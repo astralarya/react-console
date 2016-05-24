@@ -48,4 +48,14 @@ let production = Object.assign({},config, {
 	]
 });
 
-module.exports = [ config, production ];
+let development = Object.assign({},config, {
+	entry: './dev.jsx',
+	output: {
+		path: __dirname + '/example',
+		filename: 'react-console.js',
+		library: "Dev",
+		libraryTarget: "var",
+	},
+});
+
+module.exports = [ config, production, development ];
