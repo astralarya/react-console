@@ -30,16 +30,22 @@ let config = {
 };
 
 
-let min_config = Object.assign({},config);
-min_config.output.filename = 'react-console.min.js';
-min_config.plugins = [
-	new ExtractTextPlugin("react-console.min.css"),
-	new webpack.DefinePlugin({
-		'process.env.NODE_ENV': '"production"'
-	}),
-	new webpack.optimize.UglifyJsPlugin(),
-	new webpack.optimize.OccurenceOrderPlugin(),
-	new webpack.optimize.DedupePlugin()
-];
+let production = Object.assign({},config, {
+	output: {
+		path: __dirname + '/dist',
+		filename: 'react-console.min.js',
+		library: "Console",
+		libraryTarget: "var",
+	},
+	plugins: [
+		new ExtractTextPlugin("react-console.min.css"),
+		new webpack.DefinePlugin({
+			'process.env.NODE_ENV': '"production"'
+		}),
+		new webpack.optimize.UglifyJsPlugin(),
+		new webpack.optimize.OccurenceOrderPlugin(),
+		new webpack.optimize.DedupePlugin()
+	]
+});
 
-module.exports = [ config, min_config ];
+module.exports = [ config, production ];
