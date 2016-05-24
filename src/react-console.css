@@ -1,0 +1,34 @@
+div.react-console-container {
+	font-size: 14px;
+	font-family:monospace;
+	width:900px;
+	height:200px;
+	background:#efefef;
+	padding:0.5em;
+	overflow:auto
+}
+
+div.react-console-prompt-box {
+	color:#444;
+}
+
+div.react-console-focus span.react-console-cursor {
+	background:#333;
+	color:#eee;
+	font-weight:bold
+}
+
+div.react-console-message-error {
+	color:#ef0505;
+	font-weight:bold;
+	padding:0.1em;
+}
+
+div.react-console-message-success {
+	color:#187718;
+	padding:0.1em;
+}
+
+span.react-console-prompt-label {
+	font-weight:bold
+}
