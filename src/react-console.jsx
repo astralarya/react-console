@@ -2,7 +2,7 @@
 
 import React from 'react';
 import ReactDOM from 'react-dom';
-import './react-console.css';
+import './react-console.scss';
 
 let ConsolePrompt = React.createClass({
 	getDefaultProps: function() {
