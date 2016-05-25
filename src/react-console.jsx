@@ -5,17 +5,31 @@ import ReactDOM from 'react-dom';
 import './react-console.css';
 
 let ConsolePrompt = React.createClass({
+	getDefaultProps: function() {
+		return {column: -1};
+	},
+	renderValue: function() {
+		if(this.props.column < 0) {
+			return this.props.value;
+		} else if (this.props.column == this.props.value.length) {
+			return [this.props.value,<span className="react-console-cursor">&nbsp;</span>];
+		} else {
+			return [this.props.value.substring(0,this.props.column),
+				<span className="react-console-cursor">this.props.value.substring(this.props.column,this.props.column+1)</span>,
+				this.props.value.substring(column+1)];
+		}
+	},
 	render: function() {
 		return <div className="react-console-prompt-box">
 			<span className="react-console-prompt-label">{this.props.label}</span>
-			<span className="react-console-prompt">{this.props.value}</span>
+			<span className="react-console-prompt">{ this.renderValue() }</span>
 		</div>;
 	}
 });
 
 let ConsoleMessage = React.createClass({
 	render: function() {
-		return <div className={"react-console-message " + this.props.success?"react-console-message-success":"react-console-message-failure"}>
+		return <div className={"react-console-message " + (this.props.success?"react-console-message-success":"react-console-message-failure")}>
 			{this.props.value}
 		</div>;
 	}
@@ -30,6 +44,7 @@ module.exports = React.createClass({
 			history: [],
 			ringn: 0,
 			log: [],
+			focus: false,
 			acceptInput: true,
 		};
 	},
@@ -40,13 +55,17 @@ module.exports = React.createClass({
 	},
 	componentDidMount() {
 		if(this.props.autofocus) {
-			ReactDOM.findDOMNode(this.refs.typer).focus();
+			this.focus();
 		}
 	},
 	focus: function() {
 		if(!window.getSelection().toString()) {
 			ReactDOM.findDOMNode(this.refs.typer).focus();
+			this.setState({ focus: true });
 		}
+	},
+	blur: function() {
+		this.setState({ focus: false });
 	},
 	keyDown: function(e) {
 		if(this.state.acceptInput) {
@@ -80,7 +99,7 @@ module.exports = React.createClass({
 		}
 	},
 	render: function() {
-		return <div className="react-console-container"
+		return <div className={"react-console-container " + (this.state.focus?"react-console-focus":"react-console-nofocus")}
 				onClick={this.focus}
 			>
 			<textarea ref="typer"
@@ -94,6 +113,7 @@ module.exports = React.createClass({
 					top: 0,
 					left: '-9999px',
 				}}
+				onBlur={this.blur}
 				onKeyDown={this.keyDown}
 			></textarea>
 			{this.props.welcomeMessage?
@@ -111,7 +131,7 @@ module.exports = React.createClass({
 					)
 				];
 			})}
-			<ConsolePrompt label={this.props.promptLabel} value={this.state.promptText} />
+			<ConsolePrompt label={this.props.promptLabel} value={this.state.promptText} column={this.state.column} />
 		</div>;
 	}
 });
