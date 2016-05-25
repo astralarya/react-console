@@ -30,6 +30,7 @@ module.exports = React.createClass({
 			history: [],
 			ringn: 0,
 			log: [],
+			acceptInput: true,
 		};
 	},
 	getDefaultProps: function() {
@@ -47,6 +48,37 @@ module.exports = React.createClass({
 			ReactDOM.findDOMNode(this.refs.typer).focus();
 		}
 	},
+	keyDown: function(e) {
+		if(this.state.acceptInput) {
+			if(e.altKey || e.ctrlKey || e.metaKey) {
+				// TODO
+			} else {
+				let key = String.fromCharCode(e.keyCode);
+				if(!e.shiftKey) {
+					key = key.toLowerCase();
+				}
+				this.consoleInsert(key);
+			}
+		}
+	},
+	consoleInsert: function(text) {
+		this.setState({
+			promptText: this.state.promptText.substring(0,this.state.column)
+				+ text
+				+ this.state.promptText.substring(this.state.column),
+			column: this.moveColumn(text.length, text + this.state.promptText.length)
+		});
+	},
+	moveColumn: function(n, max = this.state.promptText.length) {
+		let pos = this.state.column + n;
+		if (pos < 0) {
+			return 0;
+		} if (pos > max) {
+			return max;
+		} else {
+			return pos;
+		}
+	},
 	render: function() {
 		return <div className="react-console-container"
 				onClick={this.focus}
@@ -62,6 +94,7 @@ module.exports = React.createClass({
 					top: 0,
 					left: '-9999px',
 				}}
+				onKeyDown={this.keyDown}
 			></textarea>
 			{this.props.welcomeMessage?
 				<div className="react-console-message react-console-welcome">
@@ -78,6 +111,7 @@ module.exports = React.createClass({
 					)
 				];
 			})}
+			<ConsolePrompt label={this.props.promptLabel} value={this.state.promptText} />
 		</div>;
 	}
 });
