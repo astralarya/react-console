@@ -16,7 +16,7 @@ let ConsolePrompt = React.createClass({
 		} else {
 			return [this.props.value.substring(0,this.props.column),
 				<span className="react-console-cursor">this.props.value.substring(this.props.column,this.props.column+1)</span>,
-				this.props.value.substring(column+1)];
+				this.props.value.substring(this.props.column+1)];
 		}
 	},
 	render: function() {
