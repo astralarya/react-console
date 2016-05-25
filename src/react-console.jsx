@@ -42,8 +42,15 @@ module.exports = React.createClass({
 			ReactDOM.findDOMNode(this.refs.typer).focus();
 		}
 	},
+	focus: function() {
+		if(!window.getSelection().toString()) {
+			ReactDOM.findDOMNode(this.refs.typer).focus();
+		}
+	},
 	render: function() {
-		return <div className="react-console-container">
+		return <div className="react-console-container"
+				onClick={this.focus}
+			>
 			<textarea ref="typer"
 				className="react-console-typer"
 				autocomplete="off"
