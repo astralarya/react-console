@@ -12,10 +12,10 @@ let ConsolePrompt = React.createClass({
 		if(this.props.column < 0) {
 			return this.props.value;
 		} else if (this.props.column == this.props.value.length) {
-			return [this.props.value,<span className="react-console-cursor">&nbsp;</span>];
+			return [this.props.value,<span key="cursor" className="react-console-cursor">&nbsp;</span>];
 		} else {
 			return [this.props.value.substring(0,this.props.column),
-				<span className="react-console-cursor">this.props.value.substring(this.props.column,this.props.column+1)</span>,
+				<span key="cursor" className="react-console-cursor">{this.props.value.substring(this.props.column,this.props.column+1)}</span>,
 				this.props.value.substring(this.props.column+1)];
 		}
 	},
@@ -85,7 +85,7 @@ module.exports = React.createClass({
 			promptText: this.state.promptText.substring(0,this.state.column)
 				+ text
 				+ this.state.promptText.substring(this.state.column),
-			column: this.moveColumn(text.length, text + this.state.promptText.length)
+			column: this.moveColumn(text.length, text.length + this.state.promptText.length)
 		});
 	},
 	moveColumn: function(n, max = this.state.promptText.length) {
