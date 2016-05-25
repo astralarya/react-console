@@ -15,7 +15,27 @@ div.react-console-prompt-box {
 div.react-console-focus span.react-console-cursor {
 	background:#333;
 	color:#eee;
-	font-weight:bold
+	font-weight:bold;
+	animation: react-console-cursor-animation 1s infinite;
+}
+
+@keyframes react-console-cursor-animation {
+	0% {
+		background:#333;
+		color:#eee;
+	}
+	50% {
+		background:#333;
+		color:#eee;
+	}
+	51% {
+		background:#efefef;
+		color:#444;
+	}
+	100% {
+		background:#efefef;
+		color:#444;
+	}
 }
 
 div.react-console-message-error {
