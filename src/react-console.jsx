@@ -86,9 +86,9 @@ module.exports = React.createClass({
 	getDefaultProps: function() {
 		return {
 			promptLabel: '> ',
-			continue: function() {
-				return false;
-			},
+			continue: function() { return false; },
+			complete: function() { return []; },
+			cancel: function() {},
 		};
 	},
 	componentDidMount() {
@@ -285,6 +285,13 @@ module.exports = React.createClass({
 			return 0;
 		}
 	},
+	doComplete: function() {
+		let completions = this.props.complete(this.state.promptText,column);
+		// TODO show completions
+	},
+	cancelExecution: function() {
+		this.props.cancel();
+	},
 	commandTrigger: function() {
 		if(this.props.continue(this.state.promptText)) {
 			this.consoleInsert("\n");
@@ -322,12 +329,6 @@ module.exports = React.createClass({
 	},
 	return: function() {
 		this.setState({ acceptInput: true }, this.scrollIfBottom() );
-	},
-	doComplete: function() {
-		// TODO
-	},
-	cancelExecution: function() {
-		// TODO
 	},
 	rotateHistory: function(n) {
 		if(this.state.history.length == 0) return;
