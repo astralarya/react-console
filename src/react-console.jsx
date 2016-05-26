@@ -103,8 +103,6 @@ module.exports = React.createClass({
 			// return
 			13: this.commandTrigger,
 			// tab
-			18: this.doNothing,
-			// tab
 			9: this.doComplete,
 		};
 		var ctrlCodes = {
@@ -149,6 +147,7 @@ module.exports = React.createClass({
 					ctrlCodes[e.keyCode]();
 				}
 			} else if (e.keyCode in keyCodes) {
+				if(e.keyCode == 9) { e.preventDefault(); }
 				keyCodes[e.keyCode]();
 			} else {
 				let key = String.fromCharCode(e.keyCode);
@@ -257,6 +256,9 @@ module.exports = React.createClass({
 		} else {
 			return 0;
 		}
+	},
+	doComplete: function() {
+		// TODO
 	},
 	render: function() {
 		return <div className={"react-console-container " + (this.state.focus?"react-console-focus":"react-console-nofocus")}
