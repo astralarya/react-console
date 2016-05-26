@@ -1,54 +1,63 @@
+$background-color: #efefef;
+$text-color: #444;
+$highlight-background-color: #333;
+$highlight-text-color: #eee;
+
+$red: #ef0505;
+$green: #187718;
+
 div.react-console-container {
 	font-size: 14px;
-	font-family:monospace;
-	width:900px;
-	height:200px;
-	background:#efefef;
-	padding:0.5em;
-	overflow:auto
+	font-family: monospace;
+	width: 900px;
+	height: 200px;
+	background: $background-color;
+	padding: 0.5em;
+	overflow: auto;
 }
 
 div.react-console-prompt-box {
-	color:#444;
+	color: $text-color;
 }
 
 div.react-console-focus span.react-console-cursor {
-	background:#333;
-	color:#eee;
-	font-weight:bold;
+	background: $highlight-background-color;
+	color: $highlight-text-color;
 	animation: react-console-cursor-animation 1s infinite;
 }
 
 @keyframes react-console-cursor-animation {
 	0% {
-		background:#333;
-		color:#eee;
+		background: $highlight-background-color;
+		color: $highlight-text-color;
 	}
 	50% {
-		background:#333;
-		color:#eee;
+		background: $highlight-background-color;
+		color: $highlight-text-color;
 	}
 	51% {
-		background:#efefef;
-		color:#444;
+		background: $background-color;
+		color: $text-color;
 	}
 	100% {
-		background:#efefef;
-		color:#444;
+		background: $background-color;
+		color: $text-color;
 	}
+}
+
+div.react-console-message {
+	padding:0.1em;
 }
 
 div.react-console-message-error {
-	color:#ef0505;
-	font-weight:bold;
-	padding:0.1em;
+	color: $red;
+	font-weight: bold;
 }
 
 div.react-console-message-success {
-	color:#187718;
-	padding:0.1em;
+	color: $green;
 }
 
 span.react-console-prompt-label {
-	font-weight:bold
+	font-weight: bold;
 }
