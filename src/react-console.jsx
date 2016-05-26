@@ -305,9 +305,20 @@ module.exports = React.createClass({
 				this.setState({
 					promptText: words.join(" "),
 					column: column,
-				});
+				}, this.scrollToBottom );
 			} else if (completions.length > 1) {
-				// TODO show completions
+				// show completions
+				let log = this.state.log;
+				log.push({
+					command: this.state.promptText,
+					message: [{
+						type: "completion",
+						value: [completions.join("\t")],
+					}]
+				});
+				this.setState({
+					log: log,
+				}, this.scrollToBottom );
 			}
 		}
 	},
