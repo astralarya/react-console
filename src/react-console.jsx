@@ -129,9 +129,21 @@ module.exports = React.createClass({
 			// C-l
 			76: this.clearScreen,
 		};
+		var altCodes = {
+			// M-f
+			70: this.moveToNextWord,
+			// M-b
+			66: this.moveToPreviousWord,
+			// M-d
+			68: this.deleteNextWord,
+		};
 		if(this.state.acceptInput) {
-			if (e.altKey || e.metaKey) {
+			if (e.metaKey) {
 				// TODO
+			} else if (e.altKey) {
+				if (e.keyCode in altCodes) {
+					altCodes[e.keyCode]();
+				}
 			} else if (e.ctrlKey) {
 				if (e.keyCode in ctrlCodes) {
 					ctrlCodes[e.keyCode]();
@@ -230,7 +242,7 @@ module.exports = React.createClass({
 	},
 	nextWord: function() {
 		// Find first alphanumeric char after first non-alphanumeric char
-		let search = /\W\w/.exec(this.state.promptText.substring(this.props.column));
+		let search = /\W\w/.exec(this.state.promptText.substring(this.state.column));
 		if(search) {
 			return search.index + this.state.column + 1;
 		} else {
@@ -239,9 +251,9 @@ module.exports = React.createClass({
 	},
 	previousWord: function() {
 		// Find first non-alphanumeric char after first alphanumeric char in reverse
-		let search = /\W\w(?!.*\W\w)/.exec(this.state.promptText.substring(0,column-1));
+		let search = /\W\w(?!.*\W\w)/.exec(this.state.promptText.substring(0,this.state.column-1));
 		if(search) {
-			return search.index + 2;
+			return search.index + 1;
 		} else {
 			return 0;
 		}
