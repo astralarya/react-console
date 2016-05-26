@@ -1,14 +1,14 @@
+$monospace: "Menlo", "Consolas", "DejaVu Sans Mono", monospace;
+
 $background-color: #efefef;
 $text-color: #444;
 $highlight-background-color: #333;
 $highlight-text-color: #eee;
 
-$red: #ef0505;
-$green: #187718;
 
 div.react-console-container {
 	font-size: 14px;
-	font-family: monospace;
+	font-family: $monospace;
 	width: 900px;
 	height: 200px;
 	background: $background-color;
