@@ -71,6 +71,8 @@ module.exports = React.createClass({
 		if(this.state.acceptInput) {
 			if(e.altKey || e.ctrlKey || e.metaKey) {
 				// TODO
+			} else if (e.keyCode in this.keyCodes) {
+				this.keyCodes[e.keyCode]();
 			} else {
 				let key = String.fromCharCode(e.keyCode);
 				if(!e.shiftKey) {
@@ -79,6 +81,30 @@ module.exports = React.createClass({
 				this.consoleInsert(key);
 			}
 		}
+	},
+	keyCodes: {
+		// left
+		37: this.moveBackward,
+		// right
+		39: this.moveForward,
+		// up
+		38: this.previousHistory,
+		// down
+		40: this.nextHistory,
+		// backspace
+		8:  this.backDelete,
+		// delete
+		46: this.forwardDelete,
+		// end
+		35: this.moveToEnd,
+		// start
+		36: this.moveToStart,
+		// return
+		13: this.commandTrigger,
+		// tab
+		18: this.doNothing,
+		// tab
+		9: this.doComplete
 	},
 	consoleInsert: function(text) {
 		this.setState({
@@ -96,6 +122,59 @@ module.exports = React.createClass({
 			return max;
 		} else {
 			return pos;
+		}
+	},
+	moveBackward: function() {
+		this.setState({
+			column: this.moveColumn(-1)
+		});
+	},
+	moveForward: function() {
+		this.setState({
+			column: this.moveColumn(1)
+		});
+	},
+	moveToStart: function() {
+		this.setState({
+			column: 0
+		});
+	},
+	moveToEnd: function() {
+		this.setState({
+			column: this.state.promptText.length
+		});
+	},
+	moveToEnd: function() {
+		this.setState({
+			column: this.state.promptText.length
+		});
+	},
+	moveToNextWord: function() {
+		this.setState({
+			column: this.nextWord()
+		});
+	},
+	moveToPreviousWord: function() {
+		this.setState({
+			column: this.previousWord()
+		});
+	},
+	nextWord: function() {
+		// Find first alphanumeric char after first non-alphanumeric char
+		let search = /\W\w/.exec(this.state.promptText.substring(this.props.column));
+		if(search) {
+			return search.index + this.state.column + 1;
+		} else {
+			return this.state.promptText.length;
+		}
+	},
+	previousWord: function() {
+		// Find first non-alphanumeric char after first alphanumeric char in reverse
+		let search = /\W\w(?!.*\W\w)/.exec(this.state.promptText.substring(0,column-1));
+		if(search) {
+			return search.index + 2;
+		} else {
+			return 0;
 		}
 	},
 	render: function() {
