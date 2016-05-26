@@ -68,11 +68,35 @@ module.exports = React.createClass({
 		this.setState({ focus: false });
 	},
 	keyDown: function(e) {
+		let keyCodes = {
+			// left
+			37: this.moveBackward,
+			// right
+			39: this.moveForward,
+			// up
+			38: this.previousHistory,
+			// down
+			40: this.nextHistory,
+			// backspace
+			8:  this.backDelete,
+			// delete
+			46: this.forwardDelete,
+			// end
+			35: this.moveToEnd,
+			// start
+			36: this.moveToStart,
+			// return
+			13: this.commandTrigger,
+			// tab
+			18: this.doNothing,
+			// tab
+			9: this.doComplete
+		};
 		if(this.state.acceptInput) {
 			if(e.altKey || e.ctrlKey || e.metaKey) {
 				// TODO
-			} else if (e.keyCode in this.keyCodes) {
-				this.keyCodes[e.keyCode]();
+			} else if (e.keyCode in keyCodes) {
+				keyCodes[e.keyCode]();
 			} else {
 				let key = String.fromCharCode(e.keyCode);
 				if(!e.shiftKey) {
@@ -81,30 +105,6 @@ module.exports = React.createClass({
 				this.consoleInsert(key);
 			}
 		}
-	},
-	keyCodes: {
-		// left
-		37: this.moveBackward,
-		// right
-		39: this.moveForward,
-		// up
-		38: this.previousHistory,
-		// down
-		40: this.nextHistory,
-		// backspace
-		8:  this.backDelete,
-		// delete
-		46: this.forwardDelete,
-		// end
-		35: this.moveToEnd,
-		// start
-		36: this.moveToStart,
-		// return
-		13: this.commandTrigger,
-		// tab
-		18: this.doNothing,
-		// tab
-		9: this.doComplete
 	},
 	consoleInsert: function(text) {
 		this.setState({
