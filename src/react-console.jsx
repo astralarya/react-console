@@ -96,7 +96,7 @@ module.exports = React.createClass({
 	focus: function() {
 		if(!window.getSelection().toString()) {
 			ReactDOM.findDOMNode(this.refs.typer).focus();
-			this.setState({ focus: true });
+			this.setState({ focus: true }, this.scrollToBottom );
 		}
 	},
 	blur: function() {
@@ -184,7 +184,7 @@ module.exports = React.createClass({
 				+ text
 				+ this.state.promptText.substring(this.state.column),
 			column: this.moveColumn(text.length, text.length + this.state.promptText.length)
-		});
+		}, this.scrollToBottom);
 	},
 	moveColumn: function(n, max = this.state.promptText.length) {
 		let pos = this.state.column + n;
@@ -302,25 +302,36 @@ module.exports = React.createClass({
 		log[this.state.log.length-1].message.push({value: messages});
 		this.setState({
 			log: log,
-		});
+		}, this.scrollIfBottom() );
 	},
 	logX: function(type, ...messages) {
 		let log = this.state.log;
 		log[this.state.log.length-1].message.push({type: type, value: messages});
 		this.setState({
 			log: log,
-		});
+		}, this.scrollIfBottom() );
 	},
 	return: function() {
-		this.setState({
-			acceptInput: true,
-		});
+		this.setState({ acceptInput: true }, this.scrollIfBottom() );
 	},
 	doComplete: function() {
 		// TODO
 	},
+	scrollIfBottom: function() {
+		let container = ReactDOM.findDOMNode(this.refs.container);
+		if(container.scrollTop == container.scrollHeight - container.offsetHeight) {
+			return this.scrollToBottom;
+		} else {
+			return null;
+		}
+	},
+	scrollToBottom: function() {
+		let container = ReactDOM.findDOMNode(this.refs.container);
+		container.scrollTop = container.scrollHeight;
+	},
 	render: function() {
-		return <div className={"react-console-container " + (this.state.focus?"react-console-focus":"react-console-nofocus")}
+		return <div ref="container"
+				className={"react-console-container " + (this.state.focus?"react-console-focus":"react-console-nofocus")}
 				onClick={this.focus}
 			>
 			<textarea ref="typer"
