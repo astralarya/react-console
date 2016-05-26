@@ -74,6 +74,7 @@ module.exports = React.createClass({
 	getInitialState: function() {
 		return {
 			promptText: '',
+			restoreText: '',
 			column: 0,
 			history: [],
 			ringn: 0,
@@ -181,10 +182,13 @@ module.exports = React.createClass({
 		}
 	},
 	consoleInsert: function(text) {
-		this.setState({
-			promptText: this.state.promptText.substring(0,this.state.column)
+		let promptText =
+				this.state.promptText.substring(0,this.state.column)
 				+ text
-				+ this.state.promptText.substring(this.state.column),
+				+ this.state.promptText.substring(this.state.column);
+		this.setState({
+			promptText: promptText,
+			restoreText: promptText,
 			column: this.moveColumn(text.length, text.length + this.state.promptText.length)
 		}, this.scrollToBottom);
 	},
@@ -290,6 +294,7 @@ module.exports = React.createClass({
 			log.push({ command: command, message: [] });
 			this.setState({
 				promptText: "",
+				restoreText: "",
 				column: 0,
 				history: history,
 				ringn: 0,
@@ -318,6 +323,38 @@ module.exports = React.createClass({
 	},
 	doComplete: function() {
 		// TODO
+	},
+	cancelExecution: function() {
+		// TODO
+	},
+	rotateHistory: function(n) {
+		if(this.state.history.length == 0) return;
+		let ringn = this.state.ringn - n;
+		if(ringn < 0) {
+			ringn = 0;
+		} else if (ringn > this.state.history.length) {
+			ringn = this.state.history.length;
+		}
+		if(ringn == 0) {
+			this.setState({
+				promptText: this.state.restoreText,
+				column: this.state.restoreText.length,
+				ringn: ringn,
+			}, this.scrollToBottom );
+		} else {
+			let promptText = this.state.history[this.state.history.length-ringn];
+			this.setState({
+				promptText: promptText,
+				column: promptText.length,
+				ringn: ringn,
+			}, this.scrollToBottom );
+		}
+	},
+	previousHistory: function() {
+		this.rotateHistory(-1);
+	},
+	nextHistory: function() {
+		this.rotateHistory(1);
 	},
 	scrollIfBottom: function() {
 		let container = ReactDOM.findDOMNode(this.refs.container);
