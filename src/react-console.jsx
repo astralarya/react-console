@@ -87,7 +87,6 @@ module.exports = React.createClass({
 		return {
 			promptLabel: '> ',
 			continue: function() { return false; },
-			complete: function() { return []; },
 			cancel: function() {},
 		};
 	},
@@ -286,8 +285,22 @@ module.exports = React.createClass({
 		}
 	},
 	doComplete: function() {
-		let completions = this.props.complete(this.state.promptText,column);
-		// TODO show completions
+		if(this.props.complete) {
+			// Split text and find current word
+			let words = this.state.promptText.split(" ");
+			let curr = 0;
+			let idx = words[0].length;
+			while(idx < this.state.column && curr + 1 < words.length) {
+				idx += words[++curr].length + 1;
+			}
+
+			let completions = this.props.complete(words, curr, this.state.promptText);
+			if(completions.length == 1) {
+				// TODO complete
+			} else if (completions.length > 1) {
+				// TODO show completions
+			}
+		}
 	},
 	cancelExecution: function() {
 		this.props.cancel();
