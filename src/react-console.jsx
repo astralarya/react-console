@@ -159,9 +159,7 @@ module.exports = React.createClass({
 			68: this.deleteNextWord,
 		};
 		if(this.state.acceptInput) {
-			if (e.metaKey) {
-				// TODO
-			} else if (e.altKey) {
+			if (e.altKey) {
 				if (e.keyCode in altCodes) {
 					altCodes[e.keyCode]();
 				}
