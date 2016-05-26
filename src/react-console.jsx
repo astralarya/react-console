@@ -296,7 +296,16 @@ module.exports = React.createClass({
 
 			let completions = this.props.complete(words, curr, this.state.promptText);
 			if(completions.length == 1) {
-				// TODO complete
+				// Perform completion
+				words[curr] = completions[0];
+				let column = -1;
+				for(let i = 0; i <= curr; i++) {
+					column += words[i].length + 1;
+				}
+				this.setState({
+					promptText: words.join(" "),
+					column: column,
+				});
 			} else if (completions.length > 1) {
 				// TODO show completions
 			}
