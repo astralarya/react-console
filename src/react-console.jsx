@@ -16,7 +16,7 @@ let ConsolePrompt = React.createClass({
 			this.updateSemaphore++;
 			window.setTimeout( () => {
 				this.updateSemaphore--;
-				if(this.updateSemaphore == 0) {
+				if(this.updateSemaphore == 0 && this.refs.cursor) {
 					ReactDOM.findDOMNode(this.refs.cursor).className = "react-console-cursor react-console-cursor-idle";
 				}
 			}, 500);
@@ -43,9 +43,20 @@ let ConsolePrompt = React.createClass({
 });
 
 let ConsoleMessage = React.createClass({
+	getDefaultProps: function() {
+		return {value: []};
+	},
 	render: function() {
 		return <div className={"react-console-message" + (this.props.type?" react-console-message-"+this.props.type:"")}>
-			{this.props.value}
+			{this.props.value.map((val)=>{
+				let output;
+				if(typeof val == 'string') {
+					output = val;
+				} else {
+					output = JSON.stringify(val);
+				}
+				return output.replace(/ /g, '\u00a0');
+			}).join("\n")}
 		</div>;
 	}
 });
@@ -66,6 +77,9 @@ module.exports = React.createClass({
 	getDefaultProps: function() {
 		return {
 			promptLabel: '> ',
+			continue: function() {
+				return false;
+			},
 		};
 	},
 	componentDidMount() {
@@ -257,6 +271,45 @@ module.exports = React.createClass({
 			return 0;
 		}
 	},
+	commandTrigger: function() {
+		if(this.props.continue(this.state.promptText)) {
+			this.consoleInsert("\n");
+		} else {
+			let command = this.state.promptText;
+			let history = this.state.history;
+			let log = this.state.log;
+			history.push(command);
+			log.push({ command: command, message: [] });
+			this.setState({
+				promptText: "",
+				column: 0,
+				history: history,
+				ringn: 0,
+				log: log,
+				acceptInput: false,
+			});
+			this.props.handler(command);
+		}
+	},
+	log: function(...messages) {
+		let log = this.state.log;
+		log[this.state.log.length-1].message.push({value: messages});
+		this.setState({
+			log: log,
+		});
+	},
+	logX: function(type, ...messages) {
+		let log = this.state.log;
+		log[this.state.log.length-1].message.push({type: type, value: messages});
+		this.setState({
+			log: log,
+		});
+	},
+	return: function() {
+		this.setState({
+			acceptInput: true,
+		});
+	},
 	doComplete: function() {
 		// TODO
 	},
@@ -284,16 +337,18 @@ module.exports = React.createClass({
 				</div>
 				: null
 			}
-			{this.state.log.map( (val, idx) => {
+			{this.state.log.map( (val) => {
 				return [
 					<ConsolePrompt label={this.props.promptLabel} value={val.command} />,
-					(val.message?
-						<ConsoleMessage type={val.message.type} value={val.message.value} />
-						:null
-					)
+					...val.message.map( (val,idx) => {
+						return <ConsoleMessage key={idx} type={val.type} value={val.value} />;
+					})
 				];
 			})}
-			<ConsolePrompt label={this.props.promptLabel} value={this.state.promptText} column={this.state.column} />
+			{this.state.acceptInput?
+				<ConsolePrompt label={this.props.promptLabel} value={this.state.promptText} column={this.state.column} />
+				: null
+			}
 		</div>;
 	}
 });
