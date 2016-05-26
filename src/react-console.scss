@@ -25,6 +25,13 @@ div.react-console-focus span.react-console-cursor {
 	color: $highlight-text-color;
 }
 
+div.react-console-nofocus span.react-console-cursor {
+	background: $background-color;
+	color: $text-color;
+	outline: 1px solid $highlight-background-color;
+	outline-offset: -1px;
+}
+
 div.react-console-focus span.react-console-cursor-idle {
 	animation: react-console-cursor-animation 1s infinite;
 }

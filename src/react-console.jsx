@@ -9,9 +9,15 @@ let ConsolePrompt = React.createClass({
 		return {column: -1};
 	},
 	updateSemaphore: 0,
+	componentDidMount: function() {
+		this.idle();
+	},
 	componentDidUpdate: function() {
+		this.idle();
+	},
+	idle: function() {
+		// Blink cursor when idle
 		if(this.refs.cursor) {
-			// Blink cursor when idle
 			ReactDOM.findDOMNode(this.refs.cursor).className = "react-console-cursor";
 			this.updateSemaphore++;
 			window.setTimeout( () => {
@@ -19,7 +25,7 @@ let ConsolePrompt = React.createClass({
 				if(this.updateSemaphore == 0 && this.refs.cursor) {
 					ReactDOM.findDOMNode(this.refs.cursor).className = "react-console-cursor react-console-cursor-idle";
 				}
-			}, 500);
+			}, 1000);
 		}
 	},
 	renderValue: function() {
