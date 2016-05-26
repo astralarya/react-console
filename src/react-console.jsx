@@ -8,17 +8,19 @@ let ConsolePrompt = React.createClass({
 	getDefaultProps: function() {
 		return {column: -1};
 	},
-	updateSemaphore: 0,
 	componentDidMount: function() {
 		this.idle();
 	},
 	componentDidUpdate: function() {
 		this.idle();
 	},
+	updateSemaphore: 0,
 	idle: function() {
 		// Blink cursor when idle
 		if(this.refs.cursor) {
-			ReactDOM.findDOMNode(this.refs.cursor).className = "react-console-cursor";
+			if(this.updateSemaphore == 0) {
+				ReactDOM.findDOMNode(this.refs.cursor).className = "react-console-cursor";
+			}
 			this.updateSemaphore++;
 			window.setTimeout( () => {
 				this.updateSemaphore--;
