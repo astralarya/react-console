@@ -9,14 +9,15 @@ let ConsolePrompt = React.createClass({
 		return {column: -1};
 	},
 	renderValue: function() {
+		let value = this.props.value.replace(/ /g, '\u00a0');
 		if(this.props.column < 0) {
-			return this.props.value;
-		} else if (this.props.column == this.props.value.length) {
-			return [this.props.value,<span key="cursor" className="react-console-cursor">&nbsp;</span>];
+			return value;
+		} else if (this.props.column == value.length) {
+			return [value,<span key="cursor" className="react-console-cursor">&nbsp;</span>];
 		} else {
-			return [this.props.value.substring(0,this.props.column),
-				<span key="cursor" className="react-console-cursor">{this.props.value.substring(this.props.column,this.props.column+1)}</span>,
-				this.props.value.substring(this.props.column+1)];
+			return [value.substring(0,this.props.column),
+				<span key="cursor" className="react-console-cursor">{value.substring(this.props.column,this.props.column+1)}</span>,
+				value.substring(this.props.column+1)];
 		}
 	},
 	render: function() {
