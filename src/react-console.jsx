@@ -29,7 +29,7 @@ let ConsolePrompt = React.createClass({
 
 let ConsoleMessage = React.createClass({
 	render: function() {
-		return <div className={"react-console-message " + (this.props.success?"react-console-message-success":"react-console-message-failure")}>
+		return <div className={"react-console-message" + (this.props.type?" react-console-message-"+this.props.type:"")}>
 			{this.props.value}
 		</div>;
 	}
@@ -126,7 +126,7 @@ module.exports = React.createClass({
 				return [
 					<ConsolePrompt label={this.props.promptLabel} value={val.command} />,
 					(val.message?
-						<ConsoleMessage success={val.message.success} value={val.message.value} />
+						<ConsoleMessage type={val.message.type} value={val.message.value} />
 						:null
 					)
 				];
