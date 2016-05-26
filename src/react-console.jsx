@@ -176,9 +176,12 @@ module.exports = React.createClass({
 		}
 	},
 	change: function(e) {
-		let typer = ReactDOM.findDOMNode(this.refs.typer);
-		this.consoleInsert(typer.value);
-		typer.value = "";
+		this.consoleInsert(e.target.value);
+		e.target.value = "";
+	},
+	paste: function(e) {
+		this.consoleInsert(e.target.value);
+		e.target.value = "";
 	},
 	consoleInsert: function(text) {
 		let promptText =
@@ -386,6 +389,7 @@ module.exports = React.createClass({
 				onBlur={this.blur}
 				onKeyDown={this.keyDown}
 				onChange={this.change}
+				onPaste={this.paste}
 			></textarea>
 			{this.props.welcomeMessage?
 				<div className="react-console-message react-console-welcome">
