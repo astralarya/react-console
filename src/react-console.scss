@@ -23,6 +23,9 @@ div.react-console-prompt-box {
 div.react-console-focus span.react-console-cursor {
 	background: $highlight-background-color;
 	color: $highlight-text-color;
+}
+
+div.react-console-focus span.react-console-cursor-idle {
 	animation: react-console-cursor-animation 1s infinite;
 }
 

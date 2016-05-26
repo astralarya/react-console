@@ -8,15 +8,29 @@ let ConsolePrompt = React.createClass({
 	getDefaultProps: function() {
 		return {column: -1};
 	},
+	updateSemaphore: 0,
+	componentDidUpdate: function() {
+		if(this.refs.cursor) {
+			// Blink cursor when idle
+			ReactDOM.findDOMNode(this.refs.cursor).className = "react-console-cursor";
+			this.updateSemaphore++;
+			window.setTimeout( () => {
+				this.updateSemaphore--;
+				if(this.updateSemaphore == 0) {
+					ReactDOM.findDOMNode(this.refs.cursor).className = "react-console-cursor react-console-cursor-idle";
+				}
+			}, 500);
+		}
+	},
 	renderValue: function() {
 		let value = this.props.value.replace(/ /g, '\u00a0');
 		if(this.props.column < 0) {
 			return value;
 		} else if (this.props.column == value.length) {
-			return [value,<span key="cursor" className="react-console-cursor">&nbsp;</span>];
+			return [value,<span ref="cursor" key="cursor" className="react-console-cursor">&nbsp;</span>];
 		} else {
 			return [value.substring(0,this.props.column),
-				<span key="cursor" className="react-console-cursor">{value.substring(this.props.column,this.props.column+1)}</span>,
+				<span ref="cursor" key="cursor" className="react-console-cursor">{value.substring(this.props.column,this.props.column+1)}</span>,
 				value.substring(this.props.column+1)];
 		}
 	},
