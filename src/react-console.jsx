@@ -163,21 +163,22 @@ module.exports = React.createClass({
 				if (e.keyCode in altCodes) {
 					altCodes[e.keyCode]();
 				}
+				e.preventDefault();
 			} else if (e.ctrlKey) {
 				if (e.keyCode in ctrlCodes) {
 					ctrlCodes[e.keyCode]();
 				}
+				e.preventDefault();
 			} else if (e.keyCode in keyCodes) {
-				if(e.keyCode == 9) { e.preventDefault(); }
 				keyCodes[e.keyCode]();
-			} else {
-				let key = String.fromCharCode(e.keyCode);
-				if(!e.shiftKey) {
-					key = key.toLowerCase();
-				}
-				this.consoleInsert(key);
+				e.preventDefault();
 			}
 		}
+	},
+	change: function(e) {
+		let typer = ReactDOM.findDOMNode(this.refs.typer);
+		this.consoleInsert(typer.value);
+		typer.value = "";
 	},
 	consoleInsert: function(text) {
 		let promptText =
@@ -384,6 +385,7 @@ module.exports = React.createClass({
 				}}
 				onBlur={this.blur}
 				onKeyDown={this.keyDown}
+				onChange={this.change}
 			></textarea>
 			{this.props.welcomeMessage?
 				<div className="react-console-message react-console-welcome">
