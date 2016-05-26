@@ -90,11 +90,37 @@ module.exports = React.createClass({
 			// tab
 			18: this.doNothing,
 			// tab
-			9: this.doComplete
+			9: this.doComplete,
+		};
+		var ctrlCodes = {
+			// C-a
+			65: this.moveToStart,
+			// C-e
+			69: this.moveToEnd,
+			// C-d
+			68: this.forwardDelete,
+			// C-n
+			78: this.nextHistory,
+			// C-p
+			80: this.previousHistory,
+			// C-b
+			66: this.moveBackward,
+			// C-f
+			70: this.moveForward,
+			// C-u
+			85: this.deleteUntilStart,
+			// C-k
+			75: this.deleteUntilEnd,
+			// C-l
+			76: this.clearScreen,
 		};
 		if(this.state.acceptInput) {
-			if(e.altKey || e.ctrlKey || e.metaKey) {
+			if (e.altKey || e.metaKey) {
 				// TODO
+			} else if (e.ctrlKey) {
+				if (e.keyCode in ctrlCodes) {
+					ctrlCodes[e.keyCode]();
+				}
 			} else if (e.keyCode in keyCodes) {
 				keyCodes[e.keyCode]();
 			} else {
@@ -123,6 +149,34 @@ module.exports = React.createClass({
 		} else {
 			return pos;
 		}
+	},
+	backDelete: function() {
+		if(this.state.column > 0) {
+			this.setState({
+				promptText: this.state.promptText.substring(0,this.state.column-1)
+					+ this.state.promptText.substring(this.state.column),
+				column: this.moveColumn(-1),
+			});
+		}
+	},
+	forwardDelete: function() {
+		if(this.state.column < this.state.promptText.length) {
+			this.setState({
+				promptText: this.state.promptText.substring(0,this.state.column)
+					+ this.state.promptText.substring(this.state.column+1),
+			});
+		}
+	},
+	deleteUntilStart: function() {
+		this.setState({
+			promptText: this.state.promptText.substring(this.state.column),
+			column: 0,
+		});
+	},
+	deleteUntilEnd: function() {
+		this.setState({
+			promptText: this.state.promptText.substring(0,this.state.column),
+		});
 	},
 	moveBackward: function() {
 		this.setState({
