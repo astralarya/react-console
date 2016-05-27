@@ -2,7 +2,7 @@
 
 import React from 'react';
 import ReactDOM from 'react-dom';
-import Console from './react-console.jsx';
+import Console from '../src/react-console.jsx';
 
 export function init(element) {
 	let ReactConsole = ReactDOM.render(<Console handler={echo}/>, element);

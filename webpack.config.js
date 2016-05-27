@@ -49,11 +49,11 @@ let production = Object.assign({},config, {
 });
 
 let development = Object.assign({},config, {
-	entry: './dev.jsx',
+	entry: '../example/example.jsx',
 	output: {
-		path: __dirname + '/example',
+		path: __dirname + '/example/dist',
 		filename: 'react-console.js',
-		library: "Dev",
+		library: "ExampleConsole",
 		libraryTarget: "var",
 	},
 });
