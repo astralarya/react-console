@@ -322,7 +322,7 @@ module.exports = React.createClass({
 			}
 		}
 	},
-	cancelExecution: function() {
+	cancelExecution: function() {  // TODO link this handle
 		this.props.cancel();
 	},
 	commandTrigger: function() {
