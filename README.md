@@ -8,16 +8,19 @@ Inspired by [chrisdone/jquery-console](https://github.com/chrisdone/jquery-conso
 Simple prompt that echoes back input:
 
 ```javascript
-let EchoPrompt = React.createClass({
+let EchoConsole = React.createClass({
 	echo: function(text) {
-		this.console.log(text);
-		this.console.return();
+		this.refs.console.log(text);
+		this.refs.console.return();
 	},
 	render: function() {
 		return <Console ref="console" handler={this.echo}/>;
 	}
 });
 ```
+
+Include `react-console.js` and `react-console.css` in your html.
+
 
 ## Props
 
