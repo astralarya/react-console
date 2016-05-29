@@ -30,6 +30,10 @@
     "react": "^15.1.0",
     "react-dom": "^15.1.0",
     "sass-loader": "^3.2.0",
+    "source-map-loader": "^0.1.5",
+    "ts-loader": "^0.8.2",
+    "typescript": "^1.8.10",
+    "typings": "^1.0.4",
     "webpack": "^1.13.0"
   }
 }

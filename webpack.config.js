@@ -5,7 +5,7 @@ var ExtractTextPlugin = require('extract-text-webpack-plugin');
 
 let config = {
 	context: __dirname + "/src",
-	entry: './react-console.jsx',
+	entry: './react-console.tsx',
 	output: {
 		path: __dirname + '/dist',
 		filename: 'react-console.js',
@@ -15,14 +15,20 @@ let config = {
 	module: {
 		loaders: [
 			{
-				test: /\.jsx?$/,
-				loaders: ['babel?cacheDirectory'],
+				test: /\.tsx?$/,
+				loader: "ts-loader",
 			},
 			{
 				test: /\.s?css$/,
-				loader: ExtractTextPlugin.extract("css!sass")
+				loader: ExtractTextPlugin.extract("css!sass"),
 			},
-		]
+		],
+		preLoaders: [
+			{
+				test: /\.js$/,
+				loader: "source-map-loader",
+			}
+		],
 	},
 	plugins: [
 		new ExtractTextPlugin("react-console.css"),
@@ -49,7 +55,7 @@ let production = Object.assign({},config, {
 });
 
 let development = Object.assign({},config, {
-	entry: '../example/example.jsx',
+	entry: '../example/example.tsx',
 	output: {
 		path: __dirname + '/example/dist',
 		filename: 'react-console.js',

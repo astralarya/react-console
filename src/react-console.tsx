@@ -1,7 +1,7 @@
 "use strict";
 
-import React from 'react';
-import ReactDOM from 'react-dom';
+import * as React from 'react';
+import * as ReactDOM from 'react-dom';
 import './react-console.scss';
 
 let ConsolePrompt = React.createClass({
@@ -244,11 +244,6 @@ module.exports = React.createClass({
 	moveToStart: function() {
 		this.setState({
 			column: 0
-		});
-	},
-	moveToEnd: function() {
-		this.setState({
-			column: this.state.promptText.length
 		});
 	},
 	moveToEnd: function() {

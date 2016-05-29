@@ -1,7 +1,7 @@
 "use strict";
 
-import React from 'react';
-import ReactDOM from 'react-dom';
+import * as React from 'react';
+import * as ReactDOM from 'react-dom';
 import Console from '../src/react-console.jsx';
 
 export function init(element) {

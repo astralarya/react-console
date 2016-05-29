@@ -32,6 +32,9 @@ node_modules
 # Optional REPL history
 .node_repl_history
 
+# Typescript type definitions
+typings
+
 # Directory for built project
 dist
 example
