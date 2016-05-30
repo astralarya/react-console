@@ -2,11 +2,11 @@
 
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
-import Console from '../src/react-console.jsx';
+import Console from '../src/react-console.tsx';
 
-export function init(element) {
+export function init(element: Element) {
 	let ReactConsole = ReactDOM.render(<Console handler={echo}/>, element);
-	function echo(text) {
+	function echo(text: string) {
 		window.setTimeout(function() {
 			ReactConsole.log(text);
 			window.setTimeout(function() {

@@ -56,8 +56,8 @@ let ConsoleMessage = React.createClass({
 	},
 	render: function() {
 		return <div className={"react-console-message" + (this.props.type?" react-console-message-"+this.props.type:"")}>
-			{this.props.value.map((val)=>{
-				let output;
+			{this.props.value.map((val: any)=>{
+				let output: string;
 				if(typeof val == 'string') {
 					output = val;
 				} else {
@@ -69,8 +69,16 @@ let ConsoleMessage = React.createClass({
 	}
 });
 
+interface LogMessage {
+	type: string;
+	value: Array<any>;
+}
+interface LogEntry {
+	command: string;
+	message: Array<LogMessage>;
+}
 
-module.exports = React.createClass({
+export default React.createClass({
 	getInitialState: function() {
 		return {
 			promptText: '',
@@ -97,15 +105,18 @@ module.exports = React.createClass({
 	},
 	focus: function() {
 		if(!window.getSelection().toString()) {
-			ReactDOM.findDOMNode(this.refs.typer).focus();
+			(ReactDOM.findDOMNode(this.refs.typer) as HTMLElement).focus();
 			this.setState({ focus: true }, this.scrollToBottom );
 		}
 	},
 	blur: function() {
 		this.setState({ focus: false });
 	},
-	keyDown: function(e) {
-		let keyCodes = {
+	keyDown: function(e: KeyboardEvent) {
+		interface keyMap {
+			[key: number]: ()=>void
+		}
+		let keyCodes: keyMap = {
 			// left
 			37: this.moveBackward,
 			// right
@@ -127,7 +138,7 @@ module.exports = React.createClass({
 			// tab
 			9: this.doComplete,
 		};
-		var ctrlCodes = {
+		var ctrlCodes: keyMap = {
 			// C-a
 			65: this.moveToStart,
 			// C-e
@@ -149,7 +160,7 @@ module.exports = React.createClass({
 			// C-l
 			76: this.clearScreen,
 		};
-		var altCodes = {
+		var altCodes: keyMap = {
 			// M-f
 			70: this.moveToNextWord,
 			// M-b
@@ -174,15 +185,15 @@ module.exports = React.createClass({
 			}
 		}
 	},
-	change: function(e) {
-		this.consoleInsert(e.target.value);
-		e.target.value = "";
+	change: function(e: Event) {
+		this.consoleInsert((e.target as HTMLInputElement).value);
+		(e.target as HTMLInputElement).value = "";
 	},
-	paste: function(e) {
-		this.consoleInsert(e.target.value);
-		e.target.value = "";
+	paste: function(e: Event) {
+		this.consoleInsert((e.target as HTMLInputElement).value);
+		(e.target as HTMLInputElement).value = "";
 	},
-	consoleInsert: function(text) {
+	consoleInsert: function(text: string) {
 		let promptText =
 				this.state.promptText.substring(0,this.state.column)
 				+ text
@@ -193,7 +204,7 @@ module.exports = React.createClass({
 			column: this.moveColumn(text.length, text.length + this.state.promptText.length)
 		}, this.scrollToBottom);
 	},
-	moveColumn: function(n, max = this.state.promptText.length) {
+	moveColumn: function(n: number, max: number = this.state.promptText.length) {
 		let pos = this.state.column + n;
 		if (pos < 0) {
 			return 0;
@@ -341,14 +352,14 @@ module.exports = React.createClass({
 			this.props.handler(command);
 		}
 	},
-	log: function(...messages) {
+	log: function(...messages: Array<any>) {
 		let log = this.state.log;
 		log[this.state.log.length-1].message.push({value: messages});
 		this.setState({
 			log: log,
 		}, this.scrollIfBottom() );
 	},
-	logX: function(type, ...messages) {
+	logX: function(type: string, ...messages: Array<any>) {
 		let log = this.state.log;
 		log[this.state.log.length-1].message.push({type: type, value: messages});
 		this.setState({
@@ -358,7 +369,7 @@ module.exports = React.createClass({
 	return: function() {
 		this.setState({ acceptInput: true }, this.scrollIfBottom() );
 	},
-	rotateHistory: function(n) {
+	rotateHistory: function(n: number) {
 		if(this.state.history.length == 0) return;
 		let ringn = this.state.ringn - n;
 		if(ringn < 0) {
@@ -388,7 +399,7 @@ module.exports = React.createClass({
 		this.rotateHistory(1);
 	},
 	scrollIfBottom: function() {
-		let container = ReactDOM.findDOMNode(this.refs.container);
+		let container = ReactDOM.findDOMNode(this.refs.container) as HTMLElement;
 		if(container.scrollTop == container.scrollHeight - container.offsetHeight) {
 			return this.scrollToBottom;
 		} else {
@@ -426,10 +437,10 @@ module.exports = React.createClass({
 				</div>
 				: null
 			}
-			{this.state.log.map( (val) => {
+			{this.state.log.map( (val: LogEntry) => {
 				return [
 					<ConsolePrompt label={this.props.promptLabel} value={val.command} />,
-					...val.message.map( (val,idx) => {
+					...val.message.map( (val: LogMessage, idx: number) => {
 						return <ConsoleMessage key={idx} type={val.type} value={val.value} />;
 					})
 				];
