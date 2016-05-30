@@ -15,7 +15,7 @@
     "url": "https://github.com/autochthe/react-console/issues"
   },
   "scripts": {
-    "prepublish": "webpack",
+    "prepublish": "typings install && webpack",
     "build": "webpack"
   },
   "devDependencies": {
