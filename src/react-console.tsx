@@ -411,6 +411,7 @@ export default React.createClass({
 		container.scrollTop = container.scrollHeight;
 	},
 	render: function() {
+		let _this = this; // HOPE typescript fixes lexical binding of this in jsx
 		return <div ref="container"
 				className={"react-console-container " + (this.state.focus?"react-console-focus":"react-console-nofocus")}
 				onClick={this.focus}
@@ -439,7 +440,7 @@ export default React.createClass({
 			}
 			{this.state.log.map( (val: LogEntry) => {
 				return [
-					<ConsolePrompt label={this.props.promptLabel} value={val.command} />,
+					<ConsolePrompt label={_this.props.promptLabel} value={val.command} />,
 					...val.message.map( (val: LogMessage, idx: number) => {
 						return <ConsoleMessage key={idx} type={val.type} value={val.value} />;
 					})
