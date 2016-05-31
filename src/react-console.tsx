@@ -57,24 +57,23 @@ class ConsolePrompt extends React.Component<ConsolePromptProps,{}>{
 }
 ConsolePrompt.defaultProps = { column: -1, value: "", label: ""};
 
-let ConsoleMessage = React.createClass({
-	getDefaultProps: function() {
-		return {value: []};
-	},
-	render: function() {
-		return <div className={"react-console-message" + (this.props.type?" react-console-message-"+this.props.type:"")}>
-			{this.props.value.map((val: any)=>{
-				let output: string;
-				if(typeof val == 'string') {
-					output = val;
-				} else {
-					output = JSON.stringify(val);
-				}
-				return output.replace(/ /g, '\u00a0');
-			}).join("\n")}
-		</div>;
-	}
-});
+interface ConsoleMessageProps {
+	type?: string;
+	value: any[];
+}
+function ConsoleMessage(props: ConsoleMessageProps): JSX.Element {
+	return <div className={"react-console-message" + (this.props.type?" react-console-message-"+this.props.type:"")}>
+		{this.props.value.map((val: any)=>{
+			let output: string;
+			if(typeof val == 'string') {
+				output = val;
+			} else {
+				output = JSON.stringify(val);
+			}
+			return output.replace(/ /g, '\u00a0');
+		}).join("\n")}
+	</div>;
+}
 
 interface LogMessage {
 	type: string;
