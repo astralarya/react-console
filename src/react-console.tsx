@@ -267,7 +267,7 @@ export default class extends React.Component<ConsoleProps,ConsoleState> {
 				promptText: this.state.promptText.substring(0,this.state.column-1)
 					+ this.state.promptText.substring(this.state.column),
 				column: this.moveColumn(-1),
-			});
+			}, this.scrollToBottom);
 		}
 	}
 	forwardDelete = () => {
@@ -275,49 +275,49 @@ export default class extends React.Component<ConsoleProps,ConsoleState> {
 			this.setState({
 				promptText: this.state.promptText.substring(0,this.state.column)
 					+ this.state.promptText.substring(this.state.column+1),
-			});
+			}, this.scrollToBottom);
 		}
 	}
 	deleteUntilStart = () => {
 		this.setState({
 			promptText: this.state.promptText.substring(this.state.column),
 			column: 0,
-		});
+		}, this.scrollToBottom);
 	}
 	deleteUntilEnd = () => {
 		this.setState({
 			promptText: this.state.promptText.substring(0,this.state.column),
-		});
+		}, this.scrollToBottom);
 	}
 	moveBackward = () => {
 		this.setState({
 			column: this.moveColumn(-1)
-		});
+		}, this.scrollToBottom);
 	}
 	moveForward = () => {
 		this.setState({
 			column: this.moveColumn(1)
-		});
+		}, this.scrollToBottom);
 	}
 	moveToStart = () => {
 		this.setState({
 			column: 0
-		});
+		}, this.scrollToBottom);
 	}
 	moveToEnd = () => {
 		this.setState({
 			column: this.state.promptText.length
-		});
+		}, this.scrollToBottom);
 	}
 	moveToNextWord = () => {
 		this.setState({
 			column: this.nextWord()
-		});
+		}, this.scrollToBottom);
 	}
 	moveToPreviousWord = () => {
 		this.setState({
 			column: this.previousWord()
-		});
+		}, this.scrollToBottom);
 	}
 	nextWord(): number {
 		// Find first alphanumeric char after first non-alphanumeric char
