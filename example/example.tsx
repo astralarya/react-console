@@ -5,7 +5,7 @@ import * as ReactDOM from 'react-dom';
 import Console from '../src/react-console.tsx';
 
 export function init(element: Element) {
-	let ReactConsole = ReactDOM.render(<Console handler={echo}/>, element);
+	let ReactConsole = ReactDOM.render(<Console handler={echo}/>, element) as Console;
 	function echo(text: string) {
 		window.setTimeout(function() {
 			ReactConsole.log(text);

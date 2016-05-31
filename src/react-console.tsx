@@ -9,8 +9,12 @@ interface ConsolePromptProps {
 	value: string;
 	label: string;
 }
-class ConsolePrompt extends React.Component<ConsolePromptProps,{}>{
-	static defaultProps: ConsolePromptProps;
+class ConsolePrompt extends React.Component<ConsolePromptProps,{}> {
+	static defaultProps: ConsolePromptProps = {
+		column: -1,
+		value: "",
+		label: "> "
+	}
 	child: {
 		cursor?: Element;
 	} = {};
@@ -55,15 +59,14 @@ class ConsolePrompt extends React.Component<ConsolePromptProps,{}>{
 		</div>;
 	}
 }
-ConsolePrompt.defaultProps = { column: -1, value: "", label: ""};
 
 interface ConsoleMessageProps {
 	type?: string;
 	value: any[];
 }
 function ConsoleMessage(props: ConsoleMessageProps): JSX.Element {
-	return <div className={"react-console-message" + (this.props.type?" react-console-message-"+this.props.type:"")}>
-		{this.props.value.map((val: any)=>{
+	return <div className={"react-console-message" + (props.type?" react-console-message-"+props.type:"")}>
+		{props.value.map((val: any)=>{
 			let output: string;
 			if(typeof val == 'string') {
 				output = val;
@@ -76,17 +79,45 @@ function ConsoleMessage(props: ConsoleMessageProps): JSX.Element {
 }
 
 interface LogMessage {
-	type: string;
-	value: Array<any>;
+	type?: string;
+	value: any[];
 }
 interface LogEntry {
 	command: string;
-	message: Array<LogMessage>;
+	message: LogMessage[];
 }
-
-export default React.createClass({
-	getInitialState: function() {
-		return {
+interface ConsoleProps{
+	handler(command: string): any;
+	cancel?(): any;
+	complete?(words: string[], curr: number, promptText: string): string[];
+	continue?(promptText: string): boolean;
+	autofocus?: boolean;
+	promptLabel?: string;
+	welcomeMessage?: string;
+}
+interface ConsoleState{
+	promptText?: string;
+	restoreText?: string;
+	column?: number;
+	history?: string[];
+	ringn?: number;
+	log?: LogEntry[];
+	focus?: boolean;
+	acceptInput?: boolean;
+};
+export default class extends React.Component<ConsoleProps,ConsoleState> {
+	static defaultProps = {
+		promptLabel: '> ',
+		continue: function() { return false; },
+		cancel: function() {},
+	};
+	child: {
+		typer?: HTMLElement;
+		container?: HTMLElement;
+	} = {};
+	constructor(props: ConsoleProps) {
+		super(props);
+		this.state = {
 			promptText: '',
 			restoreText: '',
 			column: 0,
@@ -96,29 +127,39 @@ export default React.createClass({
 			focus: false,
 			acceptInput: true,
 		};
-	},
-	getDefaultProps: function() {
-		return {
-			promptLabel: '> ',
-			continue: function() { return false; },
-			cancel: function() {},
-		};
-	},
+	}
+	log(...messages: any[]) {
+		let log = this.state.log;
+		log[this.state.log.length-1].message.push({value: messages});
+		this.setState({
+			log: log,
+		}, this.scrollIfBottom() );
+	}
+	logX(type: string, ...messages: any[]) {
+		let log = this.state.log;
+		log[this.state.log.length-1].message.push({type: type, value: messages});
+		this.setState({
+			log: log,
+		}, this.scrollIfBottom() );
+	}
+	return() {
+		this.setState({ acceptInput: true }, this.scrollIfBottom() );
+	}
 	componentDidMount() {
 		if(this.props.autofocus) {
 			this.focus();
 		}
-	},
-	focus: function() {
+	}
+	focus = () => {
 		if(!window.getSelection().toString()) {
-			(ReactDOM.findDOMNode(this.refs.typer) as HTMLElement).focus();
+			this.child.typer.focus();
 			this.setState({ focus: true }, this.scrollToBottom );
 		}
-	},
-	blur: function() {
+	}
+	blur = () => {
 		this.setState({ focus: false });
-	},
-	keyDown: function(e: KeyboardEvent) {
+	}
+	keyDown = (e: KeyboardEvent) => {
 		interface keyMap {
 			[key: number]: ()=>void
 		}
@@ -163,16 +204,16 @@ export default React.createClass({
 			85: this.deleteUntilStart,
 			// C-k
 			75: this.deleteUntilEnd,
-			// C-l
-			76: this.clearScreen,
+			// C-l TODO
+			//76: this.clearScreen,
 		};
 		var altCodes: keyMap = {
 			// M-f
 			70: this.moveToNextWord,
 			// M-b
 			66: this.moveToPreviousWord,
-			// M-d
-			68: this.deleteNextWord,
+			// M-d TODO
+			//68: this.deleteNextWord,
 		};
 		if(this.state.acceptInput) {
 			if (e.altKey) {
@@ -190,16 +231,16 @@ export default React.createClass({
 				e.preventDefault();
 			}
 		}
-	},
-	change: function(e: Event) {
+	}
+	change = (e: Event) => {
 		this.consoleInsert((e.target as HTMLInputElement).value);
 		(e.target as HTMLInputElement).value = "";
-	},
-	paste: function(e: Event) {
+	}
+	paste = (e: Event) => {
 		this.consoleInsert((e.target as HTMLInputElement).value);
 		(e.target as HTMLInputElement).value = "";
-	},
-	consoleInsert: function(text: string) {
+	}
+	consoleInsert = (text: string) => {
 		let promptText =
 				this.state.promptText.substring(0,this.state.column)
 				+ text
@@ -209,8 +250,8 @@ export default React.createClass({
 			restoreText: promptText,
 			column: this.moveColumn(text.length, text.length + this.state.promptText.length)
 		}, this.scrollToBottom);
-	},
-	moveColumn: function(n: number, max: number = this.state.promptText.length) {
+	}
+	moveColumn = (n: number, max: number = this.state.promptText.length) => {
 		let pos = this.state.column + n;
 		if (pos < 0) {
 			return 0;
@@ -219,8 +260,8 @@ export default React.createClass({
 		} else {
 			return pos;
 		}
-	},
-	backDelete: function() {
+	}
+	backDelete = () => {
 		if(this.state.column > 0) {
 			this.setState({
 				promptText: this.state.promptText.substring(0,this.state.column-1)
@@ -228,57 +269,57 @@ export default React.createClass({
 				column: this.moveColumn(-1),
 			});
 		}
-	},
-	forwardDelete: function() {
+	}
+	forwardDelete = () => {
 		if(this.state.column < this.state.promptText.length) {
 			this.setState({
 				promptText: this.state.promptText.substring(0,this.state.column)
 					+ this.state.promptText.substring(this.state.column+1),
 			});
 		}
-	},
-	deleteUntilStart: function() {
+	}
+	deleteUntilStart = () => {
 		this.setState({
 			promptText: this.state.promptText.substring(this.state.column),
 			column: 0,
 		});
-	},
-	deleteUntilEnd: function() {
+	}
+	deleteUntilEnd = () => {
 		this.setState({
 			promptText: this.state.promptText.substring(0,this.state.column),
 		});
-	},
-	moveBackward: function() {
+	}
+	moveBackward = () => {
 		this.setState({
 			column: this.moveColumn(-1)
 		});
-	},
-	moveForward: function() {
+	}
+	moveForward = () => {
 		this.setState({
 			column: this.moveColumn(1)
 		});
-	},
-	moveToStart: function() {
+	}
+	moveToStart = () => {
 		this.setState({
 			column: 0
 		});
-	},
-	moveToEnd: function() {
+	}
+	moveToEnd = () => {
 		this.setState({
 			column: this.state.promptText.length
 		});
-	},
-	moveToNextWord: function() {
+	}
+	moveToNextWord = () => {
 		this.setState({
 			column: this.nextWord()
 		});
-	},
-	moveToPreviousWord: function() {
+	}
+	moveToPreviousWord = () => {
 		this.setState({
 			column: this.previousWord()
 		});
-	},
-	nextWord: function() {
+	}
+	nextWord(): number {
 		// Find first alphanumeric char after first non-alphanumeric char
 		let search = /\W\w/.exec(this.state.promptText.substring(this.state.column));
 		if(search) {
@@ -286,8 +327,8 @@ export default React.createClass({
 		} else {
 			return this.state.promptText.length;
 		}
-	},
-	previousWord: function() {
+	}
+	previousWord(): number {
 		// Find first non-alphanumeric char after first alphanumeric char in reverse
 		let search = /\W\w(?!.*\W\w)/.exec(this.state.promptText.substring(0,this.state.column-1));
 		if(search) {
@@ -295,8 +336,8 @@ export default React.createClass({
 		} else {
 			return 0;
 		}
-	},
-	doComplete: function() {
+	}
+	doComplete = () => {
 		if(this.props.complete) {
 			// Split text and find current word
 			let words = this.state.promptText.split(" ");
@@ -333,11 +374,11 @@ export default React.createClass({
 				}, this.scrollToBottom );
 			}
 		}
-	},
-	cancelExecution: function() {  // TODO link this handle
+	}
+	cancelExecution = () => {  // TODO link this handle
 		this.props.cancel();
-	},
-	commandTrigger: function() {
+	}
+	commandTrigger = () => {
 		if(this.props.continue(this.state.promptText)) {
 			this.consoleInsert("\n");
 		} else {
@@ -357,25 +398,8 @@ export default React.createClass({
 			});
 			this.props.handler(command);
 		}
-	},
-	log: function(...messages: Array<any>) {
-		let log = this.state.log;
-		log[this.state.log.length-1].message.push({value: messages});
-		this.setState({
-			log: log,
-		}, this.scrollIfBottom() );
-	},
-	logX: function(type: string, ...messages: Array<any>) {
-		let log = this.state.log;
-		log[this.state.log.length-1].message.push({type: type, value: messages});
-		this.setState({
-			log: log,
-		}, this.scrollIfBottom() );
-	},
-	return: function() {
-		this.setState({ acceptInput: true }, this.scrollIfBottom() );
-	},
-	rotateHistory: function(n: number) {
+	}
+	rotateHistory = (n: number) => {
 		if(this.state.history.length == 0) return;
 		let ringn = this.state.ringn - n;
 		if(ringn < 0) {
@@ -397,32 +421,30 @@ export default React.createClass({
 				ringn: ringn,
 			}, this.scrollToBottom );
 		}
-	},
-	previousHistory: function() {
+	}
+	previousHistory = () => {
 		this.rotateHistory(-1);
-	},
-	nextHistory: function() {
+	}
+	nextHistory = () => {
 		this.rotateHistory(1);
-	},
-	scrollIfBottom: function() {
-		let container = ReactDOM.findDOMNode(this.refs.container) as HTMLElement;
-		if(container.scrollTop == container.scrollHeight - container.offsetHeight) {
+	}
+	scrollIfBottom = () => {
+		if(this.child.container.scrollTop == this.child.container.scrollHeight - this.child.container.offsetHeight) {
 			return this.scrollToBottom;
 		} else {
 			return null;
 		}
-	},
-	scrollToBottom: function() {
-		let container = ReactDOM.findDOMNode(this.refs.container);
-		container.scrollTop = container.scrollHeight;
-	},
-	render: function() {
-		let _this = this; // HOPE typescript fixes lexical binding of this in jsx
-		return <div ref="container"
+	}
+	scrollToBottom = () => {
+		this.child.container.scrollTop = this.child.container.scrollHeight; //TODO fix weird scrolling bug
+	}
+	render() {
+		return <div ref={ref => this.child.container = ref}
 				className={"react-console-container " + (this.state.focus?"react-console-focus":"react-console-nofocus")}
 				onClick={this.focus}
 			>
-			<textarea ref="typer"
+			<textarea
+				ref={ref => this.child.typer = ref}
 				className="react-console-typer"
 				autocomplete="off"
 				autocorrect="off"
@@ -446,7 +468,7 @@ export default React.createClass({
 			}
 			{this.state.log.map( (val: LogEntry) => {
 				return [
-					<ConsolePrompt label={_this.props.promptLabel} value={val.command} />,
+					<ConsolePrompt label={this.props.promptLabel} value={val.command} />,
 					...val.message.map( (val: LogMessage, idx: number) => {
 						return <ConsoleMessage key={idx} type={val.type} value={val.value} />;
 					})
@@ -458,4 +480,4 @@ export default React.createClass({
 			}
 		</div>;
 	}
-});
+}
