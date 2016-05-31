@@ -4,51 +4,58 @@ import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 import './react-console.scss';
 
-let ConsolePrompt = React.createClass({
-	getDefaultProps: function() {
-		return {column: -1};
-	},
-	componentDidMount: function() {
+interface ConsolePromptProps {
+	column?: number;
+	value: string;
+	label: string;
+}
+class ConsolePrompt extends React.Component<ConsolePromptProps,{}>{
+	static defaultProps: ConsolePromptProps;
+	child: {
+		cursor?: Element;
+	} = {};
+	updateSemaphore: number = 0;
+	componentDidMount() {
 		this.idle();
-	},
-	componentDidUpdate: function() {
+	}
+	componentDidUpdate() {
 		this.idle();
-	},
-	updateSemaphore: 0,
-	idle: function() {
+	}
+	idle() {
 		// Blink cursor when idle
-		if(this.refs.cursor) {
+		if(this.child.cursor) {
 			if(this.updateSemaphore == 0) {
-				ReactDOM.findDOMNode(this.refs.cursor).className = "react-console-cursor";
+				this.child.cursor.className = "react-console-cursor";
 			}
 			this.updateSemaphore++;
 			window.setTimeout( () => {
 				this.updateSemaphore--;
-				if(this.updateSemaphore == 0 && this.refs.cursor) {
-					ReactDOM.findDOMNode(this.refs.cursor).className = "react-console-cursor react-console-cursor-idle";
+				if(this.updateSemaphore == 0 && this.child.cursor) {
+					this.child.cursor.className = "react-console-cursor react-console-cursor-idle";
 				}
 			}, 1000);
 		}
-	},
-	renderValue: function() {
+	}
+	renderValue() {
 		let value = this.props.value.replace(/ /g, '\u00a0');
 		if(this.props.column < 0) {
-			return value;
+			return [value];
 		} else if (this.props.column == value.length) {
-			return [value,<span ref="cursor" key="cursor" className="react-console-cursor">&nbsp;</span>];
+			return [value,<span ref={ref => this.child.cursor = ref} key="cursor" className="react-console-cursor">&nbsp;</span>];
 		} else {
 			return [value.substring(0,this.props.column),
-				<span ref="cursor" key="cursor" className="react-console-cursor">{value.substring(this.props.column,this.props.column+1)}</span>,
+				<span ref={ref => this.child.cursor = ref} key="cursor" className="react-console-cursor">{value.substring(this.props.column,this.props.column+1)}</span>,
 				value.substring(this.props.column+1)];
 		}
-	},
-	render: function() {
+	}
+	render() {
 		return <div className="react-console-prompt-box">
 			<span className="react-console-prompt-label">{this.props.label}</span>
 			<span className="react-console-prompt">{ this.renderValue() }</span>
 		</div>;
 	}
-});
+}
+ConsolePrompt.defaultProps = { column: -1, value: "", label: ""};
 
 let ConsoleMessage = React.createClass({
 	getDefaultProps: function() {
