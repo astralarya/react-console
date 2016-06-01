@@ -19,7 +19,7 @@ let EchoConsole = React.createClass({
 });
 ```
 
-Include `react-console.js` and `react-console.css` in your html.
+Include `dist/react-console.js` and `dist/react-console.css` in your html.
 
 
 ## Props
@@ -28,13 +28,13 @@ Properties you can pass to the console element
 
 | Prop				| Type																	| Description
 | ----				| ----																	| ----
-| autofocus			| bool																	| Autofocus the console on component mount.
-| cancel			| function()															| Function that should stop execution of the current command and call `this.return()`.
-| complete			| function(words: string[], cursor: number, prompt: string): string[]	| Return a list of possible completions given a list of (`words`), index of the word containing the cursor (`cursor`) , and the full prompt text (`prompt`).
-| continue			| function(prompt: string): bool										| Return a boolean indicating whether to continue asking for user input on a newline given the current prompt text (`prompt`).
-| handler			| function(command: string): void										| Handle a command (`command`), logging data with `this.log()` or `this.logX()`, and calling `this.return()` when finished.
-| promptLabel		| string																| String displayed to prompt user for input.
-| welcomeMessage	| string																| Initial message displayed after mount.
+| autofocus?		| bool																	| Autofocus the console on component mount.
+| cancel?			| function(): any														| Function that should stop execution of the current command and call `this.return()`.
+| complete?			| function(words: string[], cursor: number, prompt: string): string[]	| Return a list of possible completions given a list of (`words`), index of the word containing the cursor (`cursor`) , and the full prompt text (`prompt`).
+| continue?			| function(prompt: string): bool										| Return a boolean indicating whether to continue asking for user input on a newline given the current prompt text (`prompt`).
+| handler			| function(command: string): any										| Handle a command (`command`), logging data with `this.log()` or `this.logX()`, and calling `this.return()` when finished.
+| promptLabel?		| string																| String displayed to prompt user for input.
+| welcomeMessage?	| string																| Initial message displayed after mount.
 
 ## Public members
 
