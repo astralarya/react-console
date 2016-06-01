@@ -1,8 +1,6 @@
 # react-console
 Simple React console emulator
 
-Inspired by [chrisdone/jquery-console](https://github.com/chrisdone/jquery-console).
-
 ## Example
 
 Simple prompt that echoes back input:
@@ -21,7 +19,7 @@ let EchoConsole = React.createClass({
 
 Include `dist/react-console.js` and `dist/react-console.css` in your html.
 
-See `example/echo.tsx` for an example using Typescript.
+See (example/echo.tsx)[example/echo.tsx] for an example using Typescript.
 
 
 ## Props
@@ -45,3 +43,8 @@ Properties you can pass to the console element
 | log		| function(...messages: any): void					| Log messages to the console. If string, print the value, otherwise, print the JSON value of the message.
 | logX		| function(type: string, ...messages: any): void	| Log messages of a particular type to the console. The messages will be given the class `react-console-message-{type}`.
 | return	| function(): void									| Signal the current command has finished and a new prompt should be displayed.
+
+
+## Awknoledgements
+
+React-console is inspired by [chrisdone/jquery-console](https://github.com/chrisdone/jquery-console).
