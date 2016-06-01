@@ -436,7 +436,7 @@ export default class extends React.Component<ConsoleProps,ConsoleState> {
 		}
 	}
 	scrollToBottom = () => {
-		this.child.container.scrollTop = this.child.container.scrollHeight; //TODO fix weird scrolling bug
+		this.child.container.scrollTop = this.child.container.scrollHeight;
 	}
 	render() {
 		return <div ref={ref => this.child.container = ref}
@@ -452,7 +452,6 @@ export default class extends React.Component<ConsoleProps,ConsoleState> {
 				spellcheck="false"
 				style={{
 					position: 'absolute',
-					top: 0,
 					left: '-9999px',
 				}}
 				onBlur={this.blur}
