@@ -83,6 +83,7 @@ interface LogMessage {
 	value: any[];
 }
 interface LogEntry {
+	label: string;
 	command: string;
 	message: LogMessage[];
 }
@@ -92,10 +93,11 @@ interface ConsoleProps{
 	complete?(words: string[], curr: number, promptText: string): string[];
 	continue?(promptText: string): boolean;
 	autofocus?: boolean;
-	promptLabel?: string;
+	promptLabel?: string | (()=>string);
 	welcomeMessage?: string;
 }
 interface ConsoleState{
+	currLabel?: string;
 	promptText?: string;
 	restoreText?: string;
 	column?: number;
@@ -118,6 +120,7 @@ export default class extends React.Component<ConsoleProps,ConsoleState> {
 	constructor(props: ConsoleProps) {
 		super(props);
 		this.state = {
+			currLabel: this.nextLabel(),
 			promptText: '',
 			restoreText: '',
 			column: 0,
@@ -143,7 +146,10 @@ export default class extends React.Component<ConsoleProps,ConsoleState> {
 		}, this.scrollIfBottom() );
 	}
 	return() {
-		this.setState({ acceptInput: true }, this.scrollIfBottom() );
+		this.setState({
+			currLabel: this.nextLabel(),
+			acceptInput: true
+		}, this.scrollIfBottom() );
 	}
 	componentDidMount() {
 		if(this.props.autofocus) {
@@ -363,6 +369,7 @@ export default class extends React.Component<ConsoleProps,ConsoleState> {
 				// show completions
 				let log = this.state.log;
 				log.push({
+					label: this.state.currLabel,
 					command: this.state.promptText,
 					message: [{
 						type: "completion",
@@ -370,6 +377,7 @@ export default class extends React.Component<ConsoleProps,ConsoleState> {
 					}]
 				});
 				this.setState({
+					currLabel: this.nextLabel(),
 					log: log,
 				}, this.scrollToBottom );
 			}
@@ -388,7 +396,11 @@ export default class extends React.Component<ConsoleProps,ConsoleState> {
 			if(!history || history[history.length-1] != command) {
 				history.push(command);
 			}
-			log.push({ command: command, message: [] });
+			log.push({
+				label: this.state.currLabel,
+				command: command,
+				message: []
+			});
 			this.setState({
 				promptText: "",
 				restoreText: "",
@@ -440,6 +452,13 @@ export default class extends React.Component<ConsoleProps,ConsoleState> {
 	scrollToBottom = () => {
 		this.child.container.scrollTop = this.child.container.scrollHeight;
 	}
+	nextLabel = () => {
+		if(typeof this.props.promptLabel === "string") {
+			return this.props.promptLabel as string;
+		} else {
+			return (this.props.promptLabel as ()=>string)();
+		}
+	}
 	render() {
 		return <div ref={ref => this.child.container = ref}
 				className={"react-console-container " + (this.state.focus?"react-console-focus":"react-console-nofocus")}
@@ -453,14 +472,14 @@ export default class extends React.Component<ConsoleProps,ConsoleState> {
 			}
 			{this.state.log.map( (val: LogEntry) => {
 				return [
-					<ConsolePrompt label={this.props.promptLabel} value={val.command} />,
+					<ConsolePrompt label={val.label} value={val.command} />,
 					...val.message.map( (val: LogMessage, idx: number) => {
 						return <ConsoleMessage key={idx} type={val.type} value={val.value} />;
 					})
 				];
 			})}
 			{this.state.acceptInput?
-				<ConsolePrompt label={this.props.promptLabel} value={this.state.promptText} column={this.state.column} />
+				<ConsolePrompt label={this.state.currLabel} value={this.state.promptText} column={this.state.column} />
 				: null
 			}
 			<div style={{ overflow: "hidden", height: 0 }}>
