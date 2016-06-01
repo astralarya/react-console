@@ -13,7 +13,10 @@ class EchoConsole extends React.Component<{},{}> {
 		this.child.console.return();
 	}
 	render() {
-		return <Console ref={ref => this.child.console = ref} handler={this.echo}/>;
+		return <Console ref={ref => this.child.console = ref}
+			handler={this.echo}
+			autofocus={true}
+		/>;
 	}
 }
 

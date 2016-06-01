@@ -14,7 +14,7 @@ let EchoConsole = React.createClass({
 		this.refs.console.return();
 	},
 	render: function() {
-		return <Console ref="console" handler={this.echo}/>;
+		return <Console ref="console" handler={this.echo} autofocus={true}/>;
 	}
 });
 ```
