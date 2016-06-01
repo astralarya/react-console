@@ -131,21 +131,21 @@ export default class extends React.Component<ConsoleProps,ConsoleState> {
 			acceptInput: true,
 		};
 	}
-	log(...messages: any[]) {
+	log = (...messages: any[]) => {
 		let log = this.state.log;
 		log[this.state.log.length-1].message.push({value: messages});
 		this.setState({
 			log: log,
 		}, this.scrollIfBottom() );
 	}
-	logX(type: string, ...messages: any[]) {
+	logX = (type: string, ...messages: any[]) => {
 		let log = this.state.log;
 		log[this.state.log.length-1].message.push({type: type, value: messages});
 		this.setState({
 			log: log,
 		}, this.scrollIfBottom() );
 	}
-	return() {
+	return = () => {
 		this.setState({
 			currLabel: this.nextLabel(),
 			acceptInput: true
