@@ -21,6 +21,8 @@ let EchoConsole = React.createClass({
 
 Include `dist/react-console.js` and `dist/react-console.css` in your html.
 
+See `example/echo.tsx` for an example using Typescript.
+
 
 ## Props
 

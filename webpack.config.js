@@ -55,7 +55,7 @@ let production = Object.assign({},config, {
 });
 
 let development = Object.assign({},config, {
-	entry: '../example/example.tsx',
+	entry: '../example/echo.tsx',
 	output: {
 		path: __dirname + '/example/dist',
 		filename: 'react-console.js',
