@@ -385,7 +385,9 @@ export default class extends React.Component<ConsoleProps,ConsoleState> {
 			let command = this.state.promptText;
 			let history = this.state.history;
 			let log = this.state.log;
-			history.push(command);
+			if(!history || history[history.length-1] != command) {
+				history.push(command);
+			}
 			log.push({ command: command, message: [] });
 			this.setState({
 				promptText: "",
