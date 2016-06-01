@@ -443,22 +443,6 @@ export default class extends React.Component<ConsoleProps,ConsoleState> {
 				className={"react-console-container " + (this.state.focus?"react-console-focus":"react-console-nofocus")}
 				onClick={this.focus}
 			>
-			<textarea
-				ref={ref => this.child.typer = ref}
-				className="react-console-typer"
-				autocomplete="off"
-				autocorrect="off"
-				autocapitalize="off"
-				spellcheck="false"
-				style={{
-					position: 'absolute',
-					left: '-9999px',
-				}}
-				onBlur={this.blur}
-				onKeyDown={this.keyDown}
-				onChange={this.change}
-				onPaste={this.paste}
-			></textarea>
 			{this.props.welcomeMessage?
 				<div className="react-console-message react-console-welcome">
 					this.props.welcomeMessage
@@ -477,6 +461,21 @@ export default class extends React.Component<ConsoleProps,ConsoleState> {
 				<ConsolePrompt label={this.props.promptLabel} value={this.state.promptText} column={this.state.column} />
 				: null
 			}
+			<div style={{ overflow: "hidden", height: 0 }}>
+				<textarea
+					ref={ref => this.child.typer = ref}
+					className="react-console-typer"
+					autocomplete="off"
+					autocorrect="off"
+					autocapitalize="off"
+					spellcheck="false"
+					style={{ outline: "none" }}
+					onBlur={this.blur}
+					onKeyDown={this.keyDown}
+					onChange={this.change}
+					onPaste={this.paste}
+				></textarea>
+			</div>
 		</div>;
 	}
 }
