@@ -59,7 +59,7 @@ let development = Object.assign({},config, {
 	output: {
 		path: __dirname + '/example/dist',
 		filename: 'react-console.js',
-		library: "ExampleConsole",
+		library: "Example",
 		libraryTarget: "var",
 	},
 });

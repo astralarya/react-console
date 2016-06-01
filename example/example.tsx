@@ -4,14 +4,19 @@ import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 import Console from '../src/react-console.tsx';
 
-export function init(element: Element) {
-	let ReactConsole = ReactDOM.render(<Console handler={echo}/>, element) as Console;
-	function echo(text: string) {
-		window.setTimeout(function() {
-			ReactConsole.log(text);
-			window.setTimeout(function() {
-				ReactConsole.return();
-			},200);
-		}, 500);
+class EchoConsole extends React.Component<{},{}> {
+	child: {
+		console?: Console,
+	} = {};
+	echo = (text: string) => {
+		this.child.console.log(text);
+		this.child.console.return();
 	}
+	render() {
+		return <Console ref={ref => this.child.console = ref} handler={this.echo}/>;
+	}
+}
+
+export function init(element: Element) {
+	ReactDOM.render(<EchoConsole/>, element);
 }
