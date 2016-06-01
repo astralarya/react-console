@@ -10,6 +10,8 @@ div.react-console-container {
 	font-size: 0.85em;
 	font-family: $monospace;
 	width: 60em;
+	max-width: 100%;
+	box-sizing: border-box;
 	height: 20em;
 	background: $background-color;
 	padding: 0.5em;
