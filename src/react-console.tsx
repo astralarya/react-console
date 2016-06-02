@@ -116,6 +116,7 @@ export default class extends React.Component<ConsoleProps,ConsoleState> {
 	child: {
 		typer?: HTMLTextAreaElement;
 		container?: HTMLElement;
+		focus?: HTMLElement;
 	} = {};
 	constructor(props: ConsoleProps) {
 		super(props);
@@ -473,7 +474,7 @@ export default class extends React.Component<ConsoleProps,ConsoleState> {
 	}
 	scrollToBottom = () => {
 		this.child.container.scrollTop = this.child.container.scrollHeight;
-		let rect = this.child.typer.getBoundingClientRect();
+		let rect = this.child.focus.getBoundingClientRect();
 		if(rect.top < 0 || rect.left < 0 ||
 			rect.bottom > (window.innerHeight || document.documentElement.clientHeight) ||
 			rect.right > (window.innerWidth || document.documentElement.clientWidth)
@@ -530,6 +531,7 @@ export default class extends React.Component<ConsoleProps,ConsoleState> {
 					onPaste={this.paste}
 				></textarea>
 			</div>
+			<div ref={ref => this.child.focus = ref}>&nbsp;</div>
 		</div>;
 	}
 }
