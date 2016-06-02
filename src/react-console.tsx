@@ -451,7 +451,7 @@ export default class extends React.Component<ConsoleProps,ConsoleState> {
 		}
 	}
 	scrollIfBottomTrue = () => {
-		this.child.container.scrollTop = this.child.container.scrollHeight;
+		this.scrollToBottom();
 		this.scrollSemaphore--;
 	}
 	scrollToBottom = () => {
