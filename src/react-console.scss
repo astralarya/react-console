@@ -1,9 +1,10 @@
 $monospace: "Menlo", "Consolas", "DejaVu Sans Mono", monospace;
 
 $background-color: #efefef;
-$text-color: #444;
-$highlight-background-color: #333;
-$highlight-text-color: #eee;
+$prompt-color: #444;
+$message-color: #999;
+$cursor-color: #333;
+$cursor-text-color: #eee;
 
 
 div.react-console-container {
@@ -20,7 +21,7 @@ div.react-console-container {
 }
 
 div.react-console-prompt-box {
-	color: $text-color;
+	color: $prompt-color;
 }
 
 span.react-console-prompt-label {
@@ -28,14 +29,14 @@ span.react-console-prompt-label {
 }
 
 div.react-console-focus span.react-console-cursor {
-	background: $highlight-background-color;
-	color: $highlight-text-color;
+	background: $cursor-color;
+	color: $cursor-text-color;
 }
 
 div.react-console-nofocus span.react-console-cursor {
 	background: $background-color;
-	color: $text-color;
-	outline: 0.1em solid $highlight-background-color;
+	color: $prompt-color;
+	outline: 0.1em solid $cursor-color;
 	outline-offset: -0.1em;
 }
 
@@ -45,23 +46,24 @@ div.react-console-focus span.react-console-cursor-idle {
 
 @keyframes react-console-cursor-animation {
 	0% {
-		background: $highlight-background-color;
-		color: $highlight-text-color;
+		background: $cursor-color;
+		color: $cursor-text-color;
 	}
 	50% {
-		background: $highlight-background-color;
-		color: $highlight-text-color;
+		background: $cursor-color;
+		color: $cursor-text-color;
 	}
 	51% {
 		background: $background-color;
-		color: $text-color;
+		color: $prompt-color;
 	}
 	100% {
 		background: $background-color;
-		color: $text-color;
+		color: $prompt-color;
 	}
 }
 
 div.react-console-message {
+	color: $message-color;
 	padding: 0.1em;
 }
