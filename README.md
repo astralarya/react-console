@@ -1,7 +1,7 @@
 # react-console
 Simple React console emulator.
 
-See the [live demo](http://autochthe.github.io/react-console/).
+See the [live demo](https://autochthe.github.io/react-console/).
 
 ## Example
 
