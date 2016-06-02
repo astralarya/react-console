@@ -509,7 +509,7 @@ export default class extends React.Component<ConsoleProps,ConsoleState> {
 				<ConsolePrompt label={this.state.currLabel} value={this.state.promptText} column={this.state.column} />
 				: null
 			}
-			<div style={{ overflow: "hidden", height: 0 }}>
+			<div style={{ overflow: "hidden", height: 1, width: 1 }}>
 				<textarea
 					ref={ref => this.child.typer = ref}
 					className="react-console-typer"
@@ -517,7 +517,13 @@ export default class extends React.Component<ConsoleProps,ConsoleState> {
 					autoCorrect="off"
 					autoCapitalize="off"
 					spellCheck="false"
-					style={{ outline: "none" }}
+					style={{ outline: "none",
+						color: "transparent",
+						backgroundColor: "transparent",
+						border: "none",
+						resize: "none",
+						overflow: "hidden",
+					}}
 					onBlur={this.blur}
 					onKeyDown={this.keyDown}
 					onChange={this.change}
