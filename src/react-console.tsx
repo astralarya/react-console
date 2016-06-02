@@ -456,6 +456,11 @@ export default class extends React.Component<ConsoleProps,ConsoleState> {
 	}
 	scrollToBottom = () => {
 		this.child.container.scrollTop = this.child.container.scrollHeight;
+		let rect = this.child.typer.getBoundingClientRect();
+		if(rect.top < 0 || rect.left < 0 ||
+			rect.bottom > (window.innerHeight || document.documentElement.clientHeight) ||
+			rect.right > (window.innerWidth || document.documentElement.clientWidth)
+		) { this.child.typer.scrollIntoView(); }
 	}
 	nextLabel = () => {
 		if(typeof this.props.promptLabel === "string") {
@@ -483,10 +488,6 @@ export default class extends React.Component<ConsoleProps,ConsoleState> {
 					})
 				];
 			})}
-			{this.state.acceptInput?
-				<ConsolePrompt label={this.state.currLabel} value={this.state.promptText} column={this.state.column} />
-				: null
-			}
 			<div style={{ overflow: "hidden", height: 0 }}>
 				<textarea
 					ref={ref => this.child.typer = ref}
@@ -502,6 +503,10 @@ export default class extends React.Component<ConsoleProps,ConsoleState> {
 					onPaste={this.paste}
 				></textarea>
 			</div>
+			{this.state.acceptInput?
+				<ConsolePrompt label={this.state.currLabel} value={this.state.promptText} column={this.state.column} />
+				: null
+			}
 		</div>;
 	}
 }
