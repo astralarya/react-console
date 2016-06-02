@@ -409,7 +409,10 @@ export default class extends React.Component<ConsoleProps,ConsoleState> {
 				ringn: 0,
 				log: log,
 				acceptInput: false,
-			}, () => this.props.handler(command));
+			}, () => {
+				this.scrollToBottom();
+				this.props.handler(command);
+			});
 		}
 	}
 	rotateHistory = (n: number) => {
