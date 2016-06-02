@@ -409,8 +409,7 @@ export default class extends React.Component<ConsoleProps,ConsoleState> {
 				ringn: 0,
 				log: log,
 				acceptInput: false,
-			});
-			this.props.handler(command);
+			}, () => this.props.handler(command));
 		}
 	}
 	rotateHistory = (n: number) => {
@@ -442,12 +441,18 @@ export default class extends React.Component<ConsoleProps,ConsoleState> {
 	nextHistory = () => {
 		this.rotateHistory(1);
 	}
+	scrollSemaphore = 0;
 	scrollIfBottom = () => {
-		if(this.child.container.scrollTop == this.child.container.scrollHeight - this.child.container.offsetHeight) {
-			return this.scrollToBottom;
+		if(this.scrollSemaphore > 0 || this.child.container.scrollTop == this.child.container.scrollHeight - this.child.container.offsetHeight) {
+			this.scrollSemaphore++;
+			return this.scrollIfBottomTrue;
 		} else {
 			return null;
 		}
+	}
+	scrollIfBottomTrue = () => {
+		this.child.container.scrollTop = this.child.container.scrollHeight;
+		this.scrollSemaphore--;
 	}
 	scrollToBottom = () => {
 		this.child.container.scrollTop = this.child.container.scrollHeight;
