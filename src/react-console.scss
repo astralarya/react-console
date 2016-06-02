@@ -16,6 +16,7 @@ div.react-console-container {
 	background: $background-color;
 	padding: 0.5em;
 	overflow: auto;
+	white-space: pre;
 }
 
 div.react-console-prompt-box {

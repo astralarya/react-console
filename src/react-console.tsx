@@ -41,15 +41,14 @@ class ConsolePrompt extends React.Component<ConsolePromptProps,{}> {
 		}
 	}
 	renderValue() {
-		let value = this.props.value.replace(/ /g, '\u00a0');
 		if(this.props.column < 0) {
-			return [value];
-		} else if (this.props.column == value.length) {
-			return [value,<span ref={ref => this.child.cursor = ref} key="cursor" className="react-console-cursor">&nbsp;</span>];
+			return [this.props.value];
+		} else if (this.props.column == this.props.value.length) {
+			return [this.props.value,<span ref={ref => this.child.cursor = ref} key="cursor" className="react-console-cursor">&nbsp;</span>];
 		} else {
-			return [value.substring(0,this.props.column),
-				<span ref={ref => this.child.cursor = ref} key="cursor" className="react-console-cursor">{value.substring(this.props.column,this.props.column+1)}</span>,
-				value.substring(this.props.column+1)];
+			return [this.props.value.substring(0,this.props.column),
+				<span ref={ref => this.child.cursor = ref} key="cursor" className="react-console-cursor">{this.props.value.substring(this.props.column,this.props.column+1)}</span>,
+				this.props.value.substring(this.props.column+1)];
 		}
 	}
 	render() {
@@ -397,7 +396,11 @@ export default class extends React.Component<ConsoleProps,ConsoleState> {
 		this.props.cancel();
 	}
 	commandTrigger = () => {
+		this.child.typer.value = "";
 		if(this.props.continue(this.state.promptText)) {
+			this.setState({
+				typer: "",
+			});
 			this.consoleInsert("\n");
 		} else {
 			let command = this.state.promptText;
@@ -419,6 +422,7 @@ export default class extends React.Component<ConsoleProps,ConsoleState> {
 				ringn: 0,
 				log: log,
 				acceptInput: false,
+				typer: "",
 			}, () => {
 				this.scrollToBottom();
 				this.props.handler(command);
