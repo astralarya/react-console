@@ -488,6 +488,10 @@ export default class extends React.Component<ConsoleProps,ConsoleState> {
 					})
 				];
 			})}
+			{this.state.acceptInput?
+				<ConsolePrompt label={this.state.currLabel} value={this.state.promptText} column={this.state.column} />
+				: null
+			}
 			<div style={{ overflow: "hidden", height: 0 }}>
 				<textarea
 					ref={ref => this.child.typer = ref}
@@ -503,10 +507,6 @@ export default class extends React.Component<ConsoleProps,ConsoleState> {
 					onPaste={this.paste}
 				></textarea>
 			</div>
-			{this.state.acceptInput?
-				<ConsolePrompt label={this.state.currLabel} value={this.state.promptText} column={this.state.column} />
-				: null
-			}
 		</div>;
 	}
 }
