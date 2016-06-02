@@ -1,5 +1,7 @@
 # react-console
-Simple React console emulator
+Simple React console emulator.
+
+See the [live demo](http://autochthe.github.io/react-console/).
 
 ## Example
 
@@ -22,7 +24,6 @@ let EchoConsole = React.createClass({
 
 Include `dist/react-console.js` and `dist/react-console.css` in your html.
 
-See (example/echo.tsx)[example/echo.tsx] for an example using Typescript.
 
 
 ## Props
