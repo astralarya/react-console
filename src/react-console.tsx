@@ -513,10 +513,10 @@ export default class extends React.Component<ConsoleProps,ConsoleState> {
 				<textarea
 					ref={ref => this.child.typer = ref}
 					className="react-console-typer"
-					autocomplete="off"
-					autocorrect="off"
-					autocapitalize="off"
-					spellcheck="false"
+					autoComplete="off"
+					autoCorrect="off"
+					autoCapitalize="off"
+					spellCheck="false"
 					style={{ outline: "none" }}
 					onBlur={this.blur}
 					onKeyDown={this.keyDown}
