@@ -460,7 +460,7 @@ export default class extends React.Component<ConsoleProps,ConsoleState> {
 		if(rect.top < 0 || rect.left < 0 ||
 			rect.bottom > (window.innerHeight || document.documentElement.clientHeight) ||
 			rect.right > (window.innerWidth || document.documentElement.clientWidth)
-		) { this.child.typer.scrollIntoView(); }
+		) { this.child.typer.scrollIntoView(false); }
 	}
 	nextLabel = () => {
 		if(typeof this.props.promptLabel === "string") {
