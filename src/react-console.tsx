@@ -106,6 +106,7 @@ interface ConsoleState{
 	log?: LogEntry[];
 	focus?: boolean;
 	acceptInput?: boolean;
+	typer?: string;
 };
 export default class extends React.Component<ConsoleProps,ConsoleState> {
 	static defaultProps = {
@@ -114,7 +115,7 @@ export default class extends React.Component<ConsoleProps,ConsoleState> {
 		cancel: function() {},
 	};
 	child: {
-		typer?: HTMLElement;
+		typer?: HTMLTextAreaElement;
 		container?: HTMLElement;
 	} = {};
 	constructor(props: ConsoleProps) {
@@ -129,6 +130,7 @@ export default class extends React.Component<ConsoleProps,ConsoleState> {
 			log: [],
 			focus: false,
 			acceptInput: true,
+			typer: '',
 		};
 	}
 	log = (...messages: any[]) => {
@@ -238,23 +240,31 @@ export default class extends React.Component<ConsoleProps,ConsoleState> {
 			}
 		}
 	}
-	change = (e: Event) => {
-		this.consoleInsert((e.target as HTMLInputElement).value);
-		(e.target as HTMLInputElement).value = "";
+	change = () => {
+		let idx = 0;
+		for(;idx < this.state.typer.length && idx < this.child.typer.value.length; idx++) {
+			if(this.state.typer[idx] != this.child.typer.value[idx]) {
+				break;
+			}
+		}
+		this.consoleInsert(this.child.typer.value.substring(idx), this.state.typer.length - idx);
+		this.setState({
+			typer: this.child.typer.value,
+		});
 	}
-	paste = (e: Event) => {
-		this.consoleInsert((e.target as HTMLInputElement).value);
-		(e.target as HTMLInputElement).value = "";
+	paste = (e: ClipboardEvent) => {
+		this.consoleInsert(e.clipboardData.getData('text'));
+		e.preventDefault();
 	}
-	consoleInsert = (text: string) => {
+	consoleInsert = (text: string, replace: number = 0) => {
 		let promptText =
-				this.state.promptText.substring(0,this.state.column)
+				this.state.promptText.substring(0,this.state.column - replace)
 				+ text
 				+ this.state.promptText.substring(this.state.column);
 		this.setState({
 			promptText: promptText,
 			restoreText: promptText,
-			column: this.moveColumn(text.length, text.length + this.state.promptText.length)
+			column: this.moveColumn(text.length - replace, text.length - replace + this.state.promptText.length)
 		}, this.scrollToBottom);
 	}
 	moveColumn = (n: number, max: number = this.state.promptText.length) => {
