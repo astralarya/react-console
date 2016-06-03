@@ -10,9 +10,7 @@
   ],
   "author": "Mara Kim <mara@autochthe.net> (https://github.com/autochthe)",
   "license": "GPL-3.0",
-  "bugs": {
-    "url": "https://github.com/autochthe/react-console/issues"
-  },
+  "bugs": "https://github.com/autochthe/react-console/issues",
   "main": "react-console.js",
   "scripts": {
     "prepublish": "typings install && webpack",
