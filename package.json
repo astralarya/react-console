@@ -13,6 +13,7 @@
   "bugs": {
     "url": "https://github.com/autochthe/react-console/issues"
   },
+  "main": "react-console.js",
   "scripts": {
     "prepublish": "typings install && webpack",
     "build": "webpack",
