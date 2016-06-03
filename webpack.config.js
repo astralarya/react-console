@@ -32,7 +32,7 @@ let bundle = {
 			},
 			{
 				test: /\.s?css$/,
-				loader: ExtractTextPlugin.extract("css!sass"),
+				loader: ExtractTextPlugin.extract("css-loader?sourceMap!sass-loader?sourceMap"),
 			},
 		],
 		preLoaders: [
