@@ -1,3 +1,5 @@
+// Project settings
+
 let project = 'react-console';
 let library = 'Console';
 let externals = {
@@ -6,9 +8,10 @@ let externals = {
 };
 
 
+
+// Build system
+
 let webpack = require('webpack');
-let path = require('path');
-let fs = require('fs');
 let ExtractTextPlugin = require('extract-text-webpack-plugin');
 
 let options = {
