@@ -7,7 +7,7 @@ fi
 
 cd "$( dirname "${BASH_SOURCE[0]}" )"
 
-npm run build &&
+npm run build:dev &&
 git checkout gh-pages &&
 cp -r example/dist app &&
 git commit -am"$*" &&
