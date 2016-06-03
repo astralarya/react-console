@@ -18,7 +18,6 @@ let options = {
 let bundle = {
 	context: __dirname + "/src",
 	entry: './' + project + '.tsx',
-	devtool: 'source-map',
 	output: {
 		path: __dirname + '/dist/bundle',
 		filename: project + '.bundle.js',
@@ -96,6 +95,7 @@ let lib = Object.assign({},dist, {
 		library: library,
 		libraryTarget: "commonjs2",
 	},
+	devtool: 'source-map',
 });
 
 let development = Object.assign({},bundle, {
@@ -106,6 +106,7 @@ let development = Object.assign({},bundle, {
 		library: "Example",
 		libraryTarget: "var",
 	},
+	devtool: 'source-map',
 });
 
 if(options.dev) {
