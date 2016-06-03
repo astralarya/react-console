@@ -1,7 +1,15 @@
-var webpack = require('webpack');
-var path = require('path');
-var fs = require('fs');
-var ExtractTextPlugin = require('extract-text-webpack-plugin');
+let project = 'react-console';
+let externals = {
+	"react": "React",
+	"react-dom": "ReactDOM",
+};
+let library = 'Console';
+
+
+let webpack = require('webpack');
+let path = require('path');
+let fs = require('fs');
+let ExtractTextPlugin = require('extract-text-webpack-plugin');
 
 let options = {
 	dev: process.argv.indexOf('--dev') != -1,
@@ -9,12 +17,12 @@ let options = {
 
 let bundle = {
 	context: __dirname + "/src",
-	entry: './react-console.tsx',
+	entry: './' + project + '.tsx',
 	devtool: 'source-map',
 	output: {
 		path: __dirname + '/dist/bundle',
-		filename: 'react-console.bundle.js',
-		library: "Console",
+		filename: project + '.bundle.js',
+		library: library,
 		libraryTarget: "var",
 	},
 	module: {
@@ -36,12 +44,12 @@ let bundle = {
 		],
 	},
 	plugins: [
-		new ExtractTextPlugin("react-console.css"),
+		new ExtractTextPlugin(project + '.css'),
 	],
 };
 
 let production_plugins = [
-		new ExtractTextPlugin("react-console.min.css"),
+		new ExtractTextPlugin(project + '.min.css'),
 		new webpack.DefinePlugin({
 			'process.env.NODE_ENV': '"production"'
 		}),
@@ -54,8 +62,8 @@ let production_plugins = [
 let bundle_min = Object.assign({},bundle, {
 	output: {
 		path: __dirname + '/dist/bundle',
-		filename: 'react-console.bundle.min.js',
-		library: "Console",
+		filename: project + '.bundle.min.js',
+		library: library,
 		libraryTarget: "var",
 	},
 	plugins: production_plugins,
@@ -64,21 +72,18 @@ let bundle_min = Object.assign({},bundle, {
 let dist = Object.assign({},bundle, {
 	output: {
 		path: __dirname + '/dist',
-		filename: 'react-console.js',
-		library: "Console",
+		filename: project + '.js',
+		library: library,
 		libraryTarget: "var",
 	},
-	externals: {
-		"react": "React",
-		"react-dom": "ReactDOM",
-	},
+	externals: externals,
 });
 
 let dist_min = Object.assign({},dist, {
 	output: {
 		path: __dirname + '/dist',
-		filename: 'react-console.min.js',
-		library: "Console",
+		filename: project + '.min.js',
+		library: library,
 		libraryTarget: "var",
 	},
 	plugins: production_plugins,
@@ -87,17 +92,17 @@ let dist_min = Object.assign({},dist, {
 let lib = Object.assign({},dist, {
 	output: {
 		path: __dirname + '/lib',
-		filename: 'react-console.js',
-		library: "Console",
+		filename: project + '.js',
+		library: library,
 		libraryTarget: "commonjs2",
 	},
 });
 
 let development = Object.assign({},bundle, {
-	entry: '../example/echo.tsx',
+	entry: '../example/example.tsx',
 	output: {
 		path: __dirname + '/example/dist',
-		filename: 'react-console.js',
+		filename: project + '.example.js',
 		library: "Example",
 		libraryTarget: "var",
 	},
