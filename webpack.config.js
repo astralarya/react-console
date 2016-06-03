@@ -10,6 +10,7 @@ let options = {
 let bundle = {
 	context: __dirname + "/src",
 	entry: './react-console.tsx',
+	devtool: 'source-map',
 	output: {
 		path: __dirname + '/dist',
 		filename: 'react-console.bundle.js',
