@@ -15,8 +15,15 @@ let webpack = require('webpack');
 let ExtractTextPlugin = require('extract-text-webpack-plugin');
 
 let options = {
+	bundle: process.argv.indexOf('--bundle') != -1,
 	dev: process.argv.indexOf('--dev') != -1,
-}
+	dist: process.argv.indexOf('--dist') != -1,
+	lib: process.argv.indexOf('--lib') != -1,
+	default: process.argv.indexOf('--bundle') == -1
+		&& process.argv.indexOf('--dev') == -1
+		&& process.argv.indexOf('--dist') == -1
+		&& process.argv.indexOf('--lib') == -1,
+};
 
 let bundle = {
 	context: __dirname + "/src",
@@ -115,8 +122,23 @@ let development = Object.assign({},bundle, {
 	],
 });
 
+let targets = [];
+
+if(options.bundle) {
+	targets.push(bundle, bundle_min);
+}
 if(options.dev) {
-	module.exports = [ development ];
-} else {
+	targets.push(development);
+}
+if(options.dist) {
+	targets.push(dist, dist_min);
+}
+if(options.lib) {
+	targets.push(lib);
+}
+
+if(options.default) {
 	module.exports = [ bundle, bundle_min, dist, dist_min, lib, development ];
+} else {
+	module.exports = targets;
 }
