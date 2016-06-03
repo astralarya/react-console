@@ -2,6 +2,9 @@
 
 "use strict";
 
+process.argv.push('--watch');
+require('./node_modules/.bin/webpack');
+
 var express = require('express');
 var app = express();
 
