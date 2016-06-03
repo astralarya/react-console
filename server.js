@@ -9,6 +9,7 @@ const PORT=8080;
 var webpack = require('webpack');
 var config = require('./webpack.config.js');
 var compiler = webpack(config);
+var colors = require('colors');
 
 var logSemaphore = 0;
 compiler.watch({},function(err,stats) {
@@ -41,12 +42,12 @@ app.listen(PORT, function() {
 
 function serverStatus() {
 	console.log("Server listening on:")
-	console.log("http://localhost:%s", PORT);
+	console.log(colors.cyan("http://localhost:%s"), PORT);
 
 	Object.keys(ifaces).forEach(function (ifname) {
 		ifaces[ifname].forEach(function (iface) {
 			if ('IPv4' === iface.family && iface.internal === false) {
-				console.log("http://%s:%s", iface.address, PORT);
+				console.log(colors.cyan("http://%s:%s"), iface.address, PORT);
 			}
 		});
 	});
