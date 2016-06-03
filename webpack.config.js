@@ -12,7 +12,7 @@ let bundle = {
 	entry: './react-console.tsx',
 	devtool: 'source-map',
 	output: {
-		path: __dirname + '/dist',
+		path: __dirname + '/dist/bundle',
 		filename: 'react-console.bundle.js',
 		library: "Console",
 		libraryTarget: "var",
@@ -53,7 +53,7 @@ let production_plugins = [
 
 let bundle_min = Object.assign({},bundle, {
 	output: {
-		path: __dirname + '/dist',
+		path: __dirname + '/dist/bundle',
 		filename: 'react-console.bundle.min.js',
 		library: "Console",
 		libraryTarget: "var",
