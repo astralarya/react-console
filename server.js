@@ -8,6 +8,9 @@ var app = express();
 const PORT=8080;
 
 app.use('/', express.static(__dirname + '/example/dist'));
+app.get('/', function(req, res) {
+	res.sendFile(__dirname + '/example/index.html');
+});
 
 app.listen(PORT, function() {
 	console.log("Server listening on: http://localhost:%s", PORT);
