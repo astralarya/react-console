@@ -6,7 +6,6 @@ const PORT=8080;
 
 
 // Webpack build server
-require('./node_modules/.bin/webpack');
 var webpack = require('webpack');
 var config = require('./webpack.config.js');
 var compiler = webpack(config);
