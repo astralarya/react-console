@@ -107,6 +107,9 @@ let development = Object.assign({},bundle, {
 		libraryTarget: "var",
 	},
 	devtool: 'source-map',
+	plugins: [
+		new ExtractTextPlugin(project + '.example.css'),
+	],
 });
 
 if(options.dev) {
