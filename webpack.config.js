@@ -84,7 +84,7 @@ let lib = Object.assign({},dist, {
 		path: __dirname + '/lib',
 		filename: 'react-console.js',
 		library: "Console",
-		libraryTarget: "commonjs",
+		libraryTarget: "commonjs2",
 	},
 });
 

@@ -1,12 +1,11 @@
 {
-  "name": "react-console",
+  "name": "react-console-component",
   "version": "0.0.1",
   "description": "Simple react console emulator",
   "homepage": "https://autochthe.github.io/react-console/",
   "repository": "git+https://github.com/autochthe/react-console.git",
   "keywords": [
-    "react",
-    "component",
+    "react-component",
     "console"
   ],
   "author": "Mara Kim <mara@autochthe.net> (https://github.com/autochthe)",
