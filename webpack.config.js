@@ -3,6 +3,10 @@ var path = require('path');
 var fs = require('fs');
 var ExtractTextPlugin = require('extract-text-webpack-plugin');
 
+let options = {
+	dev: process.argv.indexOf('--dev') != -1,
+}
+
 let bundle = {
 	context: __dirname + "/src",
 	entry: './react-console.tsx',
@@ -98,4 +102,8 @@ let development = Object.assign({},bundle, {
 	},
 });
 
-module.exports = [ bundle, bundle_min, dist, dist_min, lib, development ];
+if(options.dev) {
+	module.exports = [ development ];
+} else {
+	module.exports = [ bundle, bundle_min, dist, dist_min, lib, development ];
+}
