@@ -22,7 +22,7 @@ let EchoConsole = React.createClass({
 });
 ```
 
-Include `dist/react-console.js` and `dist/react-console.css` in your html.
+Include `dist/react-console.js`, `dist/react-console.css`, and React in your html.
 
 
 
