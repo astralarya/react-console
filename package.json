@@ -16,7 +16,9 @@
   "scripts": {
     "prepublish": "typings install && webpack",
     "build": "webpack",
-    "build:dev": "webpack --dev"
+    "build:dev": "webpack --dev",
+    "clean": "rm -r dist lib example/dist",
+    "clean:deep": "rm -r dist lib example/dist node_modules typings"
   },
   "devDependencies": {
     "css-loader": "^0.23.1",
