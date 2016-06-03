@@ -9,11 +9,20 @@ const PORT=8080;
 require('./node_modules/.bin/webpack');
 var webpack = require('webpack');
 var config = require('./webpack.config.js');
-var compiler = webpack(require('./webpack.config.js'));
+var compiler = webpack(config);
 
-var first_wave = config.length - 1;
+var logSemaphore = 0;
 compiler.watch({},function(err,stats) {
-	if(!err && --first_wave < 0) serverStatus();
+	console.log(stats.toString({colors:true,chunks:false,children:false}));
+	logSemaphore++;
+	setTimeout(function() {
+		logSemaphore--;
+		if(logSemaphore == 0) {
+			console.log();
+			serverStatus();
+			console.log();
+		}
+	},100);
 });
 
 // Express web server
