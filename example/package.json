@@ -1,0 +1,39 @@
+{
+  "name": "react-console-component-example",
+  "version": "0.1.0",
+  "description": "Example react console emulator",
+  "private": true,
+  "homepage": "https://autochthe.github.io/react-console/",
+  "repository": "git+https://github.com/autochthe/react-console.git",
+  "keywords": [
+    "react-component",
+    "console",
+    "example"
+  ],
+  "author": "Mara Kim <mara@autochthe.net> (https://github.com/autochthe)",
+  "license": "GPL-3.0",
+  "bugs": "https://github.com/autochthe/react-console/issues",
+  "scripts": {
+    "prepublish": "typings install && webpack",
+    "build": "webpack",
+    "clean": "rm -rf dist",
+    "clean:deep": "rm -rf dist node_modules typings"
+  },
+  "dependencies": {
+    "express": "^4.13.4"
+  },
+  "devDependencies": {
+    "css-loader": "^0.23.1",
+    "extract-text-webpack-plugin": "^1.0.1",
+    "node-sass": "^3.7.0",
+    "react": "^15.1.0",
+    "react-console-component": "^0.1.1",
+    "react-dom": "^15.1.0",
+    "sass-loader": "^3.2.0",
+    "source-map-loader": "^0.1.5",
+    "ts-loader": "^0.8.2",
+    "typescript": "^1.8.10",
+    "typings": "^1.0.4",
+    "webpack": "^1.13.0"
+  }
+}

@@ -2,7 +2,7 @@
 
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
-import Console from '../src/react-console.tsx';
+import Console from 'react-console-component';
 
 interface EchoConsoleState {
 	count: number;

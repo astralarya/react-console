@@ -1,11 +1,6 @@
 // Project settings
 
 let project = 'react-console';
-let library = 'Console';
-let externals = {
-	"react": "React",
-	"react-dom": "ReactDOM",
-};
 
 // Build system
 
