@@ -31,7 +31,7 @@ var app = express();
 var os = require('os');
 var ifaces = os.networkInterfaces();
 
-app.use('/', express.static(__dirname + '/example/dist'));
+app.use('/dist', express.static(__dirname + '/example/dist'));
 app.get('/', function(req, res) {
 	res.sendFile(__dirname + '/example/index.html');
 });
