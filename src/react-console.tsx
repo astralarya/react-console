@@ -77,16 +77,17 @@ function ConsoleMessage(props: ConsoleMessageProps): JSX.Element {
 	</div>;
 }
 
-interface LogMessage {
+export interface LogMessage {
 	type?: string;
 	value: any[];
 }
-interface LogEntry {
+export interface LogEntry {
 	label: string;
 	command: string;
 	message: LogMessage[];
 }
-interface ConsoleProps{
+
+export interface ConsoleProps{
 	handler(command: string): any;
 	cancel?(): any;
 	complete?(words: string[], curr: number, promptText: string): string[];
@@ -95,7 +96,7 @@ interface ConsoleProps{
 	promptLabel?: string | (()=>string);
 	welcomeMessage?: string;
 }
-interface ConsoleState{
+export interface ConsoleState{
 	currLabel?: string;
 	promptText?: string;
 	restoreText?: string;

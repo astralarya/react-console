@@ -12,6 +12,7 @@
   "license": "GPL-3.0",
   "bugs": "https://github.com/autochthe/react-console/issues",
   "main": "react-console.js",
+  "typings": "react-console.d.ts",
   "scripts": {
     "prepublish": "typings install && webpack",
     "build": "webpack",
