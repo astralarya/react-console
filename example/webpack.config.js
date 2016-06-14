@@ -8,7 +8,7 @@ let ExtractTextPlugin = require('extract-text-webpack-plugin');
 
 module.exports = {
 	context: __dirname,
-	entry: './example.tsx',
+	entry: './src/example.tsx',
 	output: {
 		path: __dirname + '/dist',
 		filename: project + '.example.js',

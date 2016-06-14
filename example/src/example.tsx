@@ -3,6 +3,7 @@
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 import Console from 'react-console-component';
+import 'react-console-component/dist/react-console.css';
 
 interface EchoConsoleState {
 	count: number;
