@@ -109,16 +109,16 @@ let lib = Object.assign({},dist, {
 });
 
 let development = Object.assign({},bundle, {
-	entry: '../example/example.tsx',
+	entry: './dev.tsx',
 	output: {
-		path: __dirname + '/example/dist',
-		filename: project + '.example.js',
-		library: "Example",
+		path: __dirname + '/dev/dist',
+		filename: project + '.dev.js',
+		library: "Dev",
 		libraryTarget: "var",
 	},
 	devtool: 'source-map',
 	plugins: [
-		new ExtractTextPlugin(project + '.example.css'),
+		new ExtractTextPlugin(project + '.dev.css'),
 	],
 });
 

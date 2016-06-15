@@ -31,9 +31,9 @@ var app = express();
 var os = require('os');
 var ifaces = os.networkInterfaces();
 
-app.use('/dist', express.static(__dirname + '/example/dist'));
+app.use('/dist', express.static(__dirname + '/dev/dist'));
 app.get('/', function(req, res) {
-	res.sendFile(__dirname + '/example/index.html');
+	res.sendFile(__dirname + '/dev/index.html');
 });
 
 app.listen(PORT, function() {
