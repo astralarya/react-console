@@ -12,3 +12,11 @@ To build:
 To start dev server:
 
     npm start
+
+Clean generated files:
+
+    npm run clean
+
+Clean generated files and dependencies:
+
+    npm run clean:deep
