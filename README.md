@@ -3,6 +3,10 @@ Simple React console emulator.
 
 See the [live demo](https://autochthe.github.io/react-console/).
 
+## Installation
+
+    npm install --save-dev react-console-component
+
 ## Example
 
 Simple prompt that echoes back input:
@@ -22,8 +26,7 @@ let EchoConsole = React.createClass({
 });
 ```
 
-Include `dist/react-console.js`, `dist/react-console.css`, and React in your html.
-
+See the [example project](example) used in the live demo.
 
 
 ## Props
