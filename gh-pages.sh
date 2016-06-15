@@ -11,7 +11,7 @@ cd example &&
 npm install &&
 cd .. &&
 git checkout gh-pages &&
-cp -r example/dist app &&
+cp -r example/dist/. app/ &&
 git commit -am"$*" &&
 git push
 
