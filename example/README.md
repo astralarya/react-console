@@ -1,15 +1,15 @@
-# Example react-console
+# Example react-console project
 Example React console emulator.
 
 Used in the [live demo](https://autochthe.github.io/react-console/).
 
 ## Usage
 
-To build:
+Build project:
 
     npm install
 
-To start dev server:
+Start dev server:
 
     npm start
 
