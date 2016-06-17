@@ -28,7 +28,7 @@ module.exports = {
 		],
 		preLoaders: [
 			{
-				test: /\.js$/,
+				test: /\.(css|js)$/,
 				loader: "source-map-loader",
 			}
 		],
