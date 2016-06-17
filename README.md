@@ -1,11 +1,14 @@
 # react-console
-Simple React console emulator.
+
+Simple React.js console emulator.
 
 See the [live demo](https://autochthe.github.io/react-console/).
+
 
 ## Installation
 
     npm install --save-dev react-console-component
+
 
 ## Example
 
@@ -42,6 +45,7 @@ Properties you can pass to the console element
 | handler		| function(command: string): any					| Handle a command (`command`), logging data with `this.log()` or `this.logX()`, and calling `this.return()` when finished.
 | promptLabel?		| string | function(): string						| String displayed to prompt user for input.
 | welcomeMessage?	| string								| Initial message displayed after mount.
+
 
 ## Public members
 
