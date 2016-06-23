@@ -1,8 +1,12 @@
 # react-console
 
 [![NPM Version][npm-image]][npm-url]
-[![NPM Downloads][downloads-image]][downloads-url]
+[![NPM Downloads][downloads-image]][npm-url]
 [![Travis Build][travis-image]][travis-url]
+
+[![Dependency Status][david-image]][david-url]
+[![devDependency Status][david-dev-image]][david-dev-url]
+[![peerDependency Status][david-peer-image]][david-peer-url]
 
 Simple React.js console emulator.
 
@@ -75,6 +79,11 @@ React-console is inspired by [chrisdone/jquery-console](https://github.com/chris
 [npm-image]: https://img.shields.io/npm/v/react-console-component.svg
 [npm-url]: https://npmjs.org/package/react-console-component
 [downloads-image]: https://img.shields.io/npm/dm/react-console-component.svg
-[downloads-url]: https://npmjs.org/package/react-console-component
 [travis-image]: https://img.shields.io/travis/autochthe/react-console/master.svg
 [travis-url]: https://travis-ci.org/autochthe/react-console
+[david-url]: https://david-dm.org/autochthe/react-console
+[david-image]: https://david-dm.org/autochthe/react-console.svg
+[david-dev-url]: https://david-dm.org/autochthe/react-console#info=devDependencies
+[david-dev-image]: https://david-dm.org/autochthe/react-console/dev-status.svg
+[david-peer-url]: https://david-dm.org/autochthe/react-console#info=peerDependencies
+[david-peer-image]: https://david-dm.org/autochthe/react-console/peer-status.svg
