@@ -1,5 +1,7 @@
 # react-console
 
+[![NPM Version][npm-image]][npm-url]
+
 Simple React.js console emulator.
 
 See the [live demo](https://autochthe.github.io/react-console/).
@@ -66,3 +68,7 @@ Properties you can pass to the console element
 ## Awknoledgements
 
 React-console is inspired by [chrisdone/jquery-console](https://github.com/chrisdone/jquery-console).
+
+
+[npm-image]: https://img.shields.io/npm/v/react-console-component.svg
+[npm-url]: https://npmjs.org/package/react-console-component
