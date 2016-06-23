@@ -1,5 +1,8 @@
 # react-console
 
+Simple React.js console emulator.
+See the [live demo](https://autochthe.github.io/react-console/).
+
 [![NPM Version][npm-image]][npm-url]
 [![NPM Downloads][downloads-image]][npm-url]
 [![Travis Build][travis-image]][travis-url]
@@ -7,10 +10,6 @@
 [![Dependency Status][david-image]][david-url]
 [![devDependency Status][david-dev-image]][david-dev-url]
 [![peerDependency Status][david-peer-image]][david-peer-url]
-
-Simple React.js console emulator.
-
-See the [live demo](https://autochthe.github.io/react-console/).
 
 
 ## Installation
