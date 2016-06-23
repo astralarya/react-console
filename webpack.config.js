@@ -12,6 +12,7 @@ let externals = {
 // Build system
 
 let webpack = require('webpack');
+let FailPlugin = require('webpack-fail-plugin');
 let ExtractTextPlugin = require('extract-text-webpack-plugin');
 
 let options = {
@@ -54,17 +55,19 @@ let bundle = {
 	},
 	plugins: [
 		new ExtractTextPlugin(project + '.css'),
+		FailPlugin,
 	],
 };
 
 let production_plugins = [
-		new ExtractTextPlugin(project + '.min.css'),
-		new webpack.DefinePlugin({
-			'process.env.NODE_ENV': '"production"'
-		}),
-		new webpack.optimize.UglifyJsPlugin(),
-		new webpack.optimize.OccurenceOrderPlugin(),
-		new webpack.optimize.DedupePlugin()
+	new ExtractTextPlugin(project + '.min.css'),
+	new webpack.DefinePlugin({
+		'process.env.NODE_ENV': '"production"'
+	}),
+	new webpack.optimize.UglifyJsPlugin(),
+	new webpack.optimize.OccurenceOrderPlugin(),
+	new webpack.optimize.DedupePlugin(),
+	FailPlugin,
 ]
 
 
