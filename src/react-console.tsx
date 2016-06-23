@@ -213,6 +213,8 @@ export default class extends React.Component<ConsoleProps,ConsoleState> {
 			85: this.deleteUntilStart,
 			// C-k
 			75: this.deleteUntilEnd,
+			// C-c
+			67: this.cancelCommand,
 			// C-l TODO
 			//76: this.clearScreen,
 		};
@@ -394,8 +396,28 @@ export default class extends React.Component<ConsoleProps,ConsoleState> {
 			}
 		}
 	}
-	cancelExecution = () => {  // TODO link this handle
-		this.props.cancel();
+	cancelCommand = () => {
+		if(this.state.acceptInput) { // Typing command
+			this.child.typer.value = "";
+			let log = this.state.log;
+			log.push({
+				label: this.state.currLabel,
+				command: this.state.promptText,
+				message: []
+			});
+			this.setState({
+				promptText: "",
+				restoreText: "",
+				column: 0,
+				ringn: 0,
+				log: log,
+				typer: "",
+			}, () => {
+				this.scrollToBottom();
+			});
+		} else { // command is executing, call handler
+			this.props.cancel();
+		}
 	}
 	commandTrigger = () => {
 		this.child.typer.value = "";
