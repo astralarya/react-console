@@ -10,6 +10,13 @@ See the [live demo](https://autochthe.github.io/react-console/).
     npm install --save-dev react-console-component
 
 
+## Features
+
+* Readline emulation
+* Mobile friendly
+* Input Method Editor (IME) support
+
+
 ## Example
 
 Simple prompt that echoes back input:
