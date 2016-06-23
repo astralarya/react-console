@@ -1,6 +1,8 @@
 # react-console
 
 [![NPM Version][npm-image]][npm-url]
+[![NPM Downloads][downloads-image]][downloads-url]
+[![Travis Build][travis-image]][travis-url]
 
 Simple React.js console emulator.
 
@@ -72,3 +74,7 @@ React-console is inspired by [chrisdone/jquery-console](https://github.com/chris
 
 [npm-image]: https://img.shields.io/npm/v/react-console-component.svg
 [npm-url]: https://npmjs.org/package/react-console-component
+[downloads-image]: https://img.shields.io/npm/dm/react-console-component.svg
+[downloads-url]: https://npmjs.org/package/react-console-component
+[travis-image]: https://img.shields.io/travis/autochthe/react-console/master.svg
+[travis-url]: https://travis-ci.org/autochthe/react-console
