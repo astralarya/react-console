@@ -1,7 +1,6 @@
 # react-console
 
 Simple React.js console emulator.
-See the [live demo](https://autochthe.github.io/react-console/).
 
 [![NPM Version][npm-image]][npm-url]
 [![NPM Downloads][downloads-image]][npm-url]
@@ -10,18 +9,6 @@ See the [live demo](https://autochthe.github.io/react-console/).
 [![Dependency Status][david-image]][david-url]
 [![devDependency Status][david-dev-image]][david-dev-url]
 [![peerDependency Status][david-peer-image]][david-peer-url]
-
-
-## Installation
-
-    npm install --save-dev react-console-component
-
-
-## Features
-
-* Readline emulation
-* Mobile friendly
-* Input Method Editor (IME) support
 
 
 ## Example
@@ -43,7 +30,19 @@ let EchoConsole = React.createClass({
 });
 ```
 
-See the [example project](example) used in the live demo.
+See the [example project](example) used in the [live demo][demo-url].
+
+
+## Installation
+
+    npm install --save-dev react-console-component
+
+
+## Features
+
+* Readline emulation
+* Mobile friendly
+* Input Method Editor (IME) support
 
 
 ## Props
@@ -74,7 +73,7 @@ Properties you can pass to the console element
 
 React-console is inspired by [chrisdone/jquery-console](https://github.com/chrisdone/jquery-console).
 
-
+[demo-url]: https://autochthe.github.io/react-console/
 [npm-image]: https://img.shields.io/npm/v/react-console-component.svg
 [npm-url]: https://npmjs.org/package/react-console-component
 [downloads-image]: https://img.shields.io/npm/dm/react-console-component.svg
