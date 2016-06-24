@@ -174,7 +174,7 @@ export default class extends React.Component<ConsoleProps,ConsoleState> {
 		}
 		let keyCodes: keyMap = {
 			// return
-			13: this.commandTrigger,
+			13: this.acceptLine,
 			// left
 			37: this.backwardChar,
 			// right
@@ -530,7 +530,8 @@ export default class extends React.Component<ConsoleProps,ConsoleState> {
 			this.props.cancel();
 		}
 	}
-	commandTrigger = () => {
+	// Commands for Manipulating the History
+	acceptLine = () => {
 		this.child.typer.value = "";
 		if(this.props.continue(this.state.promptText)) {
 			this.setState({
@@ -564,6 +565,12 @@ export default class extends React.Component<ConsoleProps,ConsoleState> {
 			});
 		}
 	}
+	previousHistory = () => {
+		this.rotateHistory(-1);
+	}
+	nextHistory = () => {
+		this.rotateHistory(1);
+	}
 	rotateHistory = (n: number) => {
 		if(this.state.history.length == 0) return;
 		let ringn = this.state.ringn - n;
@@ -586,12 +593,6 @@ export default class extends React.Component<ConsoleProps,ConsoleState> {
 				ringn: ringn,
 			}, this.scrollToBottom );
 		}
-	}
-	previousHistory = () => {
-		this.rotateHistory(-1);
-	}
-	nextHistory = () => {
-		this.rotateHistory(1);
 	}
 	scrollSemaphore = 0;
 	scrollIfBottom = () => {
