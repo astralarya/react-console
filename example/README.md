@@ -15,6 +15,10 @@ Start dev server:
 
     npm start
 
+Test project:
+
+    npm test
+
 Clean generated files:
 
     npm run clean

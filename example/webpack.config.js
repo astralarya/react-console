@@ -4,6 +4,7 @@ let project = 'react-console';
 
 // Build system
 
+let FailPlugin = require('webpack-fail-plugin');
 let ExtractTextPlugin = require('extract-text-webpack-plugin');
 
 module.exports = {
@@ -35,6 +36,7 @@ module.exports = {
 	},
 	devtool: 'source-map',
 	plugins: [
+		FailPlugin,
 		new ExtractTextPlugin(project + '.example.css'),
 	],
 };
