@@ -173,6 +173,8 @@ export default class extends React.Component<ConsoleProps,ConsoleState> {
 			[key: number]: ()=>void
 		}
 		let keyCodes: keyMap = {
+			// return
+			13: this.commandTrigger,
 			// left
 			37: this.moveBackward,
 			// right
@@ -189,42 +191,150 @@ export default class extends React.Component<ConsoleProps,ConsoleState> {
 			35: this.moveToEnd,
 			// start
 			36: this.moveToStart,
-			// return
-			13: this.commandTrigger,
 			// tab
 			9: this.doComplete,
+			// esc
+			//27: this.prefixMeta,
 		};
 		var ctrlCodes: keyMap = {
 			// C-a
 			65: this.moveToStart,
 			// C-e
 			69: this.moveToEnd,
-			// C-d
-			68: this.forwardDelete,
-			// C-n
-			78: this.nextHistory,
-			// C-p
-			80: this.previousHistory,
-			// C-b
-			66: this.moveBackward,
 			// C-f
 			70: this.moveForward,
-			// C-u
-			85: this.deleteUntilStart,
-			// C-k
-			75: this.deleteUntilEnd,
-			// C-c
-			67: this.cancelCommand,
+			// C-b
+			66: this.moveBackward,
+			// C-p
+			80: this.previousHistory,
+			// C-n
+			78: this.nextHistory,
+			// C-r TODO
+			//82: this.reverseSearchHistory,
+			// C-s TODO
+			//83: this.forwardSearchHistory,
 			// C-l TODO
 			//76: this.clearScreen,
+			// C-d
+			68: this.forwardDelete, // TODO EOF
+			// C-q TODO
+			//81: this.quotedInsert,
+			// C-v TODO
+			//86: this.quotedInsert,
+			// C-t TODO
+			//84: this.transposeChars,
+			// C-k TODO kill
+			75: this.deleteUntilEnd,
+			// C-u TODO kill
+			85: this.deleteUntilStart,
+			// C-y TODO
+			//89: this.yank,
+			// C-c
+			67: this.cancelCommand,
+			// C-w TODO
+			//87: this.killPreviousWhitespace,
+			// C-] TODO
+			//221: this.characterSearch,
+			// C-x TODO
+			//88: this.prefixCtrlX,
+		};
+		var ctrlXCodes: keyMap = {
+			// C-x Rubout TODO state / kill
+			//8: this.deleteUntilStart,
+			// C-x ( TODO
+			//57: this.startKbdMacro,
+			// C-x ) TODO
+			//48: this.endKbdMacro,
+			// C-x e TODO
+			//69: this.callLastKbdMacro,
+			// C-x C-u TODO
+			//85: this.undo,
+			// C-x C-x TODO
+			//88: this.exchangePointAndMark,
+		};
+		var ctrlShiftCodes: keyMap = {
+			// C-_ TODO
+			//189: this.undo,
+			// C-@ TODO
+			//50: this.setMark,
 		};
 		var altCodes: keyMap = {
 			// M-f
 			70: this.moveToNextWord,
 			// M-b
 			66: this.moveToPreviousWord,
+			// M-p TODO
+			//80: this.nonIncrementalReverseSearchHistory,
+			// M-n TODO
+			//78: this.nonIncrementalForwardSearchHistory,
+			// M-. TODO
+			//190: this.yankLastArg,
+			// M-TAB TODO
+			//9: this.tabInsert,
+			// M-t TODO
+			//84: this.transposeWords,
+			// M-u TODO
+			//85: this.upcaseWord,
+			// M-l TODO
+			//76: this.downcaseWord,
+			// M-c TODO
+			//67: this.capitalizeWord,
 			// M-d TODO
-			//68: this.deleteNextWord,
+			//68: this.killWord,
+			// M-backspace TODO
+			//8: this.backwardKillWord,
+			// M-\ TODO
+			//220: this.deleteHorizontalSpace,
+			// M-y TODO
+			//89: this.yankPop,
+			// M-0 TODO
+			//48: () => this.digitArgument(0),
+			// M-1 TODO
+			//49: () => this.digitArgument(1),
+			// M-2 TODO
+			//50: () => this.digitArgument(2),
+			// M-3 TODO
+			//51: () => this.digitArgument(3),
+			// M-4 TODO
+			//52: () => this.digitArgument(4),
+			// M-5 TODO
+			//53: () => this.digitArgument(5),
+			// M-6 TODO
+			//54: () => this.digitArgument(6),
+			// M-7 TODO
+			//55: () => this.digitArgument(7),
+			// M-8 TODO
+			//56: () => this.digitArgument(8),
+			// M-9 TODO
+			//57: () => this.digitArgument(9),
+			// M-- TODO
+			//189: () => this.digitArgument('-'),
+			// M-f TODO
+			//71: () => this.abort,
+			// M-r TODO
+			//82: this.revertLine,
+			// M-SPACE TODO
+			//32: this.setMark,
+		};
+		var altShiftCodes: keyMap = {
+			// M-< TODO
+			//188: this.beginningOfHistory,
+			// M-> TODO
+			//190: this.endOfHistory,
+			// M-_ TODO
+			//189: this.yankLastArg,
+			// M-? TODO
+			//191: this.possibleCompletions,
+			// M-* TODO
+			//56: this.insertCompletions,
+		}
+		var metaCtrlCodes: keyMap = {
+			// M-C-y TODO
+			//89: this.yankNthArg,
+			// M-C-] TODO
+			//221: this.characterSearchBackward,
+			// M-C-j TODO !!!
+			//74: this.viEditingMode,
 		};
 		if(this.state.acceptInput) {
 			if (e.altKey) {
