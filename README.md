@@ -75,7 +75,7 @@ Properties you can pass to the console element
 React-console is inspired by [chrisdone/jquery-console](https://github.com/chrisdone/jquery-console).
 
 [demo-image]: https://autochthe.github.io/react-console/images/example.svg
-[demo-url]: https://autochthe.github.io/react-console/
+[demo-url]: https://autochthe.github.io/react-console/#react-console
 [npm-image]: https://img.shields.io/npm/v/react-console-component.svg
 [npm-url]: https://npmjs.org/package/react-console-component
 [downloads-image]: https://img.shields.io/npm/dm/react-console-component.svg
