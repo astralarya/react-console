@@ -10,6 +10,7 @@ Simple React.js console emulator.
 [![devDependency Status][david-dev-image]][david-dev-url]
 [![peerDependency Status][david-peer-image]][david-peer-url]
 
+[![Demo Image][demo-image]][demo-url]
 
 ## Example
 
@@ -73,6 +74,7 @@ Properties you can pass to the console element
 
 React-console is inspired by [chrisdone/jquery-console](https://github.com/chrisdone/jquery-console).
 
+[demo-image]: https://autochthe.github.io/react-console/images/example.svg
 [demo-url]: https://autochthe.github.io/react-console/
 [npm-image]: https://img.shields.io/npm/v/react-console-component.svg
 [npm-url]: https://npmjs.org/package/react-console-component
