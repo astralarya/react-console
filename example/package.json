@@ -28,7 +28,7 @@
     "extract-text-webpack-plugin": "^1.0.1",
     "node-sass": "^3.8.0",
     "react": "^15.1.0",
-    "react-console-component": "^0.4.0",
+    "react-console-component": "^0.4.1",
     "react-dom": "^15.1.0",
     "sass-loader": "^3.2.1",
     "source-map-loader": "^0.1.5",
