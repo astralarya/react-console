@@ -34,7 +34,7 @@ div.react-console-focus span.react-console-cursor {
 }
 
 div.react-console-nofocus span.react-console-cursor {
-	background: $background-color;
+	background: none;
 	color: $prompt-color;
 	outline: 0.1em solid $cursor-color;
 	outline-offset: -0.1em;
@@ -54,11 +54,11 @@ div.react-console-focus span.react-console-cursor-idle {
 		color: $cursor-text-color;
 	}
 	51% {
-		background: $background-color;
+		background: none;
 		color: $prompt-color;
 	}
 	100% {
-		background: $background-color;
+		background: none;
 		color: $prompt-color;
 	}
 }
