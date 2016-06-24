@@ -134,6 +134,7 @@ export default class extends React.Component<ConsoleProps,ConsoleState> {
 			typer: '',
 		};
 	}
+	// Command API
 	log = (...messages: any[]) => {
 		let log = this.state.log;
 		log[this.state.log.length-1].message.push({value: messages});
@@ -154,11 +155,13 @@ export default class extends React.Component<ConsoleProps,ConsoleState> {
 			acceptInput: true
 		}, this.scrollIfBottom() );
 	}
+	// Component Lifecycle
 	componentDidMount() {
 		if(this.props.autofocus) {
 			this.focus();
 		}
 	}
+	// Event Handlers
 	focus = () => {
 		if(!window.getSelection().toString()) {
 			this.child.typer.focus();
@@ -371,15 +374,77 @@ export default class extends React.Component<ConsoleProps,ConsoleState> {
 		this.consoleInsert(e.clipboardData.getData('text'));
 		e.preventDefault();
 	}
-	moveColumn = (n: number, max: number = this.state.promptText.length) => {
-		let pos = this.state.column + n;
-		if (pos < 0) {
-			return 0;
-		} if (pos > max) {
-			return max;
+	// Commands for Moving
+	beginningOfLine = () => {
+		this.setState({
+			column: 0
+		}, this.scrollToBottom);
+	}
+	endOfLine = () => {
+		this.setState({
+			column: this.state.promptText.length
+		}, this.scrollToBottom);
+	}
+	forwardChar = () => {
+		this.setState({
+			column: this.moveColumn(1)
+		}, this.scrollToBottom);
+	}
+	backwardChar = () => {
+		this.setState({
+			column: this.moveColumn(-1)
+		}, this.scrollToBottom);
+	}
+	forwardWord = () => {
+		this.setState({
+			column: this.nextWord()
+		}, this.scrollToBottom);
+	}
+	backwardWord = () => {
+		this.setState({
+			column: this.previousWord()
+		}, this.scrollToBottom);
+	}
+	// Commands for Manipulating the History
+	acceptLine = () => {
+		this.child.typer.value = "";
+		if(this.props.continue(this.state.promptText)) {
+			this.setState({
+				typer: "",
+			});
+			this.consoleInsert("\n");
 		} else {
-			return pos;
+			let command = this.state.promptText;
+			let history = this.state.history;
+			let log = this.state.log;
+			if(!history || history[history.length-1] != command) {
+				history.push(command);
+			}
+			log.push({
+				label: this.state.currLabel,
+				command: command,
+				message: []
+			});
+			this.setState({
+				promptText: "",
+				restoreText: "",
+				column: 0,
+				history: history,
+				ringn: 0,
+				log: log,
+				acceptInput: false,
+				typer: "",
+			}, () => {
+				this.scrollToBottom();
+				this.props.handler(command);
+			});
 		}
+	}
+	previousHistory = () => {
+		this.rotateHistory(-1);
+	}
+	nextHistory = () => {
+		this.rotateHistory(1);
 	}
 	// Commands for Changing Text
 	deleteChar = () => {
@@ -424,55 +489,7 @@ export default class extends React.Component<ConsoleProps,ConsoleState> {
 			column: 0,
 		}, this.scrollToBottom);
 	}
-	// Commands for Moving
-	beginningOfLine = () => {
-		this.setState({
-			column: 0
-		}, this.scrollToBottom);
-	}
-	endOfLine = () => {
-		this.setState({
-			column: this.state.promptText.length
-		}, this.scrollToBottom);
-	}
-	forwardChar = () => {
-		this.setState({
-			column: this.moveColumn(1)
-		}, this.scrollToBottom);
-	}
-	backwardChar = () => {
-		this.setState({
-			column: this.moveColumn(-1)
-		}, this.scrollToBottom);
-	}
-	forwardWord = () => {
-		this.setState({
-			column: this.nextWord()
-		}, this.scrollToBottom);
-	}
-	backwardWord = () => {
-		this.setState({
-			column: this.previousWord()
-		}, this.scrollToBottom);
-	}
-	nextWord(): number {
-		// Find first alphanumeric char after first non-alphanumeric char
-		let search = /\W\w/.exec(this.state.promptText.substring(this.state.column));
-		if(search) {
-			return search.index + this.state.column + 1;
-		} else {
-			return this.state.promptText.length;
-		}
-	}
-	previousWord(): number {
-		// Find first non-alphanumeric char after first alphanumeric char in reverse
-		let search = /\W\w(?!.*\W\w)/.exec(this.state.promptText.substring(0,this.state.column-1));
-		if(search) {
-			return search.index + 1;
-		} else {
-			return 0;
-		}
-	}
+	// Numeric Arguments
 	// Completing
 	complete = () => {
 		if(this.props.complete) {
@@ -514,6 +531,8 @@ export default class extends React.Component<ConsoleProps,ConsoleState> {
 			}
 		}
 	}
+	// Keyboard Macros
+	// Miscellaneous
 	cancelCommand = () => {
 		if(this.state.acceptInput) { // Typing command
 			this.child.typer.value = "";
@@ -537,46 +556,34 @@ export default class extends React.Component<ConsoleProps,ConsoleState> {
 			this.props.cancel();
 		}
 	}
-	// Commands for Manipulating the History
-	acceptLine = () => {
-		this.child.typer.value = "";
-		if(this.props.continue(this.state.promptText)) {
-			this.setState({
-				typer: "",
-			});
-			this.consoleInsert("\n");
+	// Helper functions
+	moveColumn = (n: number, max: number = this.state.promptText.length) => {
+		let pos = this.state.column + n;
+		if (pos < 0) {
+			return 0;
+		} if (pos > max) {
+			return max;
 		} else {
-			let command = this.state.promptText;
-			let history = this.state.history;
-			let log = this.state.log;
-			if(!history || history[history.length-1] != command) {
-				history.push(command);
-			}
-			log.push({
-				label: this.state.currLabel,
-				command: command,
-				message: []
-			});
-			this.setState({
-				promptText: "",
-				restoreText: "",
-				column: 0,
-				history: history,
-				ringn: 0,
-				log: log,
-				acceptInput: false,
-				typer: "",
-			}, () => {
-				this.scrollToBottom();
-				this.props.handler(command);
-			});
+			return pos;
 		}
 	}
-	previousHistory = () => {
-		this.rotateHistory(-1);
+	nextWord(): number {
+		// Find first alphanumeric char after first non-alphanumeric char
+		let search = /\W\w/.exec(this.state.promptText.substring(this.state.column));
+		if(search) {
+			return search.index + this.state.column + 1;
+		} else {
+			return this.state.promptText.length;
+		}
 	}
-	nextHistory = () => {
-		this.rotateHistory(1);
+	previousWord(): number {
+		// Find first non-alphanumeric char after first alphanumeric char in reverse
+		let search = /\W\w(?!.*\W\w)/.exec(this.state.promptText.substring(0,this.state.column-1));
+		if(search) {
+			return search.index + 1;
+		} else {
+			return 0;
+		}
 	}
 	rotateHistory = (n: number) => {
 		if(this.state.history.length == 0) return;
