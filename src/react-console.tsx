@@ -192,7 +192,7 @@ export default class extends React.Component<ConsoleProps,ConsoleState> {
 			// start
 			36: this.beginningOfLine,
 			// tab
-			9: this.doComplete,
+			9: this.complete,
 			// esc
 			//27: this.prefixMeta,
 		};
@@ -473,7 +473,8 @@ export default class extends React.Component<ConsoleProps,ConsoleState> {
 			return 0;
 		}
 	}
-	doComplete = () => {
+	// Completing
+	complete = () => {
 		if(this.props.complete) {
 			// Split text and find current word
 			let words = this.state.promptText.split(" ");
