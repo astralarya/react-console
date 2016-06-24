@@ -223,10 +223,10 @@ export default class extends React.Component<ConsoleProps,ConsoleState> {
 			//86: this.quotedInsert,
 			// C-t TODO
 			//84: this.transposeChars,
-			// C-k TODO kill
-			75: this.deleteUntilEnd,
+			// C-k
+			75: this.killLine,
 			// C-u TODO kill
-			85: this.deleteUntilStart,
+			85: this.backwardKillLine,
 			// C-y TODO
 			//89: this.yank,
 			// C-c
@@ -240,7 +240,7 @@ export default class extends React.Component<ConsoleProps,ConsoleState> {
 		};
 		var ctrlXCodes: keyMap = {
 			// C-x Rubout TODO state / kill
-			//8: this.deleteUntilStart,
+			//8: this.backwardKillLine,
 			// C-x ( TODO
 			//57: this.startKbdMacro,
 			// C-x ) TODO
@@ -283,6 +283,8 @@ export default class extends React.Component<ConsoleProps,ConsoleState> {
 			//68: this.killWord,
 			// M-backspace TODO
 			//8: this.backwardKillWord,
+			// M-w TODO
+			//87: this.unixWordRubout,
 			// M-\ TODO
 			//220: this.deleteHorizontalSpace,
 			// M-y TODO
@@ -408,15 +410,18 @@ export default class extends React.Component<ConsoleProps,ConsoleState> {
 			column: this.moveColumn(text.length - replace, text.length - replace + this.state.promptText.length)
 		}, this.scrollToBottom);
 	}
-	deleteUntilStart = () => {
+	// Killing and Yanking
+	killLine = () => {
+		// TODO kill
+		this.setState({
+			promptText: this.state.promptText.substring(0,this.state.column),
+		}, this.scrollToBottom);
+	}
+	backwardKillLine = () => {
+		// TODO kill
 		this.setState({
 			promptText: this.state.promptText.substring(this.state.column),
 			column: 0,
-		}, this.scrollToBottom);
-	}
-	deleteUntilEnd = () => {
-		this.setState({
-			promptText: this.state.promptText.substring(0,this.state.column),
 		}, this.scrollToBottom);
 	}
 	// Commands for Moving
