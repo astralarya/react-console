@@ -176,9 +176,9 @@ export default class extends React.Component<ConsoleProps,ConsoleState> {
 			// return
 			13: this.commandTrigger,
 			// left
-			37: this.moveBackward,
+			37: this.backwardChar,
 			// right
-			39: this.moveForward,
+			39: this.forwardChar,
 			// up
 			38: this.previousHistory,
 			// down
@@ -188,9 +188,9 @@ export default class extends React.Component<ConsoleProps,ConsoleState> {
 			// delete
 			46: this.forwardDelete,
 			// end
-			35: this.moveToEnd,
+			35: this.endOfLine,
 			// start
-			36: this.moveToStart,
+			36: this.beginningOfLine,
 			// tab
 			9: this.doComplete,
 			// esc
@@ -198,13 +198,13 @@ export default class extends React.Component<ConsoleProps,ConsoleState> {
 		};
 		var ctrlCodes: keyMap = {
 			// C-a
-			65: this.moveToStart,
+			65: this.beginningOfLine,
 			// C-e
-			69: this.moveToEnd,
+			69: this.endOfLine,
 			// C-f
-			70: this.moveForward,
+			70: this.forwardChar,
 			// C-b
-			66: this.moveBackward,
+			66: this.backwardChar,
 			// C-p
 			80: this.previousHistory,
 			// C-n
@@ -260,9 +260,9 @@ export default class extends React.Component<ConsoleProps,ConsoleState> {
 		};
 		var altCodes: keyMap = {
 			// M-f
-			70: this.moveToNextWord,
+			70: this.forwardWord,
 			// M-b
-			66: this.moveToPreviousWord,
+			66: this.backwardWord,
 			// M-p TODO
 			//80: this.nonIncrementalReverseSearchHistory,
 			// M-n TODO
@@ -418,32 +418,33 @@ export default class extends React.Component<ConsoleProps,ConsoleState> {
 			promptText: this.state.promptText.substring(0,this.state.column),
 		}, this.scrollToBottom);
 	}
-	moveBackward = () => {
-		this.setState({
-			column: this.moveColumn(-1)
-		}, this.scrollToBottom);
-	}
-	moveForward = () => {
-		this.setState({
-			column: this.moveColumn(1)
-		}, this.scrollToBottom);
-	}
-	moveToStart = () => {
+	// Commands for Moving
+	beginningOfLine = () => {
 		this.setState({
 			column: 0
 		}, this.scrollToBottom);
 	}
-	moveToEnd = () => {
+	endOfLine = () => {
 		this.setState({
 			column: this.state.promptText.length
 		}, this.scrollToBottom);
 	}
-	moveToNextWord = () => {
+	forwardChar = () => {
+		this.setState({
+			column: this.moveColumn(1)
+		}, this.scrollToBottom);
+	}
+	backwardChar = () => {
+		this.setState({
+			column: this.moveColumn(-1)
+		}, this.scrollToBottom);
+	}
+	forwardWord = () => {
 		this.setState({
 			column: this.nextWord()
 		}, this.scrollToBottom);
 	}
-	moveToPreviousWord = () => {
+	backwardWord = () => {
 		this.setState({
 			column: this.previousWord()
 		}, this.scrollToBottom);
