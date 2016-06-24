@@ -54,12 +54,13 @@ let bundle = {
 		],
 	},
 	plugins: [
-		new ExtractTextPlugin(project + '.css'),
 		FailPlugin,
+		new ExtractTextPlugin(project + '.css'),
 	],
 };
 
 let production_plugins = [
+	FailPlugin,
 	new ExtractTextPlugin(project + '.min.css'),
 	new webpack.DefinePlugin({
 		'process.env.NODE_ENV': '"production"'
@@ -67,7 +68,6 @@ let production_plugins = [
 	new webpack.optimize.UglifyJsPlugin(),
 	new webpack.optimize.OccurenceOrderPlugin(),
 	new webpack.optimize.DedupePlugin(),
-	FailPlugin,
 ]
 
 
