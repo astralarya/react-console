@@ -184,9 +184,9 @@ export default class extends React.Component<ConsoleProps,ConsoleState> {
 			// down
 			40: this.nextHistory,
 			// backspace
-			8:  this.backDelete,
+			8:  this.backwardDeleteChar,
 			// delete
-			46: this.forwardDelete,
+			46: this.deleteChar,
 			// end
 			35: this.endOfLine,
 			// start
@@ -216,7 +216,7 @@ export default class extends React.Component<ConsoleProps,ConsoleState> {
 			// C-l TODO
 			//76: this.clearScreen,
 			// C-d
-			68: this.forwardDelete, // TODO EOF
+			68: this.deleteChar, // TODO EOF
 			// C-q TODO
 			//81: this.quotedInsert,
 			// C-v TODO
@@ -369,17 +369,6 @@ export default class extends React.Component<ConsoleProps,ConsoleState> {
 		this.consoleInsert(e.clipboardData.getData('text'));
 		e.preventDefault();
 	}
-	consoleInsert = (text: string, replace: number = 0) => {
-		let promptText =
-				this.state.promptText.substring(0,this.state.column - replace)
-				+ text
-				+ this.state.promptText.substring(this.state.column);
-		this.setState({
-			promptText: promptText,
-			restoreText: promptText,
-			column: this.moveColumn(text.length - replace, text.length - replace + this.state.promptText.length)
-		}, this.scrollToBottom);
-	}
 	moveColumn = (n: number, max: number = this.state.promptText.length) => {
 		let pos = this.state.column + n;
 		if (pos < 0) {
@@ -390,7 +379,16 @@ export default class extends React.Component<ConsoleProps,ConsoleState> {
 			return pos;
 		}
 	}
-	backDelete = () => {
+	// Commands for Changing Text
+	deleteChar = () => {
+		if(this.state.column < this.state.promptText.length) {
+			this.setState({
+				promptText: this.state.promptText.substring(0,this.state.column)
+					+ this.state.promptText.substring(this.state.column+1),
+			}, this.scrollToBottom);
+		}
+	}
+	backwardDeleteChar = () => {
 		if(this.state.column > 0) {
 			this.setState({
 				promptText: this.state.promptText.substring(0,this.state.column-1)
@@ -399,13 +397,16 @@ export default class extends React.Component<ConsoleProps,ConsoleState> {
 			}, this.scrollToBottom);
 		}
 	}
-	forwardDelete = () => {
-		if(this.state.column < this.state.promptText.length) {
-			this.setState({
-				promptText: this.state.promptText.substring(0,this.state.column)
-					+ this.state.promptText.substring(this.state.column+1),
-			}, this.scrollToBottom);
-		}
+	consoleInsert = (text: string, replace: number = 0) => {
+		let promptText =
+				this.state.promptText.substring(0,this.state.column - replace)
+				+ text
+				+ this.state.promptText.substring(this.state.column);
+		this.setState({
+			promptText: promptText,
+			restoreText: promptText,
+			column: this.moveColumn(text.length - replace, text.length - replace + this.state.promptText.length)
+		}, this.scrollToBottom);
 	}
 	deleteUntilStart = () => {
 		this.setState({
