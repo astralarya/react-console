@@ -261,7 +261,7 @@ export default class extends React.Component<ConsoleProps,ConsoleState> {
 			// C-@ TODO
 			//50: this.setMark,
 		};
-		var altCodes: keyMap = {
+		var metaCodes: keyMap = {
 			// M-f
 			70: this.forwardWord,
 			// M-b
@@ -321,7 +321,7 @@ export default class extends React.Component<ConsoleProps,ConsoleState> {
 			// M-SPACE TODO
 			//32: this.setMark,
 		};
-		var altShiftCodes: keyMap = {
+		var metaShiftCodes: keyMap = {
 			// M-< TODO
 			//188: this.beginningOfHistory,
 			// M-> TODO
@@ -343,8 +343,8 @@ export default class extends React.Component<ConsoleProps,ConsoleState> {
 		};
 		if(this.state.acceptInput) {
 			if (e.altKey) {
-				if (e.keyCode in altCodes) {
-					altCodes[e.keyCode]();
+				if (e.keyCode in metaCodes) {
+					metaCodes[e.keyCode]();
 				}
 				e.preventDefault();
 			} else if (e.ctrlKey) {
