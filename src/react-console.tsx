@@ -107,6 +107,8 @@ export interface ConsoleState{
 	focus?: boolean;
 	acceptInput?: boolean;
 	typer?: string;
+	kill?: string[];
+	killn?: number;
 };
 export default class extends React.Component<ConsoleProps,ConsoleState> {
 	static defaultProps = {
@@ -132,6 +134,8 @@ export default class extends React.Component<ConsoleProps,ConsoleState> {
 			focus: false,
 			acceptInput: true,
 			typer: '',
+			kill: [],
+			killn: 0,
 		};
 	}
 	// Command API
@@ -228,10 +232,10 @@ export default class extends React.Component<ConsoleProps,ConsoleState> {
 			//84: this.transposeChars,
 			// C-k
 			75: this.killLine,
-			// C-u TODO kill
+			// C-u
 			85: this.backwardKillLine,
 			// C-y TODO
-			//89: this.yank,
+			89: this.yank,
 			// C-c
 			67: this.cancelCommand,
 			// C-w TODO
@@ -241,9 +245,9 @@ export default class extends React.Component<ConsoleProps,ConsoleState> {
 			// C-x TODO
 			//88: this.prefixCtrlX,
 		};
-		var ctrlXCodes: keyMap = {
-			// C-x Rubout TODO state / kill
-			//8: this.backwardKillLine,
+		var ctrlXCodes: keyMap = { // TODO state
+			// C-x Rubout
+			8: this.backwardKillLine,
 			// C-x ( TODO
 			//57: this.startKbdMacro,
 			// C-x ) TODO
@@ -282,16 +286,16 @@ export default class extends React.Component<ConsoleProps,ConsoleState> {
 			//76: this.downcaseWord,
 			// M-c TODO
 			//67: this.capitalizeWord,
-			// M-d TODO
-			//68: this.killWord,
-			// M-backspace TODO
-			//8: this.backwardKillWord,
+			// M-d
+			68: this.killWord,
+			// M-backspace
+			8: this.backwardKillWord,
 			// M-w TODO
 			//87: this.unixWordRubout,
 			// M-\ TODO
 			//220: this.deleteHorizontalSpace,
-			// M-y TODO
-			//89: this.yankPop,
+			// M-y
+			89: this.yankPop,
 			// M-0 TODO
 			//48: () => this.digitArgument(0),
 			// M-1 TODO
@@ -475,18 +479,56 @@ export default class extends React.Component<ConsoleProps,ConsoleState> {
 			column: this.moveColumn(text.length - replace, text.length - replace + this.state.promptText.length)
 		}, this.scrollToBottom);
 	}
-	// Killing and Yanking
+	// Killing and Yanking TODO kill collection
 	killLine = () => {
-		// TODO kill
+		let kill = this.state.kill;
+		kill.unshift(this.state.promptText.substring(this.state.column));
 		this.setState({
 			promptText: this.state.promptText.substring(0,this.state.column),
+			kill: kill,
 		}, this.scrollToBottom);
 	}
 	backwardKillLine = () => {
-		// TODO kill
+		let kill = this.state.kill;
+		kill.unshift(this.state.promptText.substring(0,this.state.column));
 		this.setState({
 			promptText: this.state.promptText.substring(this.state.column),
+			kill: kill,
 			column: 0,
+		}, this.scrollToBottom);
+	}
+	killWholeLine = () => {
+		let kill = this.state.kill;
+		kill.unshift(this.state.promptText);
+		this.setState({
+			promptText: '',
+			kill: kill,
+			column: 0,
+		}, this.scrollToBottom);
+	}
+	killWord = () => {
+		let kill = this.state.kill;
+		kill.unshift(this.state.promptText.substring(this.state.column,this.nextWord()));
+		this.setState({
+			promptText: this.state.promptText.substring(0,this.state.column) + this.state.promptText.substring(this.nextWord()),
+			kill: kill,
+		}, this.scrollToBottom);
+	}
+	backwardKillWord = () => {
+		let kill = this.state.kill;
+		kill.unshift(this.state.promptText.substring(this.previousWord(),this.state.column));
+		this.setState({
+			promptText: this.state.promptText.substring(0,this.previousWord()) + this.state.promptText.substring(this.state.column),
+			kill: kill,
+			column: this.previousWord(),
+		}, this.scrollToBottom);
+	}
+	yank = () => {
+		this.consoleInsert(this.state.kill[this.state.killn]);
+	}
+	yankPop = () => {
+		// TODO
+		this.setState({
 		}, this.scrollToBottom);
 	}
 	// Numeric Arguments
