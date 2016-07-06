@@ -53,6 +53,7 @@ let bundle = {
 			}
 		],
 	},
+	devtool: 'source-map',
 	plugins: [
 		FailPlugin,
 		new ExtractTextPlugin(project + '.css'),
@@ -101,6 +102,12 @@ let dist_min = Object.assign({},dist, {
 	plugins: production_plugins,
 });
 
+let libexternals = {}
+for(let key in externals) {
+	if(externals.hasOwnProperty(key)) {
+		libexternals[key] = true;
+	}
+}
 let lib = Object.assign({},dist, {
 	output: {
 		path: __dirname + '/lib',
@@ -108,7 +115,7 @@ let lib = Object.assign({},dist, {
 		library: library,
 		libraryTarget: "commonjs2",
 	},
-	devtool: 'source-map',
+	externals: libexternals,
 });
 
 let development = Object.assign({},bundle, {
@@ -119,7 +126,6 @@ let development = Object.assign({},bundle, {
 		library: "Dev",
 		libraryTarget: "var",
 	},
-	devtool: 'source-map',
 	plugins: [
 		new ExtractTextPlugin(project + '.dev.css'),
 	],
