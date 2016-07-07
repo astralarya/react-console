@@ -685,7 +685,7 @@ export default class extends React.Component<ConsoleProps,ConsoleState> {
 			>
 			{this.props.welcomeMessage?
 				<div className="react-console-message react-console-welcome">
-					this.props.welcomeMessage
+					{this.props.welcomeMessage}
 				</div>
 				: null
 			}
