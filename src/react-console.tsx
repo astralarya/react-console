@@ -113,7 +113,7 @@ export interface ConsoleState{
 	restoreText?: string;
 	log?: LogEntry[];
 	history?: string[];
-	ringn?: number;
+	historyn?: number;
 	kill?: string[];
 	killn?: number;
 	lastCommand?: ConsoleCommand;
@@ -131,7 +131,7 @@ export default class extends React.Component<ConsoleProps,ConsoleState> {
 			restoreText: '',
 			log: [],
 			history: [],
-			ringn: 0,
+			historyn: 0,
 			kill: [],
 			killn: 0,
 			lastCommand: ConsoleCommand.Default,
@@ -164,7 +164,7 @@ export default class extends React.Component<ConsoleProps,ConsoleState> {
 	}
 	return = () => {
 		this.setState({
-			acceptInput: true
+			acceptInput: true,
 			currLabel: this.nextLabel(),
 		}, this.scrollIfBottom() );
 	}
@@ -460,7 +460,7 @@ export default class extends React.Component<ConsoleProps,ConsoleState> {
 				restoreText: "",
 				log: log,
 				history: history,
-				ringn: 0,
+				historyn: 0,
 				lastCommand: ConsoleCommand.Default,
 			}, () => {
 				this.scrollToBottom();
@@ -650,7 +650,7 @@ export default class extends React.Component<ConsoleProps,ConsoleState> {
 				promptText: "",
 				restoreText: "",
 				log: log,
-				ringn: 0,
+				historyn: 0,
 				lastCommand: ConsoleCommand.Default,
 			}, this.scrollToBottom);
 		} else { // command is executing, call handler
@@ -702,20 +702,20 @@ export default class extends React.Component<ConsoleProps,ConsoleState> {
 		return (ring + (ringn + n) % ring) % ring;
 	}
 	rotateHistory = (n: number) => {
-		let ringn = this.rotateRing(n, this.state.ringn, this.state.history.length+1);
-		if(ringn == 0) {
+		let historyn = this.rotateRing(n, this.state.historyn, this.state.history.length+1);
+		if(historyn == 0) {
 			this.setState({
 				column: this.state.restoreText.length,
 				promptText: this.state.restoreText,
-				ringn: ringn,
+				historyn: historyn,
 				lastCommand: ConsoleCommand.Default,
 			}, this.scrollToBottom );
 		} else {
-			let promptText = this.state.history[this.state.history.length-ringn];
+			let promptText = this.state.history[this.state.history.length-historyn];
 			this.setState({
 				column: promptText.length,
 				promptText: promptText,
-				ringn: ringn,
+				historyn: historyn,
 				lastCommand: ConsoleCommand.Default,
 			}, this.scrollToBottom );
 		}
