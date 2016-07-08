@@ -96,6 +96,11 @@ export interface ConsoleProps{
 	promptLabel?: string | (()=>string);
 	welcomeMessage?: string;
 }
+enum ConsoleCommand {
+	Default,
+	Kill,
+	Yank,
+};
 export interface ConsoleState{
 	currLabel?: string;
 	promptText?: string;
@@ -109,6 +114,7 @@ export interface ConsoleState{
 	typer?: string;
 	kill?: string[];
 	killn?: number;
+	lastCommand?: ConsoleCommand;
 };
 export default class extends React.Component<ConsoleProps,ConsoleState> {
 	static defaultProps = {
@@ -136,6 +142,7 @@ export default class extends React.Component<ConsoleProps,ConsoleState> {
 			typer: '',
 			kill: [],
 			killn: 0,
+			lastCommand: ConsoleCommand.Default,
 		};
 	}
 	// Command API
@@ -369,54 +376,68 @@ export default class extends React.Component<ConsoleProps,ConsoleState> {
 				break;
 			}
 		}
-		this.consoleInsert(this.child.typer.value.substring(idx), this.state.typer.length - idx);
-		this.setState({
-			typer: this.child.typer.value,
-		});
+		this.setState(Object.assign(
+			this.consoleInsert(this.child.typer.value.substring(idx), this.state.typer.length - idx),{
+				typer: this.child.typer.value,
+				lastCommand: ConsoleCommand.Default,
+			}), this.scrollToBottom
+		);
 	}
 	paste = (e: ClipboardEvent) => {
-		this.consoleInsert(e.clipboardData.getData('text'));
+		this.setState(Object.assign(
+			this.consoleInsert(e.clipboardData.getData('text')),{
+				lastCommand: ConsoleCommand.Default,
+			}), this.scrollToBottom
+		);
 		e.preventDefault();
 	}
 	// Commands for Moving
 	beginningOfLine = () => {
 		this.setState({
-			column: 0
+			column: 0,
+			lastCommand: ConsoleCommand.Default,
 		}, this.scrollToBottom);
 	}
 	endOfLine = () => {
 		this.setState({
-			column: this.state.promptText.length
+			column: this.state.promptText.length,
+			lastCommand: ConsoleCommand.Default,
 		}, this.scrollToBottom);
 	}
 	forwardChar = () => {
 		this.setState({
-			column: this.moveColumn(1)
+			column: this.moveColumn(1),
+			lastCommand: ConsoleCommand.Default,
 		}, this.scrollToBottom);
 	}
 	backwardChar = () => {
 		this.setState({
-			column: this.moveColumn(-1)
+			column: this.moveColumn(-1),
+			lastCommand: ConsoleCommand.Default,
 		}, this.scrollToBottom);
 	}
 	forwardWord = () => {
 		this.setState({
-			column: this.nextWord()
+			column: this.nextWord(),
+			lastCommand: ConsoleCommand.Default,
 		}, this.scrollToBottom);
 	}
 	backwardWord = () => {
 		this.setState({
-			column: this.previousWord()
+			column: this.previousWord(),
+			lastCommand: ConsoleCommand.Default,
 		}, this.scrollToBottom);
 	}
 	// Commands for Manipulating the History
 	acceptLine = () => {
 		this.child.typer.value = "";
 		if(this.props.continue(this.state.promptText)) {
-			this.setState({
-				typer: "",
-			});
-			this.consoleInsert("\n");
+			this.setState(Object.assign(
+				this.consoleInsert("\n"),{
+					typer: "",
+					lastCommand: ConsoleCommand.Default,
+				}), this.scrollToBottom
+			);
 		} else {
 			let command = this.state.promptText;
 			let history = this.state.history;
@@ -438,6 +459,7 @@ export default class extends React.Component<ConsoleProps,ConsoleState> {
 				log: log,
 				acceptInput: false,
 				typer: "",
+				lastCommand: ConsoleCommand.Default,
 			}, () => {
 				this.scrollToBottom();
 				this.props.handler(command);
@@ -456,6 +478,7 @@ export default class extends React.Component<ConsoleProps,ConsoleState> {
 			this.setState({
 				promptText: this.state.promptText.substring(0,this.state.column)
 					+ this.state.promptText.substring(this.state.column+1),
+				lastCommand: ConsoleCommand.Default,
 			}, this.scrollToBottom);
 		}
 	}
@@ -465,6 +488,7 @@ export default class extends React.Component<ConsoleProps,ConsoleState> {
 				promptText: this.state.promptText.substring(0,this.state.column-1)
 					+ this.state.promptText.substring(this.state.column),
 				column: this.moveColumn(-1),
+				lastCommand: ConsoleCommand.Default,
 			}, this.scrollToBottom);
 		}
 	}
@@ -473,63 +497,104 @@ export default class extends React.Component<ConsoleProps,ConsoleState> {
 				this.state.promptText.substring(0,this.state.column - replace)
 				+ text
 				+ this.state.promptText.substring(this.state.column);
-		this.setState({
+		return {
 			promptText: promptText,
 			restoreText: promptText,
-			column: this.moveColumn(text.length - replace, text.length - replace + this.state.promptText.length)
-		}, this.scrollToBottom);
+			column: this.moveColumn(text.length - replace, text.length - replace + this.state.promptText.length),
+			lastCommand: ConsoleCommand.Default,
+		};
 	}
-	// Killing and Yanking TODO kill collection
+	// Killing and Yanking
 	killLine = () => {
 		let kill = this.state.kill;
-		kill.unshift(this.state.promptText.substring(this.state.column));
+		if(this.state.lastCommand == ConsoleCommand.Kill) {
+			kill[0] = kill[0] + this.state.promptText.substring(this.state.column);
+		} else {
+			kill.unshift(this.state.promptText.substring(this.state.column));
+		}
 		this.setState({
 			promptText: this.state.promptText.substring(0,this.state.column),
 			kill: kill,
+			killn: 0,
+			lastCommand: ConsoleCommand.Kill,
 		}, this.scrollToBottom);
 	}
 	backwardKillLine = () => {
 		let kill = this.state.kill;
-		kill.unshift(this.state.promptText.substring(0,this.state.column));
+		if(this.state.lastCommand == ConsoleCommand.Kill) {
+			kill[0] = this.state.promptText.substring(0,this.state.column) + kill[0];
+		} else {
+			kill.unshift(this.state.promptText.substring(0,this.state.column));
+		}
 		this.setState({
+			column: 0,
 			promptText: this.state.promptText.substring(this.state.column),
 			kill: kill,
-			column: 0,
+			killn: 0,
+			lastCommand: ConsoleCommand.Kill,
 		}, this.scrollToBottom);
 	}
 	killWholeLine = () => {
 		let kill = this.state.kill;
-		kill.unshift(this.state.promptText);
+		if(this.state.lastCommand == ConsoleCommand.Kill) {
+			kill[0] = this.state.promptText.substring(0,this.state.column) + kill[0] + this.state.promptText.substring(this.state.column);
+		} else {
+			kill.unshift(this.state.promptText);
+		}
 		this.setState({
+			column: 0,
 			promptText: '',
 			kill: kill,
-			column: 0,
+			killn: 0,
+			lastCommand: ConsoleCommand.Kill,
 		}, this.scrollToBottom);
 	}
 	killWord = () => {
 		let kill = this.state.kill;
-		kill.unshift(this.state.promptText.substring(this.state.column,this.nextWord()));
+		if(this.state.lastCommand == ConsoleCommand.Kill) {
+			kill[0] = kill[0] + this.state.promptText.substring(this.state.column,this.nextWord());
+		} else {
+			kill.unshift(this.state.promptText.substring(this.state.column,this.nextWord()));
+		}
 		this.setState({
 			promptText: this.state.promptText.substring(0,this.state.column) + this.state.promptText.substring(this.nextWord()),
 			kill: kill,
+			killn: 0,
+			lastCommand: ConsoleCommand.Kill,
 		}, this.scrollToBottom);
 	}
 	backwardKillWord = () => {
 		let kill = this.state.kill;
-		kill.unshift(this.state.promptText.substring(this.previousWord(),this.state.column));
+		if(this.state.lastCommand == ConsoleCommand.Kill) {
+			kill[0] = this.state.promptText.substring(this.previousWord(),this.state.column) + kill[0];
+		} else {
+			kill.unshift(this.state.promptText.substring(this.previousWord(),this.state.column));
+		}
 		this.setState({
 			promptText: this.state.promptText.substring(0,this.previousWord()) + this.state.promptText.substring(this.state.column),
 			kill: kill,
+			killn: 0,
 			column: this.previousWord(),
+			lastCommand: ConsoleCommand.Kill,
 		}, this.scrollToBottom);
 	}
 	yank = () => {
-		this.consoleInsert(this.state.kill[this.state.killn]);
+		this.setState(Object.assign(
+			this.consoleInsert(this.state.kill[this.state.killn]),{
+				lastCommand: ConsoleCommand.Yank,
+			}), this.scrollToBottom
+		);
 	}
 	yankPop = () => {
-		// TODO
-		this.setState({
-		}, this.scrollToBottom);
+		if(this.state.lastCommand == ConsoleCommand.Yank) {
+			let killn = this.rotateRing(1, this.state.killn, this.state.kill.length);
+			this.setState(Object.assign(
+				this.consoleInsert(this.state.kill[killn], this.state.kill[this.state.killn].length),{
+					killn: killn,
+					lastCommand: ConsoleCommand.Yank,
+				}), this.scrollToBottom
+			);
+		}
 	}
 	// Numeric Arguments
 	// Completing
@@ -554,6 +619,7 @@ export default class extends React.Component<ConsoleProps,ConsoleState> {
 				this.setState({
 					promptText: words.join(" "),
 					column: column,
+					lastCommand: ConsoleCommand.Default,
 				}, this.scrollToBottom );
 			} else if (completions.length > 1) {
 				// show completions
@@ -569,6 +635,7 @@ export default class extends React.Component<ConsoleProps,ConsoleState> {
 				this.setState({
 					currLabel: this.nextLabel(),
 					log: log,
+					lastCommand: ConsoleCommand.Default,
 				}, this.scrollToBottom );
 			}
 		}
@@ -591,6 +658,7 @@ export default class extends React.Component<ConsoleProps,ConsoleState> {
 				ringn: 0,
 				log: log,
 				typer: "",
+				lastCommand: ConsoleCommand.Default,
 			}, () => {
 				this.scrollToBottom();
 			});
@@ -627,19 +695,18 @@ export default class extends React.Component<ConsoleProps,ConsoleState> {
 			return 0;
 		}
 	}
+	rotateRing = (n: number, ringn: number, ring: number): number => {
+		if(ring == 0) return 0;
+		return (ring + (ringn + n) % ring) % ring;
+	}
 	rotateHistory = (n: number) => {
-		if(this.state.history.length == 0) return;
-		let ringn = this.state.ringn - n;
-		if(ringn < 0) {
-			ringn = 0;
-		} else if (ringn > this.state.history.length) {
-			ringn = this.state.history.length;
-		}
+		let ringn = this.rotateRing(n, this.state.ringn, this.state.history.length+1);
 		if(ringn == 0) {
 			this.setState({
 				promptText: this.state.restoreText,
 				column: this.state.restoreText.length,
 				ringn: ringn,
+				lastCommand: ConsoleCommand.Default,
 			}, this.scrollToBottom );
 		} else {
 			let promptText = this.state.history[this.state.history.length-ringn];
@@ -647,6 +714,7 @@ export default class extends React.Component<ConsoleProps,ConsoleState> {
 				promptText: promptText,
 				column: promptText.length,
 				ringn: ringn,
+				lastCommand: ConsoleCommand.Default,
 			}, this.scrollToBottom );
 		}
 	}
