@@ -356,13 +356,25 @@ export default class extends React.Component<ConsoleProps,ConsoleState> {
 		};
 		if(this.state.acceptInput) {
 			if (e.altKey) {
-				if (e.keyCode in metaCodes) {
+				if (e.ctrlKey) {
+					if (e.keyCode in metaCtrlCodes) {
+						metaCtrlCodes[e.keyCode]();
+						e.preventDefault();
+					}
+				} else if (e.shiftKey) {
+					if (e.keyCode in metaShiftCodes) {
+						metaShiftCodes[e.keyCode]();
+						e.preventDefault();
+					}
+				} else if (e.keyCode in metaCodes) {
 					metaCodes[e.keyCode]();
+					e.preventDefault();
 				}
 				e.preventDefault();
 			} else if (e.ctrlKey) {
 				if (e.keyCode in ctrlCodes) {
 					ctrlCodes[e.keyCode]();
+					e.preventDefault();
 				}
 				e.preventDefault();
 			} else if (e.keyCode in keyCodes) {
@@ -475,10 +487,10 @@ export default class extends React.Component<ConsoleProps,ConsoleState> {
 		this.rotateHistory(1);
 	}
 	beginningOfHistory = () => {
-		// TODO
+		this.rotateHistory(-this.state.history.length);
 	}
 	endOfHistory = () => {
-		// TODO
+		this.rotateHistory(this.state.history.length);
 	}
 	reverseSearchHistory = () => {
 		// TODO
@@ -733,12 +745,23 @@ export default class extends React.Component<ConsoleProps,ConsoleState> {
 			return 0;
 		}
 	}
-	rotateRing = (n: number, ringn: number, ring: number): number => {
+	rotateRing = (n: number, ringn: number, ring: number, circular: boolean = true): number => {
 		if(ring == 0) return 0;
-		return (ring + (ringn + n) % ring) % ring;
+		if(circular) {
+			return (ring + (ringn + n) % ring) % ring;
+		} else {
+			ringn = ringn - n;
+			if(ringn < 0) {
+				return 0;
+			} else if (ringn >= ring) {
+				return ring;
+			} else {
+				return ringn;
+			}
+		}
 	}
 	rotateHistory = (n: number) => {
-		let historyn = this.rotateRing(n, this.state.historyn, this.state.history.length+1);
+		let historyn = this.rotateRing(n, this.state.historyn, this.state.history.length+1, false);
 		if(historyn == 0) {
 			this.setState({
 				point: this.state.restoreText.length,
