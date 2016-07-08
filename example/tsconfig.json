@@ -1,6 +1,7 @@
 {
 	"compilerOptions": {
 		"noImplicitAny": true,
+		"declarations": false,
 		"sourceMap": true,
 		"module": "commonjs",
 		"target": "es5",

@@ -96,7 +96,7 @@ export interface ConsoleProps{
 	promptLabel?: string | (()=>string);
 	welcomeMessage?: string;
 }
-enum ConsoleCommand {
+export enum ConsoleCommand {
 	Default,
 	Kill,
 	Yank,

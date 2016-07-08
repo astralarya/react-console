@@ -18,6 +18,11 @@ export interface ConsoleProps {
     promptLabel?: string | (() => string);
     welcomeMessage?: string;
 }
+export declare enum ConsoleCommand {
+    Default = 0,
+    Kill = 1,
+    Yank = 2,
+}
 export interface ConsoleState {
     currLabel?: string;
     promptText?: string;
@@ -29,6 +34,9 @@ export interface ConsoleState {
     focus?: boolean;
     acceptInput?: boolean;
     typer?: string;
+    kill?: string[];
+    killn?: number;
+    lastCommand?: ConsoleCommand;
 }
 export default class  extends React.Component<ConsoleProps, ConsoleState> {
     static defaultProps: {
@@ -51,26 +59,37 @@ export default class  extends React.Component<ConsoleProps, ConsoleState> {
     keyDown: (e: KeyboardEvent) => void;
     change: () => void;
     paste: (e: ClipboardEvent) => void;
-    consoleInsert: (text: string, replace?: number) => void;
-    moveColumn: (n: number, max?: number) => number;
-    backDelete: () => void;
-    forwardDelete: () => void;
-    deleteUntilStart: () => void;
-    deleteUntilEnd: () => void;
-    moveBackward: () => void;
-    moveForward: () => void;
-    moveToStart: () => void;
-    moveToEnd: () => void;
-    moveToNextWord: () => void;
-    moveToPreviousWord: () => void;
-    nextWord(): number;
-    previousWord(): number;
-    doComplete: () => void;
-    cancelExecution: () => void;
-    commandTrigger: () => void;
-    rotateHistory: (n: number) => void;
+    beginningOfLine: () => void;
+    endOfLine: () => void;
+    forwardChar: () => void;
+    backwardChar: () => void;
+    forwardWord: () => void;
+    backwardWord: () => void;
+    acceptLine: () => void;
     previousHistory: () => void;
     nextHistory: () => void;
+    deleteChar: () => void;
+    backwardDeleteChar: () => void;
+    killLine: () => void;
+    backwardKillLine: () => void;
+    killWholeLine: () => void;
+    killWord: () => void;
+    backwardKillWord: () => void;
+    yank: () => void;
+    yankPop: () => void;
+    complete: () => void;
+    cancelCommand: () => void;
+    consoleInsert: (text: string, replace?: number) => {
+        promptText: string;
+        restoreText: string;
+        column: number;
+        lastCommand: ConsoleCommand;
+    };
+    moveColumn: (n: number, max?: number) => number;
+    nextWord(): number;
+    previousWord(): number;
+    rotateRing: (n: number, ringn: number, ring: number) => number;
+    rotateHistory: (n: number) => void;
     scrollSemaphore: number;
     scrollIfBottom: () => () => void;
     scrollIfBottomTrue: () => void;
