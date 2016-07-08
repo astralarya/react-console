@@ -30,6 +30,7 @@ class EchoConsole extends React.Component<{},EchoConsoleState> {
 		return <Console ref={ref => this.child.console = ref}
 			handler={this.echo}
 			promptLabel={this.promptLabel}
+			welcomeMessage={"Welcome to the react-console demo!"}
 			autofocus={true}
 		/>;
 	}
