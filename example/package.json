@@ -1,6 +1,6 @@
 {
   "name": "react-console-component-example",
-  "version": "0.3.0",
+  "version": "0.4.0",
   "description": "Example react console emulator",
   "private": true,
   "homepage": "https://autochthe.github.io/react-console/",
@@ -28,7 +28,7 @@
     "extract-text-webpack-plugin": "^1.0.1",
     "node-sass": "^3.8.0",
     "react": "^15.1.0",
-    "react-console-component": "^0.5.1",
+    "react-console-component": "^0.5.2",
     "react-dom": "^15.1.0",
     "sass-loader": "^4.0.0",
     "source-map-loader": "^0.1.5",
