@@ -24,21 +24,22 @@ export declare enum ConsoleCommand {
     Yank = 2,
 }
 export interface ConsoleState {
-    currLabel?: string;
-    promptText?: string;
-    restoreText?: string;
-    column?: number;
-    history?: string[];
-    ringn?: number;
-    log?: LogEntry[];
     focus?: boolean;
     acceptInput?: boolean;
     typer?: string;
+    column?: number;
+    currLabel?: string;
+    promptText?: string;
+    restoreText?: string;
+    log?: LogEntry[];
+    history?: string[];
+    historyn?: number;
     kill?: string[];
     killn?: number;
     lastCommand?: ConsoleCommand;
 }
 export default class  extends React.Component<ConsoleProps, ConsoleState> {
+    constructor(props: ConsoleProps);
     static defaultProps: {
         promptLabel: string;
         continue: () => boolean;
@@ -49,7 +50,6 @@ export default class  extends React.Component<ConsoleProps, ConsoleState> {
         container?: HTMLElement;
         focus?: HTMLElement;
     };
-    constructor(props: ConsoleProps);
     log: (...messages: any[]) => void;
     logX: (type: string, ...messages: any[]) => void;
     return: () => void;
@@ -80,9 +80,9 @@ export default class  extends React.Component<ConsoleProps, ConsoleState> {
     complete: () => void;
     cancelCommand: () => void;
     consoleInsert: (text: string, replace?: number) => {
+        column: number;
         promptText: string;
         restoreText: string;
-        column: number;
         lastCommand: ConsoleCommand;
     };
     moveColumn: (n: number, max?: number) => number;
