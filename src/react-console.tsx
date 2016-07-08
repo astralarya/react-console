@@ -221,16 +221,16 @@ export default class extends React.Component<ConsoleProps,ConsoleState> {
 			70: this.forwardChar,
 			// C-b
 			66: this.backwardChar,
+			// C-l TODO
+			//76: this.clearScreen,
 			// C-p
 			80: this.previousHistory,
 			// C-n
 			78: this.nextHistory,
-			// C-r TODO
-			//82: this.reverseSearchHistory,
-			// C-s TODO
-			//83: this.forwardSearchHistory,
-			// C-l TODO
-			//76: this.clearScreen,
+			// C-r
+			82: this.reverseSearchHistory,
+			// C-s
+			83: this.forwardSearchHistory,
 			// C-d
 			68: this.deleteChar, // TODO EOF
 			// C-q TODO
@@ -279,12 +279,12 @@ export default class extends React.Component<ConsoleProps,ConsoleState> {
 			70: this.forwardWord,
 			// M-b
 			66: this.backwardWord,
-			// M-p TODO
-			//80: this.nonIncrementalReverseSearchHistory,
-			// M-n TODO
-			//78: this.nonIncrementalForwardSearchHistory,
-			// M-. TODO
-			//190: this.yankLastArg,
+			// M-p
+			80: this.nonIncrementalReverseSearchHistory,
+			// M-n
+			78: this.nonIncrementalForwardSearchHistory,
+			// M-.
+			190: this.yankLastArg,
 			// M-TAB TODO
 			//9: this.tabInsert,
 			// M-t TODO
@@ -334,21 +334,21 @@ export default class extends React.Component<ConsoleProps,ConsoleState> {
 			// M-SPACE TODO
 			//32: this.setMark,
 		};
-		var metaShiftCodes: keyMap = {
-			// M-< TODO
-			//188: this.beginningOfHistory,
-			// M-> TODO
-			//190: this.endOfHistory,
-			// M-_ TODO
-			//189: this.yankLastArg,
+		var metaShiftCodes: keyMap = { // TODO hook in
+			// M-<
+			188: this.beginningOfHistory,
+			// M->
+			190: this.endOfHistory,
+			// M-_
+			189: this.yankLastArg,
 			// M-? TODO
 			//191: this.possibleCompletions,
 			// M-* TODO
 			//56: this.insertCompletions,
 		}
 		var metaCtrlCodes: keyMap = {
-			// M-C-y TODO
-			//89: this.yankNthArg,
+			// M-C-y
+			89: this.yankNthArg,
 			// M-C-] TODO
 			//221: this.characterSearchBackward,
 			// M-C-j TODO !!!
@@ -473,6 +473,42 @@ export default class extends React.Component<ConsoleProps,ConsoleState> {
 	}
 	nextHistory = () => {
 		this.rotateHistory(1);
+	}
+	beginningOfHistory = () => {
+		// TODO
+	}
+	endOfHistory = () => {
+		// TODO
+	}
+	reverseSearchHistory = () => {
+		// TODO
+	}
+	forwardSearchHistory = () => {
+		// TODO
+	}
+	nonIncrementalReverseSearchHistory = () => {
+		// TODO
+	}
+	nonIncrementalForwardSearchHistory = () => {
+		// TODO
+	}
+	historySearchBackward = () => {
+		// TODO
+	}
+	historySearchForward = () => {
+		// TODO
+	}
+	historySubstringSearchBackward = () => {
+		// TODO
+	}
+	historySubstringSearchForward = () => {
+		// TODO
+	}
+	yankNthArg = () => {
+		// TODO
+	}
+	yankLastArg = () => {
+		// TODO
 	}
 	// Commands for Changing Text
 	deleteChar = () => {
