@@ -492,18 +492,6 @@ export default class extends React.Component<ConsoleProps,ConsoleState> {
 			}, this.scrollToBottom);
 		}
 	}
-	consoleInsert = (text: string, replace: number = 0) => {
-		let promptText =
-				this.state.promptText.substring(0,this.state.column - replace)
-				+ text
-				+ this.state.promptText.substring(this.state.column);
-		return {
-			promptText: promptText,
-			restoreText: promptText,
-			column: this.moveColumn(text.length - replace, text.length - replace + this.state.promptText.length),
-			lastCommand: ConsoleCommand.Default,
-		};
-	}
 	// Killing and Yanking
 	killLine = () => {
 		let kill = this.state.kill;
@@ -667,6 +655,18 @@ export default class extends React.Component<ConsoleProps,ConsoleState> {
 		}
 	}
 	// Helper functions
+	consoleInsert = (text: string, replace: number = 0) => {
+		let promptText =
+				this.state.promptText.substring(0,this.state.column - replace)
+				+ text
+				+ this.state.promptText.substring(this.state.column);
+		return {
+			promptText: promptText,
+			restoreText: promptText,
+			column: this.moveColumn(text.length - replace, text.length - replace + this.state.promptText.length),
+			lastCommand: ConsoleCommand.Default,
+		};
+	}
 	moveColumn = (n: number, max: number = this.state.promptText.length) => {
 		let pos = this.state.column + n;
 		if (pos < 0) {
@@ -718,6 +718,7 @@ export default class extends React.Component<ConsoleProps,ConsoleState> {
 			}, this.scrollToBottom );
 		}
 	}
+	// DOM management
 	scrollSemaphore = 0;
 	scrollIfBottom = () => {
 		if(this.scrollSemaphore > 0 || this.child.container.scrollTop == this.child.container.scrollHeight - this.child.container.offsetHeight) {
