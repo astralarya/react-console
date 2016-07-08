@@ -5,13 +5,13 @@ import * as ReactDOM from 'react-dom';
 import './react-console.scss';
 
 interface ConsolePromptProps {
-	column?: number;
+	point?: number;
 	value: string;
 	label: string;
 }
 class ConsolePrompt extends React.Component<ConsolePromptProps,{}> {
 	static defaultProps: ConsolePromptProps = {
-		column: -1,
+		point: -1,
 		value: "",
 		label: "> "
 	}
@@ -43,14 +43,14 @@ class ConsolePrompt extends React.Component<ConsolePromptProps,{}> {
 		}
 	}
 	renderValue() {
-		if(this.props.column < 0) {
+		if(this.props.point < 0) {
 			return [this.props.value];
-		} else if (this.props.column == this.props.value.length) {
+		} else if (this.props.point == this.props.value.length) {
 			return [this.props.value,<span ref={ref => this.child.cursor = ref} key="cursor" className="react-console-cursor">&nbsp;</span>];
 		} else {
-			return [this.props.value.substring(0,this.props.column),
-				<span ref={ref => this.child.cursor = ref} key="cursor" className="react-console-cursor">{this.props.value.substring(this.props.column,this.props.column+1)}</span>,
-				this.props.value.substring(this.props.column+1)];
+			return [this.props.value.substring(0,this.props.point),
+				<span ref={ref => this.child.cursor = ref} key="cursor" className="react-console-cursor">{this.props.value.substring(this.props.point,this.props.point+1)}</span>,
+				this.props.value.substring(this.props.point+1)];
 		}
 	}
 	render() {
@@ -107,7 +107,7 @@ export interface ConsoleState{
 	focus?: boolean;
 	acceptInput?: boolean;
 	typer?: string;
-	column?: number;
+	point?: number;
 	currLabel?: string;
 	promptText?: string;
 	restoreText?: string;
@@ -125,7 +125,7 @@ export default class extends React.Component<ConsoleProps,ConsoleState> {
 			focus: false,
 			acceptInput: true,
 			typer: '',
-			column: 0,
+			point: 0,
 			currLabel: this.nextLabel(),
 			promptText: '',
 			restoreText: '',
@@ -396,37 +396,37 @@ export default class extends React.Component<ConsoleProps,ConsoleState> {
 	// Commands for Moving
 	beginningOfLine = () => {
 		this.setState({
-			column: 0,
+			point: 0,
 			lastCommand: ConsoleCommand.Default,
 		}, this.scrollToBottom);
 	}
 	endOfLine = () => {
 		this.setState({
-			column: this.state.promptText.length,
+			point: this.state.promptText.length,
 			lastCommand: ConsoleCommand.Default,
 		}, this.scrollToBottom);
 	}
 	forwardChar = () => {
 		this.setState({
-			column: this.moveColumn(1),
+			point: this.movePoint(1),
 			lastCommand: ConsoleCommand.Default,
 		}, this.scrollToBottom);
 	}
 	backwardChar = () => {
 		this.setState({
-			column: this.moveColumn(-1),
+			point: this.movePoint(-1),
 			lastCommand: ConsoleCommand.Default,
 		}, this.scrollToBottom);
 	}
 	forwardWord = () => {
 		this.setState({
-			column: this.nextWord(),
+			point: this.nextWord(),
 			lastCommand: ConsoleCommand.Default,
 		}, this.scrollToBottom);
 	}
 	backwardWord = () => {
 		this.setState({
-			column: this.previousWord(),
+			point: this.previousWord(),
 			lastCommand: ConsoleCommand.Default,
 		}, this.scrollToBottom);
 	}
@@ -455,7 +455,7 @@ export default class extends React.Component<ConsoleProps,ConsoleState> {
 			this.setState({
 				acceptInput: false,
 				typer: "",
-				column: 0,
+				point: 0,
 				promptText: "",
 				restoreText: "",
 				log: log,
@@ -476,20 +476,20 @@ export default class extends React.Component<ConsoleProps,ConsoleState> {
 	}
 	// Commands for Changing Text
 	deleteChar = () => {
-		if(this.state.column < this.state.promptText.length) {
+		if(this.state.point < this.state.promptText.length) {
 			this.setState({
-				promptText: this.state.promptText.substring(0,this.state.column)
-					+ this.state.promptText.substring(this.state.column+1),
+				promptText: this.state.promptText.substring(0,this.state.point)
+					+ this.state.promptText.substring(this.state.point+1),
 				lastCommand: ConsoleCommand.Default,
 			}, this.scrollToBottom);
 		}
 	}
 	backwardDeleteChar = () => {
-		if(this.state.column > 0) {
+		if(this.state.point > 0) {
 			this.setState({
-				column: this.moveColumn(-1),
-				promptText: this.state.promptText.substring(0,this.state.column-1)
-					+ this.state.promptText.substring(this.state.column),
+				point: this.movePoint(-1),
+				promptText: this.state.promptText.substring(0,this.state.point-1)
+					+ this.state.promptText.substring(this.state.point),
 				lastCommand: ConsoleCommand.Default,
 			}, this.scrollToBottom);
 		}
@@ -498,12 +498,12 @@ export default class extends React.Component<ConsoleProps,ConsoleState> {
 	killLine = () => {
 		let kill = this.state.kill;
 		if(this.state.lastCommand == ConsoleCommand.Kill) {
-			kill[0] = kill[0] + this.state.promptText.substring(this.state.column);
+			kill[0] = kill[0] + this.state.promptText.substring(this.state.point);
 		} else {
-			kill.unshift(this.state.promptText.substring(this.state.column));
+			kill.unshift(this.state.promptText.substring(this.state.point));
 		}
 		this.setState({
-			promptText: this.state.promptText.substring(0,this.state.column),
+			promptText: this.state.promptText.substring(0,this.state.point),
 			kill: kill,
 			killn: 0,
 			lastCommand: ConsoleCommand.Kill,
@@ -512,13 +512,13 @@ export default class extends React.Component<ConsoleProps,ConsoleState> {
 	backwardKillLine = () => {
 		let kill = this.state.kill;
 		if(this.state.lastCommand == ConsoleCommand.Kill) {
-			kill[0] = this.state.promptText.substring(0,this.state.column) + kill[0];
+			kill[0] = this.state.promptText.substring(0,this.state.point) + kill[0];
 		} else {
-			kill.unshift(this.state.promptText.substring(0,this.state.column));
+			kill.unshift(this.state.promptText.substring(0,this.state.point));
 		}
 		this.setState({
-			column: 0,
-			promptText: this.state.promptText.substring(this.state.column),
+			point: 0,
+			promptText: this.state.promptText.substring(this.state.point),
 			kill: kill,
 			killn: 0,
 			lastCommand: ConsoleCommand.Kill,
@@ -527,13 +527,13 @@ export default class extends React.Component<ConsoleProps,ConsoleState> {
 	killWholeLine = () => {
 		let kill = this.state.kill;
 		if(this.state.lastCommand == ConsoleCommand.Kill) {
-			kill[0] = this.state.promptText.substring(0,this.state.column)
-				+ kill[0] + this.state.promptText.substring(this.state.column);
+			kill[0] = this.state.promptText.substring(0,this.state.point)
+				+ kill[0] + this.state.promptText.substring(this.state.point);
 		} else {
 			kill.unshift(this.state.promptText);
 		}
 		this.setState({
-			column: 0,
+			point: 0,
 			promptText: '',
 			kill: kill,
 			killn: 0,
@@ -543,12 +543,12 @@ export default class extends React.Component<ConsoleProps,ConsoleState> {
 	killWord = () => {
 		let kill = this.state.kill;
 		if(this.state.lastCommand == ConsoleCommand.Kill) {
-			kill[0] = kill[0] + this.state.promptText.substring(this.state.column,this.nextWord());
+			kill[0] = kill[0] + this.state.promptText.substring(this.state.point,this.nextWord());
 		} else {
-			kill.unshift(this.state.promptText.substring(this.state.column,this.nextWord()));
+			kill.unshift(this.state.promptText.substring(this.state.point,this.nextWord()));
 		}
 		this.setState({
-			promptText: this.state.promptText.substring(0,this.state.column)
+			promptText: this.state.promptText.substring(0,this.state.point)
 				+ this.state.promptText.substring(this.nextWord()),
 			kill: kill,
 			killn: 0,
@@ -558,14 +558,14 @@ export default class extends React.Component<ConsoleProps,ConsoleState> {
 	backwardKillWord = () => {
 		let kill = this.state.kill;
 		if(this.state.lastCommand == ConsoleCommand.Kill) {
-			kill[0] = this.state.promptText.substring(this.previousWord(),this.state.column) + kill[0];
+			kill[0] = this.state.promptText.substring(this.previousWord(),this.state.point) + kill[0];
 		} else {
-			kill.unshift(this.state.promptText.substring(this.previousWord(),this.state.column));
+			kill.unshift(this.state.promptText.substring(this.previousWord(),this.state.point));
 		}
 		this.setState({
-			column: this.previousWord(),
+			point: this.previousWord(),
 			promptText: this.state.promptText.substring(0,this.previousWord())
-				+ this.state.promptText.substring(this.state.column),
+				+ this.state.promptText.substring(this.state.point),
 			kill: kill,
 			killn: 0,
 			lastCommand: ConsoleCommand.Kill,
@@ -597,7 +597,7 @@ export default class extends React.Component<ConsoleProps,ConsoleState> {
 			let words = this.state.promptText.split(" ");
 			let curr = 0;
 			let idx = words[0].length;
-			while(idx < this.state.column && curr + 1 < words.length) {
+			while(idx < this.state.point && curr + 1 < words.length) {
 				idx += words[++curr].length + 1;
 			}
 
@@ -605,12 +605,12 @@ export default class extends React.Component<ConsoleProps,ConsoleState> {
 			if(completions.length == 1) {
 				// Perform completion
 				words[curr] = completions[0];
-				let column = -1;
+				let point = -1;
 				for(let i = 0; i <= curr; i++) {
-					column += words[i].length + 1;
+					point += words[i].length + 1;
 				}
 				this.setState({
-					column: column,
+					point: point,
 					promptText: words.join(" "),
 					lastCommand: ConsoleCommand.Default,
 				}, this.scrollToBottom );
@@ -646,7 +646,7 @@ export default class extends React.Component<ConsoleProps,ConsoleState> {
 			});
 			this.setState({
 				typer: "",
-				column: 0,
+				point: 0,
 				promptText: "",
 				restoreText: "",
 				log: log,
@@ -660,17 +660,17 @@ export default class extends React.Component<ConsoleProps,ConsoleState> {
 	// Helper functions
 	consoleInsert = (text: string, replace: number = 0) => {
 		let promptText =
-				this.state.promptText.substring(0,this.state.column - replace)
-				+ text + this.state.promptText.substring(this.state.column);
+				this.state.promptText.substring(0,this.state.point - replace)
+				+ text + this.state.promptText.substring(this.state.point);
 		return {
-			column: this.moveColumn(text.length - replace, text.length - replace + this.state.promptText.length),
+			point: this.movePoint(text.length - replace, text.length - replace + this.state.promptText.length),
 			promptText: promptText,
 			restoreText: promptText,
 			lastCommand: ConsoleCommand.Default,
 		};
 	}
-	moveColumn = (n: number, max: number = this.state.promptText.length) => {
-		let pos = this.state.column + n;
+	movePoint = (n: number, max: number = this.state.promptText.length) => {
+		let pos = this.state.point + n;
 		if (pos < 0) {
 			return 0;
 		} if (pos > max) {
@@ -681,16 +681,16 @@ export default class extends React.Component<ConsoleProps,ConsoleState> {
 	}
 	nextWord(): number {
 		// Find first alphanumeric char after first non-alphanumeric char
-		let search = /\W\w/.exec(this.state.promptText.substring(this.state.column));
+		let search = /\W\w/.exec(this.state.promptText.substring(this.state.point));
 		if(search) {
-			return search.index + this.state.column + 1;
+			return search.index + this.state.point + 1;
 		} else {
 			return this.state.promptText.length;
 		}
 	}
 	previousWord(): number {
 		// Find first non-alphanumeric char after first alphanumeric char in reverse
-		let search = /\W\w(?!.*\W\w)/.exec(this.state.promptText.substring(0,this.state.column-1));
+		let search = /\W\w(?!.*\W\w)/.exec(this.state.promptText.substring(0,this.state.point-1));
 		if(search) {
 			return search.index + 1;
 		} else {
@@ -705,7 +705,7 @@ export default class extends React.Component<ConsoleProps,ConsoleState> {
 		let historyn = this.rotateRing(n, this.state.historyn, this.state.history.length+1);
 		if(historyn == 0) {
 			this.setState({
-				column: this.state.restoreText.length,
+				point: this.state.restoreText.length,
 				promptText: this.state.restoreText,
 				historyn: historyn,
 				lastCommand: ConsoleCommand.Default,
@@ -713,7 +713,7 @@ export default class extends React.Component<ConsoleProps,ConsoleState> {
 		} else {
 			let promptText = this.state.history[this.state.history.length-historyn];
 			this.setState({
-				column: promptText.length,
+				point: promptText.length,
 				promptText: promptText,
 				historyn: historyn,
 				lastCommand: ConsoleCommand.Default,
@@ -769,7 +769,7 @@ export default class extends React.Component<ConsoleProps,ConsoleState> {
 				];
 			})}
 			{this.state.acceptInput?
-				<ConsolePrompt label={this.state.currLabel} value={this.state.promptText} column={this.state.column} />
+				<ConsolePrompt label={this.state.currLabel} value={this.state.promptText} point={this.state.point} />
 				: null
 			}
 			<div style={{ overflow: "hidden", height: 1, width: 1 }}>
