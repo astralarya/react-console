@@ -111,6 +111,7 @@ export interface ConsoleProps{
 }
 export const enum ConsoleCommand {
 	Default,
+	InitSearch,
 	Search,
 	Kill,
 	Yank,
@@ -121,7 +122,6 @@ export interface ConsoleState{
 	typer?: string;
 	point?: number;
 	currLabel?: string;
-	argument?: string;
 	promptText?: string;
 	restoreText?: string;
 	searchText?: string;
@@ -130,6 +130,7 @@ export interface ConsoleState{
 	historyn?: number;
 	kill?: string[];
 	killn?: number;
+	argument?: string;
 	lastCommand?: ConsoleCommand;
 };
 export default class extends React.Component<ConsoleProps,ConsoleState> {
@@ -141,7 +142,6 @@ export default class extends React.Component<ConsoleProps,ConsoleState> {
 			typer: '',
 			point: 0,
 			currLabel: this.nextLabel(),
-			argument: null,
 			promptText: '',
 			restoreText: '',
 			searchText: '',
@@ -150,6 +150,7 @@ export default class extends React.Component<ConsoleProps,ConsoleState> {
 			historyn: 0,
 			kill: [],
 			killn: 0,
+			argument: null,
 			lastCommand: ConsoleCommand.Default,
 		};
 	}
@@ -425,36 +426,42 @@ export default class extends React.Component<ConsoleProps,ConsoleState> {
 	beginningOfLine = () => {
 		this.setState({
 			point: 0,
+			argument: null,
 			lastCommand: ConsoleCommand.Default,
 		}, this.scrollToBottom);
 	}
 	endOfLine = () => {
 		this.setState({
 			point: this.state.promptText.length,
+			argument: null,
 			lastCommand: ConsoleCommand.Default,
 		}, this.scrollToBottom);
 	}
 	forwardChar = () => {
 		this.setState({
 			point: this.movePoint(1),
+			argument: null,
 			lastCommand: ConsoleCommand.Default,
 		}, this.scrollToBottom);
 	}
 	backwardChar = () => {
 		this.setState({
 			point: this.movePoint(-1),
+			argument: null,
 			lastCommand: ConsoleCommand.Default,
 		}, this.scrollToBottom);
 	}
 	forwardWord = () => {
 		this.setState({
 			point: this.nextWord(),
+			argument: null,
 			lastCommand: ConsoleCommand.Default,
 		}, this.scrollToBottom);
 	}
 	backwardWord = () => {
 		this.setState({
 			point: this.previousWord(),
+			argument: null,
 			lastCommand: ConsoleCommand.Default,
 		}, this.scrollToBottom);
 	}
@@ -489,6 +496,7 @@ export default class extends React.Component<ConsoleProps,ConsoleState> {
 				log: log,
 				history: history,
 				historyn: 0,
+				argument: null,
 				lastCommand: ConsoleCommand.Default,
 			}, () => {
 				this.scrollToBottom();
@@ -509,20 +517,22 @@ export default class extends React.Component<ConsoleProps,ConsoleState> {
 		this.rotateHistory(this.state.history.length);
 	}
 	reverseSearchHistory = () => {
-		if(this.state.lastCommand == ConsoleCommand.Search) {
+		if(this.state.lastCommand == ConsoleCommand.Search || this.state.lastCommand == ConsoleCommand.InitSearch) {
 			// TODO search backwards
 		} else {
 			this.setState({
 				argument: `(reverse-i-search)\`': `,
+				lastCommand: ConsoleCommand.Search,
 			});
 		}
 	}
 	forwardSearchHistory = () => {
-		if(this.state.lastCommand == ConsoleCommand.Search) {
+		if(this.state.lastCommand == ConsoleCommand.Search || this.state.lastCommand == ConsoleCommand.InitSearch) {
 			// TODO search forwards
 		} else {
 			this.setState({
 				argument: `(forward-i-search)\`': `,
+				lastCommand: ConsoleCommand.Search,
 			});
 		}
 	}
@@ -556,6 +566,7 @@ export default class extends React.Component<ConsoleProps,ConsoleState> {
 			this.setState({
 				promptText: this.state.promptText.substring(0,this.state.point)
 					+ this.state.promptText.substring(this.state.point+1),
+				argument: null,
 				lastCommand: ConsoleCommand.Default,
 			}, this.scrollToBottom);
 		}
@@ -566,6 +577,7 @@ export default class extends React.Component<ConsoleProps,ConsoleState> {
 				point: this.movePoint(-1),
 				promptText: this.state.promptText.substring(0,this.state.point-1)
 					+ this.state.promptText.substring(this.state.point),
+				argument: null,
 				lastCommand: ConsoleCommand.Default,
 			}, this.scrollToBottom);
 		}
@@ -582,6 +594,7 @@ export default class extends React.Component<ConsoleProps,ConsoleState> {
 			promptText: this.state.promptText.substring(0,this.state.point),
 			kill: kill,
 			killn: 0,
+			argument: null,
 			lastCommand: ConsoleCommand.Kill,
 		}, this.scrollToBottom);
 	}
@@ -597,6 +610,7 @@ export default class extends React.Component<ConsoleProps,ConsoleState> {
 			promptText: this.state.promptText.substring(this.state.point),
 			kill: kill,
 			killn: 0,
+			argument: null,
 			lastCommand: ConsoleCommand.Kill,
 		}, this.scrollToBottom);
 	}
@@ -613,6 +627,7 @@ export default class extends React.Component<ConsoleProps,ConsoleState> {
 			promptText: '',
 			kill: kill,
 			killn: 0,
+			argument: null,
 			lastCommand: ConsoleCommand.Kill,
 		}, this.scrollToBottom);
 	}
@@ -628,6 +643,7 @@ export default class extends React.Component<ConsoleProps,ConsoleState> {
 				+ this.state.promptText.substring(this.nextWord()),
 			kill: kill,
 			killn: 0,
+			argument: null,
 			lastCommand: ConsoleCommand.Kill,
 		}, this.scrollToBottom);
 	}
@@ -644,6 +660,7 @@ export default class extends React.Component<ConsoleProps,ConsoleState> {
 				+ this.state.promptText.substring(this.state.point),
 			kill: kill,
 			killn: 0,
+			argument: null,
 			lastCommand: ConsoleCommand.Kill,
 		}, this.scrollToBottom);
 	}
@@ -688,6 +705,7 @@ export default class extends React.Component<ConsoleProps,ConsoleState> {
 				this.setState({
 					point: point,
 					promptText: words.join(" "),
+					argument: null,
 					lastCommand: ConsoleCommand.Default,
 				}, this.scrollToBottom );
 			} else if (completions.length > 1) {
@@ -704,6 +722,7 @@ export default class extends React.Component<ConsoleProps,ConsoleState> {
 				this.setState({
 					currLabel: this.nextLabel(),
 					log: log,
+					argument: null,
 					lastCommand: ConsoleCommand.Default,
 				}, this.scrollToBottom );
 			}
@@ -727,6 +746,7 @@ export default class extends React.Component<ConsoleProps,ConsoleState> {
 				restoreText: "",
 				log: log,
 				historyn: 0,
+				argument: null,
 				lastCommand: ConsoleCommand.Default,
 			}, this.scrollToBottom);
 		} else { // command is executing, call handler
@@ -734,7 +754,7 @@ export default class extends React.Component<ConsoleProps,ConsoleState> {
 		}
 	}
 	// Helper functions
-	consoleInsert = (text: string, replace: number = 0) => {
+	consoleInsert = (text: string, replace: number = 0): ConsoleState => {
 		let promptText =
 				this.state.promptText.substring(0,this.state.point - replace)
 				+ text + this.state.promptText.substring(this.state.point);
@@ -742,6 +762,7 @@ export default class extends React.Component<ConsoleProps,ConsoleState> {
 			point: this.movePoint(text.length - replace, text.length - replace + this.state.promptText.length),
 			promptText: promptText,
 			restoreText: promptText,
+			argument: null,
 			lastCommand: ConsoleCommand.Default,
 		};
 	}
@@ -795,6 +816,7 @@ export default class extends React.Component<ConsoleProps,ConsoleState> {
 				point: this.state.restoreText.length,
 				promptText: this.state.restoreText,
 				historyn: historyn,
+				argument: null,
 				lastCommand: ConsoleCommand.Default,
 			}, this.scrollToBottom );
 		} else {
@@ -803,6 +825,7 @@ export default class extends React.Component<ConsoleProps,ConsoleState> {
 				point: promptText.length,
 				promptText: promptText,
 				historyn: historyn,
+				argument: null,
 				lastCommand: ConsoleCommand.Default,
 			}, this.scrollToBottom );
 		}
