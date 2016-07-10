@@ -82,11 +82,10 @@ function ConsoleMessage(props: ConsoleMessageProps): JSX.Element {
 		{props.value.map((val: any)=>{
 			let output: string;
 			if(typeof val == 'string') {
-				output = val;
+				return val;
 			} else {
-				output = JSON.stringify(val);
+				return JSON.stringify(val);
 			}
-			return output.replace(/ /g, '\u00a0');
 		}).join("\n")}
 	</div>;
 }
