@@ -8,12 +8,14 @@ interface ConsolePromptProps {
 	point?: number;
 	value: string;
 	label: string;
+	argument?: string;
 }
 class ConsolePrompt extends React.Component<ConsolePromptProps,{}> {
 	static defaultProps: ConsolePromptProps = {
 		point: -1,
 		value: "",
-		label: "> "
+		label: "> ",
+		argument: null,
 	}
 	child: {
 		cursor?: Element;
@@ -54,8 +56,18 @@ class ConsolePrompt extends React.Component<ConsolePromptProps,{}> {
 		}
 	}
 	render() {
+		let label = this.props.label;
+		if(this.props.argument) {
+			let idx = label.lastIndexOf("\n");
+			if(idx >= 0) {
+				label = label.substring(0, idx+1);
+			} else {
+				label = '';
+			}
+		}
 		return <div className="react-console-prompt-box">
-			<span className="react-console-prompt-label">{this.props.label}</span>
+			<span className="react-console-prompt-label">{ label }</span>
+			<span className="react-console-prompt-argument">{ this.props.argument }</span>
 			<span className="react-console-prompt">{ this.renderValue() }</span>
 		</div>;
 	}
@@ -98,8 +110,9 @@ export interface ConsoleProps{
 	promptLabel?: string | (()=>string);
 	welcomeMessage?: string;
 }
-export enum ConsoleCommand {
+export const enum ConsoleCommand {
 	Default,
+	Search,
 	Kill,
 	Yank,
 };
@@ -109,8 +122,10 @@ export interface ConsoleState{
 	typer?: string;
 	point?: number;
 	currLabel?: string;
+	argument?: string;
 	promptText?: string;
 	restoreText?: string;
+	searchText?: string;
 	log?: LogEntry[];
 	history?: string[];
 	historyn?: number;
@@ -127,8 +142,10 @@ export default class extends React.Component<ConsoleProps,ConsoleState> {
 			typer: '',
 			point: 0,
 			currLabel: this.nextLabel(),
+			argument: null,
 			promptText: '',
 			restoreText: '',
+			searchText: '',
 			log: [],
 			history: [],
 			historyn: 0,
@@ -493,10 +510,22 @@ export default class extends React.Component<ConsoleProps,ConsoleState> {
 		this.rotateHistory(this.state.history.length);
 	}
 	reverseSearchHistory = () => {
-		// TODO
+		if(this.state.lastCommand == ConsoleCommand.Search) {
+			// TODO search backwards
+		} else {
+			this.setState({
+				argument: `(reverse-i-search)\`': `,
+			});
+		}
 	}
 	forwardSearchHistory = () => {
-		// TODO
+		if(this.state.lastCommand == ConsoleCommand.Search) {
+			// TODO search forwards
+		} else {
+			this.setState({
+				argument: `(forward-i-search)\`': `,
+			});
+		}
 	}
 	nonIncrementalReverseSearchHistory = () => {
 		// TODO
@@ -828,7 +857,12 @@ export default class extends React.Component<ConsoleProps,ConsoleState> {
 				];
 			})}
 			{this.state.acceptInput?
-				<ConsolePrompt label={this.state.currLabel} value={this.state.promptText} point={this.state.point} />
+				<ConsolePrompt
+					label={this.state.currLabel}
+					value={this.state.promptText}
+					point={this.state.point}
+					argument={this.state.argument}
+					/>
 				: null
 			}
 			<div style={{ overflow: "hidden", height: 1, width: 1 }}>
