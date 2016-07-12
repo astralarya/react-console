@@ -111,11 +111,14 @@ export interface ConsoleProps{
 }
 export const enum ConsoleCommand {
 	Default,
-	InitSearch,
 	Search,
 	Kill,
 	Yank,
 };
+export const enum SearchDirection {
+	Reverse,
+	Forward,
+}
 export interface ConsoleState{
 	focus?: boolean;
 	acceptInput?: boolean;
@@ -125,6 +128,7 @@ export interface ConsoleState{
 	promptText?: string;
 	restoreText?: string;
 	searchText?: string;
+	searchInit?: boolean;
 	log?: LogEntry[];
 	history?: string[];
 	historyn?: number;
@@ -145,6 +149,7 @@ export default class extends React.Component<ConsoleProps,ConsoleState> {
 			promptText: '',
 			restoreText: '',
 			searchText: '',
+			searchInit: false,
 			log: [],
 			history: [],
 			historyn: 0,
@@ -517,23 +522,35 @@ export default class extends React.Component<ConsoleProps,ConsoleState> {
 		this.rotateHistory(this.state.history.length);
 	}
 	reverseSearchHistory = () => {
-		if(this.state.lastCommand == ConsoleCommand.Search || this.state.lastCommand == ConsoleCommand.InitSearch) {
-			// TODO search backwards
+		if(this.state.lastCommand == ConsoleCommand.Search) {
+			this.setState(Object.assign(
+				this.searchHistory(SearchDirection.Reverse, true),{
+					argument: `(reverse-i-search)\`${this.state.searchText}': `,
+					lastCommand: ConsoleCommand.Search,
+				}), this.scrollToBottom
+			);
 		} else {
 			this.setState({
+				searchInit: true,
 				argument: `(reverse-i-search)\`': `,
 				lastCommand: ConsoleCommand.Search,
-			});
+			}, this.scrollToBottom);
 		}
 	}
 	forwardSearchHistory = () => {
-		if(this.state.lastCommand == ConsoleCommand.Search || this.state.lastCommand == ConsoleCommand.InitSearch) {
-			// TODO search forwards
+		if(this.state.lastCommand == ConsoleCommand.Search) {
+			this.setState(Object.assign(
+				this.searchHistory(SearchDirection.Forward, true),{
+					argument: `(forward-i-search)\`${this.state.searchText}': `,
+					lastCommand: ConsoleCommand.Search,
+				}), this.scrollToBottom
+			);
 		} else {
 			this.setState({
+				searchInit: true,
 				argument: `(forward-i-search)\`': `,
 				lastCommand: ConsoleCommand.Search,
-			});
+			}, this.scrollToBottom);
 		}
 	}
 	nonIncrementalReverseSearchHistory = () => {
@@ -829,6 +846,28 @@ export default class extends React.Component<ConsoleProps,ConsoleState> {
 				lastCommand: ConsoleCommand.Default,
 			}, this.scrollToBottom );
 		}
+	}
+	searchHistory = (direction: SearchDirection, next: boolean = false): ConsoleState => {
+		let idx = this.state.historyn;
+		let inc = (direction == SearchDirection.Reverse)?1:-1;
+		if(next) {
+			idx = idx + inc;
+		}
+		for(;idx > 0 && idx <= this.state.history.length; idx = idx + inc) {
+			let entry = this.state.history[this.state.history.length-idx];
+			let point = entry.indexOf(this.state.searchText);
+			if(point > -1) {
+				return {
+					point: point,
+					promptText: entry,
+					searchInit: false,
+					historyn: idx,
+				};
+			}
+		}
+		return {
+			searchInit: false,
+		};
 	}
 	// DOM management
 	scrollSemaphore = 0;
