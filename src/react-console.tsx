@@ -234,7 +234,7 @@ export default class extends React.Component<ConsoleProps,ConsoleState> {
 			// tab
 			9: this.complete,
 			// esc
-			//27: this.prefixMeta,
+			27: this.prefixMeta,
 		};
 		var ctrlCodes: keyMap = {
 			// C-a
@@ -617,7 +617,12 @@ export default class extends React.Component<ConsoleProps,ConsoleState> {
 		}
 	}
 	backwardDeleteChar = () => {
-		if(this.state.point > 0) {
+		if(this.state.lastCommand == ConsoleCommand.Search) {
+			this.setState({
+				searchText: this.state.searchText.substring(0,this.state.searchText.length-1),
+				typer: this.child.typer.value,
+			}, this.triggerSearch );
+		} else if(this.state.point > 0) {
 			this.setState({
 				point: this.movePoint(-1),
 				promptText: this.state.promptText.substring(0,this.state.point-1)
@@ -775,6 +780,15 @@ export default class extends React.Component<ConsoleProps,ConsoleState> {
 	}
 	// Keyboard Macros
 	// Miscellaneous
+	prefixMeta = () => {
+		if(this.state.lastCommand == ConsoleCommand.Search) {
+			this.setState({
+				argument: null,
+				lastCommand: ConsoleCommand.Default,
+			});
+		}
+		// TODO Meta prefixed state
+	}
 	cancelCommand = () => {
 		if(this.state.acceptInput) { // Typing command
 			this.child.typer.value = "";
