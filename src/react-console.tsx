@@ -870,7 +870,7 @@ export default class extends React.Component<ConsoleProps,ConsoleState> {
 		}
 	}
 	rotateHistory = (n: number) => {
-		let historyn = this.rotateRing(n, this.state.historyn, this.state.history.length+1, false);
+		let historyn = this.rotateRing(n, this.state.historyn, this.state.history.length, false);
 		if(historyn == 0) {
 			this.setState({
 				point: this.state.restoreText.length,
