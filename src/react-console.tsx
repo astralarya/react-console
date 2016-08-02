@@ -128,6 +128,7 @@ export interface ConsoleState{
 	promptText?: string;
 	restoreText?: string;
 	searchText?: string;
+	searchDirection?: SearchDirection;
 	searchInit?: boolean;
 	log?: LogEntry[];
 	history?: string[];
@@ -149,6 +150,7 @@ export default class extends React.Component<ConsoleProps,ConsoleState> {
 			promptText: '',
 			restoreText: '',
 			searchText: '',
+			searchDirection: null,
 			searchInit: false,
 			log: [],
 			history: [],
@@ -412,19 +414,36 @@ export default class extends React.Component<ConsoleProps,ConsoleState> {
 				break;
 			}
 		}
-		this.setState(Object.assign(
-			this.consoleInsert(this.child.typer.value.substring(idx), this.state.typer.length - idx),{
+		let insert = this.child.typer.value.substring(idx);
+		let replace = this.state.typer.length - idx;
+		if(this.state.lastCommand == ConsoleCommand.Search) {
+			this.setState({
+				searchText: this.state.searchInit?insert:this.textInsert(insert, this.state.searchText, replace),
 				typer: this.child.typer.value,
-				lastCommand: ConsoleCommand.Default,
-			}), this.scrollToBottom
-		);
+			}, this.triggerSearch );
+		} else {
+			this.setState(Object.assign(
+				this.consoleInsert(insert, replace),{
+					typer: this.child.typer.value,
+					lastCommand: ConsoleCommand.Default,
+				}), this.scrollToBottom
+			);
+		}
 	}
 	paste = (e: ClipboardEvent) => {
-		this.setState(Object.assign(
-			this.consoleInsert(e.clipboardData.getData('text')),{
-				lastCommand: ConsoleCommand.Default,
-			}), this.scrollToBottom
-		);
+		let insert = e.clipboardData.getData('text');
+		if(this.state.lastCommand == ConsoleCommand.Search) {
+			this.setState({
+				searchText: this.state.searchInit?insert:this.textInsert(insert, this.state.searchText),
+				typer: this.child.typer.value,
+			}, this.triggerSearch );
+		} else {
+			this.setState(Object.assign(
+				this.consoleInsert(insert),{
+					lastCommand: ConsoleCommand.Default,
+				}), this.scrollToBottom
+			);
+		}
 		e.preventDefault();
 	}
 	// Commands for Moving
@@ -521,6 +540,13 @@ export default class extends React.Component<ConsoleProps,ConsoleState> {
 	endOfHistory = () => {
 		this.rotateHistory(this.state.history.length);
 	}
+	triggerSearch = () => {
+		if(this.state.searchDirection == SearchDirection.Reverse) {
+			this.reverseSearchHistory();
+		} else {
+			this.forwardSearchHistory();
+		}
+	}
 	reverseSearchHistory = () => {
 		if(this.state.lastCommand == ConsoleCommand.Search) {
 			this.setState(Object.assign(
@@ -531,6 +557,7 @@ export default class extends React.Component<ConsoleProps,ConsoleState> {
 			);
 		} else {
 			this.setState({
+				searchDirection: SearchDirection.Reverse,
 				searchInit: true,
 				argument: `(reverse-i-search)\`': `,
 				lastCommand: ConsoleCommand.Search,
@@ -547,6 +574,7 @@ export default class extends React.Component<ConsoleProps,ConsoleState> {
 			);
 		} else {
 			this.setState({
+				searchDirection: SearchDirection.Forward,
 				searchInit: true,
 				argument: `(forward-i-search)\`': `,
 				lastCommand: ConsoleCommand.Search,
@@ -771,12 +799,13 @@ export default class extends React.Component<ConsoleProps,ConsoleState> {
 		}
 	}
 	// Helper functions
-	consoleInsert = (text: string, replace: number = 0): ConsoleState => {
-		let promptText =
-				this.state.promptText.substring(0,this.state.point - replace)
-				+ text + this.state.promptText.substring(this.state.point);
+	textInsert = (insert: string, text: string, replace: number = 0, point: number = text.length): string => {
+		return text.substring(0, point - replace) + insert + text.substring(point);
+	}
+	consoleInsert = (insert: string, replace: number = 0): ConsoleState => {
+		let promptText = this.textInsert(insert, this.state.promptText, replace, this.state.point);
 		return {
-			point: this.movePoint(text.length - replace, text.length - replace + this.state.promptText.length),
+			point: this.movePoint(insert.length - replace, insert.length - replace + this.state.promptText.length),
 			promptText: promptText,
 			restoreText: promptText,
 			argument: null,
@@ -847,7 +876,7 @@ export default class extends React.Component<ConsoleProps,ConsoleState> {
 			}, this.scrollToBottom );
 		}
 	}
-	searchHistory = (direction: SearchDirection, next: boolean = false): ConsoleState => {
+	searchHistory = (direction: SearchDirection = this.state.searchDirection, next: boolean = false): ConsoleState => {
 		let idx = this.state.historyn;
 		let inc = (direction == SearchDirection.Reverse)?1:-1;
 		if(next) {
@@ -860,12 +889,14 @@ export default class extends React.Component<ConsoleProps,ConsoleState> {
 				return {
 					point: point,
 					promptText: entry,
+					searchDirection: direction,
 					searchInit: false,
 					historyn: idx,
 				};
 			}
 		}
 		return {
+			searchDirection: direction,
 			searchInit: false,
 		};
 	}
