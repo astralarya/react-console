@@ -14,14 +14,13 @@ let externals = {
 let webpack = require('webpack');
 let FailPlugin = require('webpack-fail-plugin');
 let ExtractTextPlugin = require('extract-text-webpack-plugin');
+let ArchivePlugin = require('webpack-archive-plugin');
 
 let options = {
-	bundle: process.argv.indexOf('--bundle') != -1,
 	dev: process.argv.indexOf('--dev') != -1,
 	dist: process.argv.indexOf('--dist') != -1,
 	lib: process.argv.indexOf('--lib') != -1,
-	default: process.argv.indexOf('--bundle') == -1
-		&& process.argv.indexOf('--dev') == -1
+	default: process.argv.indexOf('--dev') == -1
 		&& process.argv.indexOf('--dist') == -1
 		&& process.argv.indexOf('--lib') == -1,
 };
@@ -48,10 +47,6 @@ let base = {
 		],
 	},
 	devtool: 'source-map',
-	plugins: [
-		FailPlugin,
-		new ExtractTextPlugin(project + '.css'),
-	],
 };
 
 let production_plugins = [
@@ -64,32 +59,6 @@ let production_plugins = [
 	new webpack.optimize.DedupePlugin(),
 ]
 
-let bundle = Object.assign({},base, {
-	output: {
-		path: __dirname + '/dist/bundle',
-		filename: project + '.bundle.js',
-		library: library,
-		libraryTarget: "var",
-	},
-	plugins: [
-		FailPlugin,
-		new ExtractTextPlugin(project + '.bundle.css'),
-	],
-});
-
-let bundle_min = Object.assign({},base, {
-	output: {
-		path: __dirname + '/dist/bundle-min',
-		filename: project + '.bundle.min.js',
-		library: library,
-		libraryTarget: "var",
-	},
-	plugins: [
-		new ExtractTextPlugin(project + '.bundle.min.css'),
-		...production_plugins,
-	],
-});
-
 let dist = Object.assign({},base, {
 	output: {
 		path: __dirname + '/dist/dist',
@@ -98,6 +67,11 @@ let dist = Object.assign({},base, {
 		libraryTarget: "var",
 	},
 	externals: externals,
+	plugins: [
+		FailPlugin,
+		new ArchivePlugin(),
+		new ExtractTextPlugin(project + '.css'),
+	],
 });
 
 let dist_min = Object.assign({},dist, {
@@ -108,7 +82,9 @@ let dist_min = Object.assign({},dist, {
 		libraryTarget: "var",
 	},
 	plugins: [
+		FailPlugin,
 		new ExtractTextPlugin(project + '.min.css'),
+		new ArchivePlugin(),
 		...production_plugins,
 	],
 });
@@ -127,6 +103,10 @@ let lib = Object.assign({},dist, {
 		libraryTarget: "commonjs2",
 	},
 	externals: libexternals,
+	plugins: [
+		FailPlugin,
+		new ExtractTextPlugin(project + '.css'),
+	],
 });
 
 let development = Object.assign({},bundle, {
@@ -145,21 +125,14 @@ let development = Object.assign({},bundle, {
 
 let targets = [];
 
-if(options.bundle) {
-	targets.push(bundle, bundle_min);
-}
-if(options.dev) {
+if(options.dev || options.default) {
 	targets.push(development);
 }
-if(options.dist) {
+if(options.dist || options.default) {
 	targets.push(dist, dist_min);
 }
-if(options.lib) {
+if(options.lib || options.default) {
 	targets.push(lib);
 }
 
-if(options.default) {
-	module.exports = [ bundle, bundle_min, dist, dist_min, lib, development ];
-} else {
-	module.exports = targets;
-}
+module.exports = targets;
