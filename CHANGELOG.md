@@ -2,6 +2,8 @@
 This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
+
+## [0.6.0] - 2016-08-05
 - Rename variables to match GNU readline semantics
 - Add Begginning/End of history commands
 - Add Incremental History search
@@ -58,7 +60,8 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - Working basic console implementation
 - Webpack compilation of React-Typescript and Sass
 
-[Unreleased]: https://github.com/autochthe/react-console/compare/v0.5.2...HEAD
+[Unreleased]: https://github.com/autochthe/react-console/compare/v0.6.0...HEAD
+[0.6.0]: https://github.com/autochthe/react-console/compare/v0.5.2...v0.6.0
 [0.5.2]: https://github.com/autochthe/react-console/compare/v0.5.1...v0.5.2
 [0.5.1]: https://github.com/autochthe/react-console/compare/v0.5.0...v0.5.1
 [0.5.0]: https://github.com/autochthe/react-console/compare/v0.4.2...v0.5.0
