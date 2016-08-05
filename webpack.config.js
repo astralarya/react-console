@@ -1,3 +1,5 @@
+'use strict';
+
 // Project settings
 
 let project = 'react-console';
@@ -123,8 +125,8 @@ let development = Object.assign({},base, {
 	],
 });
 
-let targets = [];
 
+let targets = [];
 if(options.dev || options.default) {
 	targets.push(development);
 }
@@ -134,5 +136,4 @@ if(options.dist || options.default) {
 if(options.lib || options.default) {
 	targets.push(lib);
 }
-
 module.exports = targets;
