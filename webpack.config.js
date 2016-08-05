@@ -26,15 +26,9 @@ let options = {
 		&& process.argv.indexOf('--lib') == -1,
 };
 
-let bundle = {
+let base = {
 	context: __dirname + "/src",
 	entry: './' + project + '.tsx',
-	output: {
-		path: __dirname + '/dist/bundle',
-		filename: project + '.bundle.js',
-		library: library,
-		libraryTarget: "var",
-	},
 	module: {
 		loaders: [
 			{
@@ -62,7 +56,6 @@ let bundle = {
 
 let production_plugins = [
 	FailPlugin,
-	new ExtractTextPlugin(project + '.min.css'),
 	new webpack.DefinePlugin({
 		'process.env.NODE_ENV': '"production"'
 	}),
@@ -71,20 +64,35 @@ let production_plugins = [
 	new webpack.optimize.DedupePlugin(),
 ]
 
-
-let bundle_min = Object.assign({},bundle, {
+let bundle = Object.assign({},base, {
 	output: {
 		path: __dirname + '/dist/bundle',
+		filename: project + '.bundle.js',
+		library: library,
+		libraryTarget: "var",
+	},
+	plugins: [
+		FailPlugin,
+		new ExtractTextPlugin(project + '.bundle.css'),
+	],
+});
+
+let bundle_min = Object.assign({},base, {
+	output: {
+		path: __dirname + '/dist/bundle-min',
 		filename: project + '.bundle.min.js',
 		library: library,
 		libraryTarget: "var",
 	},
-	plugins: production_plugins,
+	plugins: [
+		new ExtractTextPlugin(project + '.bundle.min.css'),
+		...production_plugins,
+	],
 });
 
-let dist = Object.assign({},bundle, {
+let dist = Object.assign({},base, {
 	output: {
-		path: __dirname + '/dist',
+		path: __dirname + '/dist/dist',
 		filename: project + '.js',
 		library: library,
 		libraryTarget: "var",
@@ -94,12 +102,15 @@ let dist = Object.assign({},bundle, {
 
 let dist_min = Object.assign({},dist, {
 	output: {
-		path: __dirname + '/dist',
+		path: __dirname + '/dist/dist-min',
 		filename: project + '.min.js',
 		library: library,
 		libraryTarget: "var",
 	},
-	plugins: production_plugins,
+	plugins: [
+		new ExtractTextPlugin(project + '.min.css'),
+		...production_plugins,
+	],
 });
 
 let libexternals = {}
@@ -127,6 +138,7 @@ let development = Object.assign({},bundle, {
 		libraryTarget: "var",
 	},
 	plugins: [
+		FailPlugin,
 		new ExtractTextPlugin(project + '.dev.css'),
 	],
 });
