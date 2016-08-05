@@ -109,7 +109,7 @@ let lib = Object.assign({},dist, {
 	],
 });
 
-let development = Object.assign({},bundle, {
+let development = Object.assign({},base, {
 	entry: '../dev/dev.tsx',
 	output: {
 		path: __dirname + '/dev/dist',
