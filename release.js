@@ -17,27 +17,34 @@ const project = require('./package.json');
 const changelogParser = require('changelog-parser');
 const GitHubAPI = require('github');
 const path = require('path');
+const read = require('read');
 const semver = require('semver');
 
-// Read changelog
-changelogParser(CHANGELOG, (err, result) => {
-	if (err) throw err;
+let password = '';
 
-	let found = false;
-	for(let elem of result.versions) {
-		if (elem.version == project.version) {
-			found = true;
-			if(!elem.body) {
-				console.log('Changelog body is required');
-				process.exit(1);
+read({ prompt: `Github password for ${USER}: `, silent: true }, (er, input) => {
+	password = input;
+
+	// Read changelog
+	changelogParser(CHANGELOG, (err, result) => {
+		if (err) throw err;
+
+		let found = false;
+		for(let elem of result.versions) {
+			if (elem.version == project.version) {
+				found = true;
+				if(!elem.body) {
+					console.log('Changelog body is required');
+					process.exit(1);
+				}
+				createRelease(project.version, elem.body);
 			}
-			createRelease(project.version, elem.body);
 		}
-	}
-	if(!found) {
-		console.log(`No changelog found for v${project.version}`);
-		process.exit(1);
-	}
+		if(!found) {
+			console.log(`No changelog found for v${project.version}`);
+			process.exit(1);
+		}
+	})
 })
 
 function createRelease(version, body) {
@@ -45,8 +52,9 @@ function createRelease(version, body) {
 	console.log(body);
 
 	let auth = {
-		type: 'oauth',
-		token: '6c64814fd14fc726673855dfa285f201ac8d93cc',
+		type: 'basic',
+		username: USER,
+		password: password,
 	};
 
 	// Connect to github
