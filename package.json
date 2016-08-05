@@ -20,6 +20,7 @@
     "clean": "rm -rf dist lib dev/dist",
     "clean:deep": "rm -rf dist lib dev/dist node_modules typings",
     "test": "webpack",
+    "preversion": "npm test"
     "postversion": "git push && git push --tags && ./release.js"
   },
   "devDependencies": {
