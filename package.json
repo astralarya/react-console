@@ -1,6 +1,6 @@
 {
   "name": "react-console-component",
-  "version": "0.5.2",
+  "version": "0.6.0",
   "description": "Simple react console emulator",
   "homepage": "https://autochthe.github.io/react-console/",
   "repository": "git+https://github.com/autochthe/react-console.git",
