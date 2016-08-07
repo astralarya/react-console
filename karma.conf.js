@@ -85,6 +85,14 @@ module.exports = function(config) {
 	// Long timeout to allow for slow test environments
 	browserDisconnectTimeout: 10000,
 
+	// Travis CI Chrome config
+	customLaunchers: {
+		Chrome_travis_ci: {
+			base: 'Chrome',
+			flags: ['--no-sandbox'],
+		},
+	},
+
     // Continuous Integration mode
     // if true, Karma captures browsers, runs the tests and exits
     singleRun: true,
