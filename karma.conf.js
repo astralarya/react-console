@@ -1,5 +1,6 @@
+'use strict';
+
 // Karma configuration
-// Generated on Sun Aug 07 2016 12:54:04 GMT-0500 (CDT)
 
 module.exports = function(config) {
 	config.set({
@@ -35,7 +36,7 @@ module.exports = function(config) {
 				loaders: [
 					{
 						test: /\.tsx?$/,
-						loader: "ts-loader",
+						loader: "istanbul-instrumenter!ts-loader",
 					},
 					{
 						test: /\.s?css$/,
@@ -46,7 +47,7 @@ module.exports = function(config) {
 					{
 						test: /\.(css|js)$/,
 						loader: "source-map-loader",
-					}
+					},
 				],
 			},
 			devtool: 'inline-source-map',
@@ -79,7 +80,10 @@ module.exports = function(config) {
 		// test results reporter to use
 		// possible values: 'dots', 'progress'
 		// available reporters: https://npmjs.org/browse/keyword/karma-reporter
-		reporters: ['mocha'],
+		reporters: ['mocha', 'coverage'],
+		coverageReporter: {
+			type: 'text',
+		},
 
 
 		// web server port
