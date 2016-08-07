@@ -36,7 +36,7 @@ module.exports = function(config) {
 				loaders: [
 					{
 						test: /\.tsx?$/,
-						loader: "istanbul-instrumenter!ts-loader",
+						loader: "ts-loader",
 					},
 					{
 						test: /\.s?css$/,
@@ -47,6 +47,13 @@ module.exports = function(config) {
 					{
 						test: /\.(css|js)$/,
 						loader: "source-map-loader",
+					},
+				],
+				postLoaders: [
+					{
+						test: /\.tsx?$/,
+						include: /src\//,
+						loader: "istanbul-instrumenter",
 					},
 				],
 			},
