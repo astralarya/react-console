@@ -23,11 +23,9 @@ let options = {
 	dev: process.argv.indexOf('--dev') != -1,
 	dist: process.argv.indexOf('--dist') != -1,
 	lib: process.argv.indexOf('--lib') != -1,
-	test: process.argv.indexOf('--test') != -1,
 	default: process.argv.indexOf('--dev') == -1
 		&& process.argv.indexOf('--dist') == -1
-		&& process.argv.indexOf('--lib') == -1
-		&& process.argv.indexOf('--test') == -1,
+		&& process.argv.indexOf('--lib') == -1,
 };
 
 let base = {
@@ -128,21 +126,6 @@ let development = Object.assign({},base, {
 	],
 });
 
-let test = Object.assign({},base, {
-	entry: '../test/test.tsx',
-	output: {
-		path: __dirname + '/test/dist',
-		filename: 'test.js',
-	},
-	devtool: 'inline-source-map',
-	target: 'node',
-	externals: [nodeExternals()],
-	plugins: [
-		FailPlugin,
-		new ExtractTextPlugin('test.css'),
-	],
-});
-
 
 let targets = [];
 if(options.dev || options.default) {
@@ -153,8 +136,5 @@ if(options.dist || options.default) {
 }
 if(options.lib || options.default) {
 	targets.push(lib);
-}
-if(options.test || options.default) {
-	targets.push(test);
 }
 module.exports = targets;
