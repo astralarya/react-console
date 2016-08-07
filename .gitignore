@@ -38,3 +38,6 @@ typings
 # Directory for built project
 dist
 lib
+
+# mocha-webpack cache
+.tmp

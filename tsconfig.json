@@ -9,6 +9,8 @@
 	},
 	"exclude": [
 		"example",
+		"test",
+		".tmp",
 		"node_modules"
 	]
 }

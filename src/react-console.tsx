@@ -77,7 +77,7 @@ interface ConsoleMessageProps {
 	type?: string;
 	value: any[];
 }
-function ConsoleMessage(props: ConsoleMessageProps): JSX.Element {
+let ConsoleMessage: React.SFC<ConsoleMessageProps> = function(props: ConsoleMessageProps) {
 	return <div className={"react-console-message" + (props.type?" react-console-message-"+props.type:"")}>
 		{props.value.map((val: any)=>{
 			let output: string;
@@ -88,6 +88,10 @@ function ConsoleMessage(props: ConsoleMessageProps): JSX.Element {
 			}
 		}).join("\n")}
 	</div>;
+}
+ConsoleMessage.defaultProps = {
+	type: null,
+	value: [],
 }
 
 export interface LogMessage {
