@@ -17,10 +17,10 @@
   "scripts": {
     "prepublish": "typings install && webpack",
     "build": "webpack",
-    "clean": "rm -rf dist lib dev/dist",
-    "clean:deep": "rm -rf dist lib dev/dist node_modules typings",
+    "clean": "rm -rf dist lib dev/dist test/dist",
+    "clean:deep": "rm -rf dist lib dev/dist test/dist node_modules typings",
     "pretest": "webpack",
-    "test": "mocha-webpack --webpack-config webpack.config-test.js test/*",
+    "test": "mocha test/dist/test.js",
     "preversion": "npm test",
     "postversion": "git push && git push --tags && ./release.js"
   },
@@ -34,7 +34,6 @@
     "extract-text-webpack-plugin": "^1.0.1",
     "github": "^2.4.0",
     "mocha": "^3.0.1",
-    "mocha-webpack": "^0.5.0",
     "node-sass": "^3.8.0",
     "react": "^15.1.0",
     "react-addons-test-utils": "^15.3.0",
