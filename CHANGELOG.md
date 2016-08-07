@@ -2,6 +2,7 @@
 This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
+- Add Karma/Mocha/Chai testing and reporting to coveralls.io
 
 ## [0.6.0] - 2016-08-05
 - Rename variables to match GNU readline semantics
