@@ -5,6 +5,7 @@ Simple React.js console emulator.
 [![NPM Version][npm-image]][npm-url]
 [![NPM Downloads][downloads-image]][npm-url]
 [![Travis Build][travis-image]][travis-url]
+[![Coverage Status][coveralls-image]][coveralls-url]
 
 [![Dependency Status][david-image]][david-url]
 [![devDependency Status][david-dev-image]][david-dev-url]
@@ -81,6 +82,8 @@ React-console is inspired by [chrisdone/jquery-console](https://github.com/chris
 [downloads-image]: https://img.shields.io/npm/dm/react-console-component.svg
 [travis-image]: https://img.shields.io/travis/autochthe/react-console/master.svg
 [travis-url]: https://travis-ci.org/autochthe/react-console
+[coveralls-image]: https://coveralls.io/repos/github/autochthe/react-console/badge.svg?branch=master
+[coveralls-url]: https://coveralls.io/github/autochthe/react-console?branch=master
 [david-url]: https://david-dm.org/autochthe/react-console
 [david-image]: https://david-dm.org/autochthe/react-console.svg
 [david-dev-url]: https://david-dm.org/autochthe/react-console#info=devDependencies
