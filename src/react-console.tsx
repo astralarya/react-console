@@ -80,7 +80,6 @@ interface ConsoleMessageProps {
 let ConsoleMessage: React.SFC<ConsoleMessageProps> = function(props: ConsoleMessageProps) {
 	return <div className={"react-console-message" + (props.type?" react-console-message-"+props.type:"")}>
 		{props.value.map((val: any)=>{
-			let output: string;
 			if(typeof val == 'string') {
 				return val;
 			} else {
