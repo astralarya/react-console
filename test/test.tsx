@@ -4,7 +4,11 @@ import * as React from 'react';
 import { assert, expect } from 'chai';
 import * as enzyme from 'enzyme';
 
-const ConsoleMessage = require('exports?ConsoleMessage!../src/react-console.tsx');
+const {
+	ConsomePrompt,
+	ConsoleMessage,
+	default: Console
+} = require('exports?ConsolePrompt&ConsoleMessage!../src/react-console.tsx');
 
 describe('<ConsoleMessage />', function() {
 	describe('type: ', function () {
