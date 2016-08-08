@@ -4,11 +4,21 @@ import * as React from 'react';
 import { assert, expect } from 'chai';
 import * as enzyme from 'enzyme';
 
-const {
-	ConsomePrompt,
+import {
+	ConsolePrompt,
 	ConsoleMessage,
-	default: Console
-} = require('exports?ConsolePrompt&ConsoleMessage!../src/react-console.tsx');
+	default as Console
+} from 'exports?ConsolePrompt&ConsoleMessage!../src/react-console.tsx';
+
+describe('<ConsolePrompt />', function() {
+	describe('point: ', function () {
+		it('Has no cursor when point is not passed', function() {
+			var wrapper = enzyme.shallow(<ConsolePrompt />);
+			expect((wrapper.instance() as ConsolePrompt).child.cursor).not.exist;
+			expect(wrapper.find('.react-console-cursor')).length(0);
+		});
+	});
+});
 
 describe('<ConsoleMessage />', function() {
 	describe('type: ', function () {
