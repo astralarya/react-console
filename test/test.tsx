@@ -10,18 +10,36 @@ import {
 	default as Console
 } from 'exports?ConsolePrompt&ConsoleMessage!../src/react-console.tsx';
 
+
 describe('<ConsolePrompt />', function() {
-	describe('point: ', function () {
+	describe('[Property] point: ', function () {
 		it('Has no cursor when point is not passed', function() {
 			var wrapper = enzyme.shallow(<ConsolePrompt />);
 			expect((wrapper.instance() as ConsolePrompt).child.cursor).not.exist;
 			expect(wrapper.find('.react-console-cursor')).length(0);
 		});
+		it('Has cursor when point is >= 0', function() {
+			var wrapper = enzyme.shallow(<ConsolePrompt point={0}/>);
+			expect(wrapper.find('.react-console-cursor')).length(1);
+		});
+	});
+	describe('[Style] idle: ', function () {
+		it('Is not idle right after mount', function() {
+			var wrapper = enzyme.shallow(<ConsolePrompt point={0}/>);
+			expect(wrapper.find('.react-console-cursor-idle')).length(0);
+		});
+		it('Is idle after 1 second', function(done) {
+			var wrapper = enzyme.mount(<ConsolePrompt point={0}/>);
+			window.setTimeout( () => {
+				expect(wrapper.find('.react-console-cursor-idle')).length(1);
+				done();
+			}, 1100);
+		});
 	});
 });
 
 describe('<ConsoleMessage />', function() {
-	describe('type: ', function () {
+	describe('[Property] type: ', function () {
 		it('Has class `react-console-message` when type=null', function() {
 			var wrapper = enzyme.shallow(<ConsoleMessage />);
 			assert(wrapper.hasClass('react-console-message'), 'Missing class `react-console-message`');
@@ -32,7 +50,7 @@ describe('<ConsoleMessage />', function() {
 			assert(wrapper.hasClass('react-console-message'), 'Missing class `react-console-message`');
 		});
 	});
-	describe('value: ', function () {
+	describe('[Property] value: ', function () {
 		it('Text == \'ababa\' when value={[\'ababa\']}', function() {
 			var wrapper = enzyme.shallow(<ConsoleMessage value={['ababa']}/>);
 			assert(wrapper.text() == 'ababa', 'Text does not equal \'ababa\'');
