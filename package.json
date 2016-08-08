@@ -17,8 +17,8 @@
   "scripts": {
     "prepublish": "typings install && webpack",
     "build": "webpack",
-    "clean": "rm -rf dist lib dev/dist test/dist",
-    "clean:deep": "rm -rf dist lib dev/dist test/dist node_modules typings",
+    "clean": "rm -rf dist lib dev/dist test/dist coverage",
+    "clean:deep": "rm -rf dist lib dev/dist test/dist coverage node_modules typings",
     "test": "karma start",
     "preversion": "npm test",
     "postversion": "git push && git push --tags && ./release.js"
