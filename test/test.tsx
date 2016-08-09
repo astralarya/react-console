@@ -44,6 +44,28 @@ describe('<ConsolePrompt />', function() {
 			expect(wrapper.find('.react-console-cursor').text()).equals('r');
 		});
 	});
+	describe('[Property] label: ', function () {
+		it('`.react-console-prompt-label` has text \'foo\' when label=\'foo\'', function() {
+			var wrapper = enzyme.shallow(<ConsolePrompt label='foo'/>);
+			expect(wrapper.find('.react-console-prompt-label').text()).equals('foo');
+		});
+	});
+	describe('[Property] argument: ', function () {
+		it('`.react-console-prompt-argument` has text \'foo\' when argument=\'foo\'', function() {
+			var wrapper = enzyme.shallow(<ConsolePrompt argument='foo'/>);
+			expect(wrapper.find('.react-console-prompt-argument').text()).equals('foo');
+		});
+		it('`.react-console-prompt-label` has text \'\' when label=\'foo\' and `.react-console-prompt-argument` has text \'bar\' when argument=\'bar\'', function() {
+			var wrapper = enzyme.shallow(<ConsolePrompt label='foo' argument='bar'/>);
+			expect(wrapper.find('.react-console-prompt-label').text()).equals('');
+			expect(wrapper.find('.react-console-prompt-argument').text()).equals('bar');
+		});
+		it('`.react-console-prompt-label` has text \'foo\\n\' when label=\'foo\\nbar\' and `.react-console-prompt-argument` has text \'baz\' when argument=\'baz\'', function() {
+			var wrapper = enzyme.mount(<ConsolePrompt label='foo\nbar' argument='baz'/>);
+			expect(wrapper.find('.react-console-prompt-label').text()).equals('foo\n');
+			expect(wrapper.find('.react-console-prompt-argument').text()).equals('baz');
+		});
+	});
 	describe('[Style] idle: ', function () {
 		it('Is not idle right after mount', function() {
 			var wrapper = enzyme.shallow(<ConsolePrompt point={0}/>);
