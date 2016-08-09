@@ -23,6 +23,27 @@ describe('<ConsolePrompt />', function() {
 			expect(wrapper.find('.react-console-cursor')).length(1);
 		});
 	});
+	describe('[Property] value: ', function () {
+		it('`.react-console-prompt` has text \'foo\' when value=\'foo\'', function() {
+			var wrapper = enzyme.shallow(<ConsolePrompt value='foo'/>);
+			expect(wrapper.find('.react-console-prompt').text()).equals('foo');
+		});
+		it('`.react-console-prompt` has text \'bar\' and `.react-console-cursor` has text \'b\' when value=\'bar\' and point=0', function() {
+			var wrapper = enzyme.shallow(<ConsolePrompt value='bar' point={0}/>);
+			expect(wrapper.find('.react-console-prompt').text()).equals('bar');
+			expect(wrapper.find('.react-console-cursor').text()).equals('b');
+		});
+		it('`.react-console-prompt` has text \'bar\' and `.react-console-cursor` has text \'a\' when value=\'bar\' and point=1', function() {
+			var wrapper = enzyme.shallow(<ConsolePrompt value='bar' point={1}/>);
+			expect(wrapper.find('.react-console-prompt').text()).equals('bar');
+			expect(wrapper.find('.react-console-cursor').text()).equals('a');
+		});
+		it('`.react-console-prompt` has text \'bar\' and `.react-console-cursor` has text \'r\' when value=\'bar\' and point=2', function() {
+			var wrapper = enzyme.shallow(<ConsolePrompt value='bar' point={2}/>);
+			expect(wrapper.find('.react-console-prompt').text()).equals('bar');
+			expect(wrapper.find('.react-console-cursor').text()).equals('r');
+		});
+	});
 	describe('[Style] idle: ', function () {
 		it('Is not idle right after mount', function() {
 			var wrapper = enzyme.shallow(<ConsolePrompt point={0}/>);
