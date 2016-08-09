@@ -98,6 +98,10 @@ describe('<ConsoleMessage />', function() {
 			var wrapper = enzyme.shallow(<ConsoleMessage value={['ababa']}/>);
 			assert(wrapper.text() == 'ababa', 'Text does not equal \'ababa\'');
 		});
+		it('Text == \'a\\nb\\nc\' when value={[\'a\',\'b\',\'c\']}', function() {
+			var wrapper = enzyme.mount(<ConsoleMessage value={['a','b','c']}/>);
+			assert(wrapper.text() == 'a\nb\nc', 'Text does not equal \'a\\nb\\nc\'');
+		});
 		it('Text == JSON.stringify(value) when value={[[\'a\',\'b\',\'c\',1,2,3]]}', function() {
 			var wrapper = enzyme.shallow(<ConsoleMessage value={[['a','b','c',1,2,3]]}/>);
 			assert(wrapper.text() == JSON.stringify(['a','b','c',1,2,3]), 'Text does not equal JSON.stringify(value)');
