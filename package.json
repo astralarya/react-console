@@ -59,7 +59,7 @@
     "typescript": "^1.8.10",
     "typings": "^1.3.0",
     "webpack": "^1.13.1",
-    "webpack-archive-plugin": "^1.0.0",
+    "webpack-archive-plugin": "^2.0.0",
     "webpack-fail-plugin": "^1.0.4",
     "webpack-node-externals": "^1.3.3"
   },
