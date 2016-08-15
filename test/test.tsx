@@ -124,4 +124,16 @@ describe('<Console />', function() {
 			expect(wrapper.find('.react-console-focus')).length(1);
 		});
 	});
+	describe('[Property] welcomeMessage: ', function () {
+		it('Doesn\'t have class `react-console-welcome` when welcomeMessage undefined', function() {
+			var wrapper = enzyme.shallow(<Console />);
+			expect(wrapper.find('.react-console-message')).length(0);
+		});
+		it('Has div `react-console-welcome` with text()=\'foo\' when welcomeMessage=\'foo\'', function() {
+			var wrapper = enzyme.shallow(<Console welcomeMessage='foo'/>);
+			var welcome = wrapper.find('.react-console-welcome');
+			expect(welcome).length(1);
+			expect(welcome.text()).equal('foo')
+		});
+	});
 });
