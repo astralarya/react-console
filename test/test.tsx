@@ -112,3 +112,16 @@ describe('<ConsoleMessage />', function() {
 		});
 	});
 });
+
+describe('<Console />', function() {
+	describe('[Property] autofocus: ', function () {
+		it('Has class `react-console-nofocus` on mount when autofocus undefined', function() {
+			var wrapper = enzyme.mount(<Console />);
+			expect(wrapper.find('.react-console-nofocus')).length(1);
+		});
+		it('Has class `react-console-focus` on mount when autofocus=true', function() {
+			var wrapper = enzyme.mount(<Console autofocus={true}/>);
+			expect(wrapper.find('.react-console-focus')).length(1);
+		});
+	});
+});
