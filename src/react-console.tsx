@@ -168,6 +168,7 @@ export default class extends React.Component<ConsoleProps,ConsoleState> {
 		promptLabel: '> ',
 		continue: function() { return false; },
 		cancel: function() {},
+		handler: function() { this.return() },
 	};
 	child: {
 		typer?: HTMLTextAreaElement;

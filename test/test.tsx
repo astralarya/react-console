@@ -129,6 +129,16 @@ describe('<Console />', function() {
 			expect(wrapper.find('.react-console-nofocus')).length(0);
 		});
 	});
+	describe('[Property] promptLabel: ', function () {
+		it('Has label \'> \' when promptLabel undefined', function() {
+			var wrapper = enzyme.mount(<Console />);
+			expect(wrapper.find('.react-console-prompt-label').text()).equals('> ');
+		});
+		it('Has label \'ababa: \' when promptLabel=\'ababa:\' ', function() {
+			var wrapper = enzyme.mount(<Console promptLabel='ababa: '/>);
+			expect(wrapper.find('.react-console-prompt-label').text()).equals('ababa: ');
+		});
+	});
 	describe('[Property] welcomeMessage: ', function () {
 		it('Doesn\'t have class `react-console-welcome` when welcomeMessage undefined', function() {
 			var wrapper = enzyme.shallow(<Console />);
