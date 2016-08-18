@@ -89,8 +89,10 @@ module.exports = function(config) {
 		// available reporters: https://npmjs.org/browse/keyword/karma-reporter
 		reporters: ['mocha', 'coverage', 'coveralls'],
 		coverageReporter: {
-			type: 'lcovonly',
-			dir: 'coverage/',
+			reporters: [
+				{ type: 'text-summary' },
+				{ type: 'lcovonly', dir: 'coverage/' },
+			]
 		},
 
 
