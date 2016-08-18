@@ -14,9 +14,12 @@
 			animation: cursor-animation 1s infinite;
 			animation-delay: 1s; }
 		text {
+			fill:#999;
+			font-family:'Menlo','Consolas','DejaVu Sans Mono',monospace; }
+		.prompt {
 			fill:#444;
 			font-weight:bold;
-			font-family:'Menlo','Consolas','DejaVu Sans Mono',monospace; }
+		}
 		@keyframes cursor-animation {
 		  0% {
 			fill: #333; }
@@ -36,12 +39,19 @@
 		width="60" />
 	<rect
 		id="cursor"
-		y="0.6"
+		y="2.5"
 		x="2.25"
 		height="1.2"
 		width="0.6" />
 	<text
 		y="1.55"
+		x="0.5"
+		font-size="1" >
+		Try the live demo!
+	</text>
+	<text
+		class="prompt"
+		y="3.5"
 		x="0.5"
 		font-size="1" >
 		0&gt;
