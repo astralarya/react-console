@@ -39,7 +39,7 @@
 		width="60" />
 	<rect
 		id="cursor"
-		y="2.5"
+		y="2.2"
 		x="2.25"
 		height="1.2"
 		width="0.6" />
@@ -51,7 +51,7 @@
 	</text>
 	<text
 		class="prompt"
-		y="3.5"
+		y="3.15"
 		x="0.5"
 		font-size="1" >
 		0&gt;
