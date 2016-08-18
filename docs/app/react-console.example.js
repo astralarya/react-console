@@ -21102,46 +21102,53 @@ var Example =
 		    };
 		    ConsolePrompt.prototype.renderValue = function () {
 		        var _this = this;
-		        if (this.props.column < 0) {
+		        if (this.props.point < 0) {
 		            return [this.props.value];
 		        }
-		        else if (this.props.column == this.props.value.length) {
+		        else if (this.props.point == this.props.value.length) {
 		            return [this.props.value, React.createElement("span", {ref: function (ref) { return _this.child.cursor = ref; }, key: "cursor", className: "react-console-cursor"}, " ")];
 		        }
 		        else {
-		            return [this.props.value.substring(0, this.props.column),
-		                React.createElement("span", {ref: function (ref) { return _this.child.cursor = ref; }, key: "cursor", className: "react-console-cursor"}, this.props.value.substring(this.props.column, this.props.column + 1)),
-		                this.props.value.substring(this.props.column + 1)];
+		            return [this.props.value.substring(0, this.props.point),
+		                React.createElement("span", {ref: function (ref) { return _this.child.cursor = ref; }, key: "cursor", className: "react-console-cursor"}, this.props.value.substring(this.props.point, this.props.point + 1)),
+		                this.props.value.substring(this.props.point + 1)];
 		        }
 		    };
 		    ConsolePrompt.prototype.render = function () {
-		        return React.createElement("div", {className: "react-console-prompt-box"}, React.createElement("span", {className: "react-console-prompt-label"}, this.props.label), React.createElement("span", {className: "react-console-prompt"}, this.renderValue()));
+		        var label = this.props.label;
+		        if (this.props.argument) {
+		            var idx = label.lastIndexOf("\n");
+		            if (idx >= 0) {
+		                label = label.substring(0, idx + 1);
+		            }
+		            else {
+		                label = '';
+		            }
+		        }
+		        return React.createElement("div", {className: "react-console-prompt-box"}, React.createElement("span", {className: "react-console-prompt-label"}, label), React.createElement("span", {className: "react-console-prompt-argument"}, this.props.argument), React.createElement("span", {className: "react-console-prompt"}, this.renderValue()));
 		    };
 		    ConsolePrompt.defaultProps = {
-		        column: -1,
+		        point: -1,
 		        value: "",
-		        label: "> "
+		        label: "> ",
+		        argument: null,
 		    };
 		    return ConsolePrompt;
 		}(React.Component));
-		function ConsoleMessage(props) {
+		var ConsoleMessage = function (props) {
 		    return React.createElement("div", {className: "react-console-message" + (props.type ? " react-console-message-" + props.type : "")}, props.value.map(function (val) {
-		        var output;
 		        if (typeof val == 'string') {
-		            output = val;
+		            return val;
 		        }
 		        else {
-		            output = JSON.stringify(val);
+		            return JSON.stringify(val);
 		        }
-		        return output.replace(/ /g, '\u00a0');
 		    }).join("\n"));
-		}
-		(function (ConsoleCommand) {
-		    ConsoleCommand[ConsoleCommand["Default"] = 0] = "Default";
-		    ConsoleCommand[ConsoleCommand["Kill"] = 1] = "Kill";
-		    ConsoleCommand[ConsoleCommand["Yank"] = 2] = "Yank";
-		})(exports.ConsoleCommand || (exports.ConsoleCommand = {}));
-		var ConsoleCommand = exports.ConsoleCommand;
+		};
+		ConsoleMessage.defaultProps = {
+		    type: null,
+		    value: [],
+		};
 		;
 		;
 		var default_1 = (function (_super) {
@@ -21211,6 +21218,8 @@ var Example =
 		                36: _this.beginningOfLine,
 		                // tab
 		                9: _this.complete,
+		                // esc
+		                27: _this.prefixMeta,
 		            };
 		            var ctrlCodes = {
 		                // C-a
@@ -21221,16 +21230,16 @@ var Example =
 		                70: _this.forwardChar,
 		                // C-b
 		                66: _this.backwardChar,
+		                // C-l TODO
+		                //76: this.clearScreen,
 		                // C-p
 		                80: _this.previousHistory,
 		                // C-n
 		                78: _this.nextHistory,
-		                // C-r TODO
-		                //82: this.reverseSearchHistory,
-		                // C-s TODO
-		                //83: this.forwardSearchHistory,
-		                // C-l TODO
-		                //76: this.clearScreen,
+		                // C-r
+		                82: _this.reverseSearchHistory,
+		                // C-s
+		                83: _this.forwardSearchHistory,
 		                // C-d
 		                68: _this.deleteChar,
 		                // C-q TODO
@@ -21258,12 +21267,12 @@ var Example =
 		                70: _this.forwardWord,
 		                // M-b
 		                66: _this.backwardWord,
-		                // M-p TODO
-		                //80: this.nonIncrementalReverseSearchHistory,
-		                // M-n TODO
-		                //78: this.nonIncrementalForwardSearchHistory,
-		                // M-. TODO
-		                //190: this.yankLastArg,
+		                // M-p
+		                80: _this.nonIncrementalReverseSearchHistory,
+		                // M-n
+		                78: _this.nonIncrementalForwardSearchHistory,
+		                // M-.
+		                190: _this.yankLastArg,
 		                // M-TAB TODO
 		                //9: this.tabInsert,
 		                // M-t TODO
@@ -21285,18 +21294,42 @@ var Example =
 		                // M-y
 		                89: _this.yankPop,
 		            };
-		            var metaShiftCodes = {};
-		            var metaCtrlCodes = {};
+		            var metaShiftCodes = {
+		                // M-<
+		                188: _this.beginningOfHistory,
+		                // M->
+		                190: _this.endOfHistory,
+		                // M-_
+		                189: _this.yankLastArg,
+		            };
+		            var metaCtrlCodes = {
+		                // M-C-y
+		                89: _this.yankNthArg,
+		            };
 		            if (_this.state.acceptInput) {
 		                if (e.altKey) {
-		                    if (e.keyCode in metaCodes) {
+		                    if (e.ctrlKey) {
+		                        if (e.keyCode in metaCtrlCodes) {
+		                            metaCtrlCodes[e.keyCode]();
+		                            e.preventDefault();
+		                        }
+		                    }
+		                    else if (e.shiftKey) {
+		                        if (e.keyCode in metaShiftCodes) {
+		                            metaShiftCodes[e.keyCode]();
+		                            e.preventDefault();
+		                        }
+		                    }
+		                    else if (e.keyCode in metaCodes) {
 		                        metaCodes[e.keyCode]();
+		                        e.preventDefault();
 		                    }
 		                    e.preventDefault();
 		                }
 		                else if (e.ctrlKey) {
 		                    if (e.keyCode in ctrlCodes) {
 		                        ctrlCodes[e.keyCode]();
+		                        e.preventDefault();
 		                    }
 		                    e.preventDefault();
 		                }
@@ -21313,52 +21346,77 @@ var Example =
 		                    break;
 		                }
 		            }
-		            _this.setState(Object.assign(_this.consoleInsert(_this.child.typer.value.substring(idx), _this.state.typer.length - idx), {
-		                typer: _this.child.typer.value,
-		                lastCommand: ConsoleCommand.Default,
-		            }), _this.scrollToBottom);
+		            var insert = _this.child.typer.value.substring(idx);
+		            var replace = _this.state.typer.length - idx;
+		            if (_this.state.lastCommand == 1 /* Search */) {
+		                _this.setState({
+		                    searchText: _this.state.searchInit ? insert : _this.textInsert(insert, _this.state.searchText, replace),
+		                    typer: _this.child.typer.value,
+		                }, _this.triggerSearch);
+		            }
+		            else {
+		                _this.setState(Object.assign(_this.consoleInsert(insert, replace), {
+		                    typer: _this.child.typer.value,
+		                    lastCommand: 0 /* Default */,
+		                }), _this.scrollToBottom);
+		            }
 		        };
 		        this.paste = function (e) {
-		            _this.setState(Object.assign(_this.consoleInsert(e.clipboardData.getData('text')), {
-		                lastCommand: ConsoleCommand.Default,
-		            }), _this.scrollToBottom);
+		            var insert = e.clipboardData.getData('text');
+		            if (_this.state.lastCommand == 1 /* Search */) {
+		                _this.setState({
+		                    searchText: _this.state.searchInit ? insert : _this.textInsert(insert, _this.state.searchText),
+		                    typer: _this.child.typer.value,
+		                }, _this.triggerSearch);
+		            }
+		            else {
+		                _this.setState(Object.assign(_this.consoleInsert(insert), {
+		                    lastCommand: 0 /* Default */,
+		                }), _this.scrollToBottom);
+		            }
 		            e.preventDefault();
 		        };
 		        // Commands for Moving
 		        this.beginningOfLine = function () {
 		            _this.setState({
-		                column: 0,
-		                lastCommand: ConsoleCommand.Default,
+		                point: 0,
+		                argument: null,
+		                lastCommand: 0 /* Default */,
 		            }, _this.scrollToBottom);
 		        };
 		        this.endOfLine = function () {
 		            _this.setState({
-		                column: _this.state.promptText.length,
-		                lastCommand: ConsoleCommand.Default,
+		                point: _this.state.promptText.length,
+		                argument: null,
+		                lastCommand: 0 /* Default */,
 		            }, _this.scrollToBottom);
 		        };
 		        this.forwardChar = function () {
 		            _this.setState({
-		                column: _this.moveColumn(1),
-		                lastCommand: ConsoleCommand.Default,
+		                point: _this.movePoint(1),
+		                argument: null,
+		                lastCommand: 0 /* Default */,
 		            }, _this.scrollToBottom);
 		        };
 		        this.backwardChar = function () {
 		            _this.setState({
-		                column: _this.moveColumn(-1),
-		                lastCommand: ConsoleCommand.Default,
+		                point: _this.movePoint(-1),
+		                argument: null,
+		                lastCommand: 0 /* Default */,
 		            }, _this.scrollToBottom);
 		        };
 		        this.forwardWord = function () {
 		            _this.setState({
-		                column: _this.nextWord(),
-		                lastCommand: ConsoleCommand.Default,
+		                point: _this.nextWord(),
+		                argument: null,
+		                lastCommand: 0 /* Default */,
 		            }, _this.scrollToBottom);
 		        };
 		        this.backwardWord = function () {
 		            _this.setState({
-		                column: _this.previousWord(),
-		                lastCommand: ConsoleCommand.Default,
+		                point: _this.previousWord(),
+		                argument: null,
+		                lastCommand: 0 /* Default */,
 		            }, _this.scrollToBottom);
 		        };
 		        // Commands for Manipulating the History
@@ -21367,7 +21425,7 @@ var Example =
 		            if (_this.props.continue(_this.state.promptText)) {
 		                _this.setState(Object.assign(_this.consoleInsert("\n"), {
 		                    typer: "",
-		                    lastCommand: ConsoleCommand.Default,
+		                    lastCommand: 0 /* Default */,
 		                }), _this.scrollToBottom);
 		            }
 		            else {
@@ -21385,13 +21443,14 @@ var Example =
 		                _this.setState({
 		                    acceptInput: false,
 		                    typer: "",
-		                    column: 0,
+		                    point: 0,
 		                    promptText: "",
 		                    restoreText: "",
 		                    log: log,
 		                    history: history_1,
 		                    historyn: 0,
-		                    lastCommand: ConsoleCommand.Default,
+		                    argument: null,
+		                    lastCommand: 0 /* Default */,
 		                }, function () {
 		                    _this.scrollToBottom();
 		                    _this.props.handler(command_1);
@@ -21404,119 +21463,202 @@ var Example =
 		        this.nextHistory = function () {
 		            _this.rotateHistory(1);
 		        };
+		        this.beginningOfHistory = function () {
+		            _this.rotateHistory(-_this.state.history.length);
+		        };
+		        this.endOfHistory = function () {
+		            _this.rotateHistory(_this.state.history.length);
+		        };
+		        this.triggerSearch = function () {
+		            if (_this.state.searchDirection == 0 /* Reverse */) {
+		                _this.reverseSearchHistory();
+		            }
+		            else {
+		                _this.forwardSearchHistory();
+		            }
+		        };
+		        this.reverseSearchHistory = function () {
+		            if (_this.state.lastCommand == 1 /* Search */) {
+		                _this.setState(Object.assign(_this.searchHistory(0 /* Reverse */, true), {
+		                    argument: "(reverse-i-search)`" + _this.state.searchText + "': ",
+		                    lastCommand: 1 /* Search */,
+		                }), _this.scrollToBottom);
+		            }
+		            else {
+		                _this.setState({
+		                    searchDirection: 0 /* Reverse */,
+		                    searchInit: true,
+		                    argument: "(reverse-i-search)`': ",
+		                    lastCommand: 1 /* Search */,
+		                }, _this.scrollToBottom);
+		            }
+		        };
+		        this.forwardSearchHistory = function () {
+		            if (_this.state.lastCommand == 1 /* Search */) {
+		                _this.setState(Object.assign(_this.searchHistory(1 /* Forward */, true), {
+		                    argument: "(forward-i-search)`" + _this.state.searchText + "': ",
+		                    lastCommand: 1 /* Search */,
+		                }), _this.scrollToBottom);
+		            }
+		            else {
+		                _this.setState({
+		                    searchDirection: 1 /* Forward */,
+		                    searchInit: true,
+		                    argument: "(forward-i-search)`': ",
+		                    lastCommand: 1 /* Search */,
+		                }, _this.scrollToBottom);
+		            }
+		        };
+		        this.nonIncrementalReverseSearchHistory = function () {
+		            // TODO
+		        };
+		        this.nonIncrementalForwardSearchHistory = function () {
+		            // TODO
+		        };
+		        this.historySearchBackward = function () {
+		            // TODO
+		        };
+		        this.historySearchForward = function () {
+		            // TODO
+		        };
+		        this.historySubstringSearchBackward = function () {
+		            // TODO
+		        };
+		        this.historySubstringSearchForward = function () {
+		            // TODO
+		        };
+		        this.yankNthArg = function () {
+		            // TODO
+		        };
+		        this.yankLastArg = function () {
+		            // TODO
+		        };
 		        // Commands for Changing Text
 		        this.deleteChar = function () {
-		            if (_this.state.column < _this.state.promptText.length) {
+		            if (_this.state.point < _this.state.promptText.length) {
 		                _this.setState({
-		                    promptText: _this.state.promptText.substring(0, _this.state.column)
-		                        + _this.state.promptText.substring(_this.state.column + 1),
-		                    lastCommand: ConsoleCommand.Default,
+		                    promptText: _this.state.promptText.substring(0, _this.state.point)
+		                        + _this.state.promptText.substring(_this.state.point + 1),
+		                    argument: null,
+		                    lastCommand: 0 /* Default */,
 		                }, _this.scrollToBottom);
 		            }
 		        };
 		        this.backwardDeleteChar = function () {
-		            if (_this.state.column > 0) {
+		            if (_this.state.lastCommand == 1 /* Search */) {
 		                _this.setState({
-		                    column: _this.moveColumn(-1),
-		                    promptText: _this.state.promptText.substring(0, _this.state.column - 1)
-		                        + _this.state.promptText.substring(_this.state.column),
-		                    lastCommand: ConsoleCommand.Default,
+		                    searchText: _this.state.searchText.substring(0, _this.state.searchText.length - 1),
+		                    typer: _this.child.typer.value,
+		                }, _this.triggerSearch);
+		            }
+		            else if (_this.state.point > 0) {
+		                _this.setState({
+		                    point: _this.movePoint(-1),
+		                    promptText: _this.state.promptText.substring(0, _this.state.point - 1)
+		                        + _this.state.promptText.substring(_this.state.point),
+		                    argument: null,
+		                    lastCommand: 0 /* Default */,
 		                }, _this.scrollToBottom);
 		            }
 		        };
 		        // Killing and Yanking
 		        this.killLine = function () {
 		            var kill = _this.state.kill;
-		            if (_this.state.lastCommand == ConsoleCommand.Kill) {
-		                kill[0] = kill[0] + _this.state.promptText.substring(_this.state.column);
+		            if (_this.state.lastCommand == 2 /* Kill */) {
+		                kill[0] = kill[0] + _this.state.promptText.substring(_this.state.point);
 		            }
 		            else {
-		                kill.unshift(_this.state.promptText.substring(_this.state.column));
+		                kill.unshift(_this.state.promptText.substring(_this.state.point));
 		            }
 		            _this.setState({
-		                promptText: _this.state.promptText.substring(0, _this.state.column),
+		                promptText: _this.state.promptText.substring(0, _this.state.point),
 		                kill: kill,
 		                killn: 0,
-		                lastCommand: ConsoleCommand.Kill,
+		                argument: null,
+		                lastCommand: 2 /* Kill */,
 		            }, _this.scrollToBottom);
 		        };
 		        this.backwardKillLine = function () {
 		            var kill = _this.state.kill;
-		            if (_this.state.lastCommand == ConsoleCommand.Kill) {
-		                kill[0] = _this.state.promptText.substring(0, _this.state.column) + kill[0];
+		            if (_this.state.lastCommand == 2 /* Kill */) {
+		                kill[0] = _this.state.promptText.substring(0, _this.state.point) + kill[0];
 		            }
 		            else {
-		                kill.unshift(_this.state.promptText.substring(0, _this.state.column));
+		                kill.unshift(_this.state.promptText.substring(0, _this.state.point));
 		            }
 		            _this.setState({
-		                column: 0,
-		                promptText: _this.state.promptText.substring(_this.state.column),
+		                point: 0,
+		                promptText: _this.state.promptText.substring(_this.state.point),
 		                kill: kill,
 		                killn: 0,
-		                lastCommand: ConsoleCommand.Kill,
+		                argument: null,
+		                lastCommand: 2 /* Kill */,
 		            }, _this.scrollToBottom);
 		        };
 		        this.killWholeLine = function () {
 		            var kill = _this.state.kill;
-		            if (_this.state.lastCommand == ConsoleCommand.Kill) {
-		                kill[0] = _this.state.promptText.substring(0, _this.state.column)
-		                    + kill[0] + _this.state.promptText.substring(_this.state.column);
+		            if (_this.state.lastCommand == 2 /* Kill */) {
+		                kill[0] = _this.state.promptText.substring(0, _this.state.point)
+		                    + kill[0] + _this.state.promptText.substring(_this.state.point);
 		            }
 		            else {
 		                kill.unshift(_this.state.promptText);
 		            }
 		            _this.setState({
-		                column: 0,
+		                point: 0,
 		                promptText: '',
 		                kill: kill,
 		                killn: 0,
-		                lastCommand: ConsoleCommand.Kill,
+		                argument: null,
+		                lastCommand: 2 /* Kill */,
 		            }, _this.scrollToBottom);
 		        };
 		        this.killWord = function () {
 		            var kill = _this.state.kill;
-		            if (_this.state.lastCommand == ConsoleCommand.Kill) {
-		                kill[0] = kill[0] + _this.state.promptText.substring(_this.state.column, _this.nextWord());
+		            if (_this.state.lastCommand == 2 /* Kill */) {
+		                kill[0] = kill[0] + _this.state.promptText.substring(_this.state.point, _this.nextWord());
 		            }
 		            else {
-		                kill.unshift(_this.state.promptText.substring(_this.state.column, _this.nextWord()));
+		                kill.unshift(_this.state.promptText.substring(_this.state.point, _this.nextWord()));
 		            }
 		            _this.setState({
-		                promptText: _this.state.promptText.substring(0, _this.state.column)
+		                promptText: _this.state.promptText.substring(0, _this.state.point)
 		                    + _this.state.promptText.substring(_this.nextWord()),
 		                kill: kill,
 		                killn: 0,
-		                lastCommand: ConsoleCommand.Kill,
+		                argument: null,
+		                lastCommand: 2 /* Kill */,
 		            }, _this.scrollToBottom);
 		        };
 		        this.backwardKillWord = function () {
 		            var kill = _this.state.kill;
-		            if (_this.state.lastCommand == ConsoleCommand.Kill) {
-		                kill[0] = _this.state.promptText.substring(_this.previousWord(), _this.state.column) + kill[0];
+		            if (_this.state.lastCommand == 2 /* Kill */) {
+		                kill[0] = _this.state.promptText.substring(_this.previousWord(), _this.state.point) + kill[0];
 		            }
 		            else {
-		                kill.unshift(_this.state.promptText.substring(_this.previousWord(), _this.state.column));
+		                kill.unshift(_this.state.promptText.substring(_this.previousWord(), _this.state.point));
 		            }
 		            _this.setState({
-		                column: _this.previousWord(),
+		                point: _this.previousWord(),
 		                promptText: _this.state.promptText.substring(0, _this.previousWord())
-		                    + _this.state.promptText.substring(_this.state.column),
+		                    + _this.state.promptText.substring(_this.state.point),
 		                kill: kill,
 		                killn: 0,
-		                lastCommand: ConsoleCommand.Kill,
+		                argument: null,
+		                lastCommand: 2 /* Kill */,
 		            }, _this.scrollToBottom);
 		        };
 		        this.yank = function () {
 		            _this.setState(Object.assign(_this.consoleInsert(_this.state.kill[_this.state.killn]), {
-		                lastCommand: ConsoleCommand.Yank,
+		                lastCommand: 3 /* Yank */,
 		            }), _this.scrollToBottom);
 		        };
 		        this.yankPop = function () {
-		            if (_this.state.lastCommand == ConsoleCommand.Yank) {
+		            if (_this.state.lastCommand == 3 /* Yank */) {
 		                var killn = _this.rotateRing(1, _this.state.killn, _this.state.kill.length);
 		                _this.setState(Object.assign(_this.consoleInsert(_this.state.kill[killn], _this.state.kill[_this.state.killn].length), {
 		                    killn: killn,
-		                    lastCommand: ConsoleCommand.Yank,
+		                    lastCommand: 3 /* Yank */,
 		                }), _this.scrollToBottom);
 		            }
 		        };
@@ -21528,21 +21670,22 @@ var Example =
 		                var words = _this.state.promptText.split(" ");
 		                var curr = 0;
 		                var idx = words[0].length;
-		                while (idx < _this.state.column && curr + 1 < words.length) {
+		                while (idx < _this.state.point && curr + 1 < words.length) {
 		                    idx += words[++curr].length + 1;
 		                }
 		                var completions = _this.props.complete(words, curr, _this.state.promptText);
 		                if (completions.length == 1) {
 		                    // Perform completion
 		                    words[curr] = completions[0];
-		                    var column = -1;
+		                    var point = -1;
 		                    for (var i = 0; i <= curr; i++) {
-		                        column += words[i].length + 1;
+		                        point += words[i].length + 1;
 		                    }
 		                    _this.setState({
-		                        column: column,
+		                        point: point,
 		                        promptText: words.join(" "),
-		                        lastCommand: ConsoleCommand.Default,
+		                        argument: null,
+		                        lastCommand: 0 /* Default */,
 		                    }, _this.scrollToBottom);
 		                }
 		                else if (completions.length > 1) {
@@ -21559,13 +21702,23 @@ var Example =
 		                    _this.setState({
 		                        currLabel: _this.nextLabel(),
 		                        log: log,
-		                        lastCommand: ConsoleCommand.Default,
+		                        argument: null,
+		                        lastCommand: 0 /* Default */,
 		                    }, _this.scrollToBottom);
 		                }
 		            }
 		        };
 		        // Keyboard Macros
 		        // Miscellaneous
+		        this.prefixMeta = function () {
+		            if (_this.state.lastCommand == 1 /* Search */) {
+		                _this.setState({
+		                    argument: null,
+		                    lastCommand: 0 /* Default */,
+		                });
+		            }
+		            // TODO Meta prefixed state
+		        };
 		        this.cancelCommand = function () {
 		            if (_this.state.acceptInput) {
 		                _this.child.typer.value = "";
@@ -21577,12 +21730,13 @@ var Example =
 		                });
 		                _this.setState({
 		                    typer: "",
-		                    column: 0,
+		                    point: 0,
 		                    promptText: "",
 		                    restoreText: "",
 		                    log: log,
 		                    historyn: 0,
-		                    lastCommand: ConsoleCommand.Default,
+		                    argument: null,
+		                    lastCommand: 0 /* Default */,
 		                }, _this.scrollToBottom);
 		            }
 		            else {
@@ -21590,20 +21744,25 @@ var Example =
 		            }
 		        };
 		        // Helper functions
-		        this.consoleInsert = function (text, replace) {
+		        this.textInsert = function (insert, text, replace, point) {
 		            if (replace === void 0) { replace = 0; }
-		            var promptText = _this.state.promptText.substring(0, _this.state.column - replace)
-		                + text + _this.state.promptText.substring(_this.state.column);
+		            if (point === void 0) { point = text.length; }
+		            return text.substring(0, point - replace) + insert + text.substring(point);
+		        };
+		        this.consoleInsert = function (insert, replace) {
+		            if (replace === void 0) { replace = 0; }
+		            var promptText = _this.textInsert(insert, _this.state.promptText, replace, _this.state.point);
 		            return {
-		                column: _this.moveColumn(text.length - replace, text.length - replace + _this.state.promptText.length),
+		                point: _this.movePoint(insert.length - replace, insert.length - replace + _this.state.promptText.length),
 		                promptText: promptText,
 		                restoreText: promptText,
-		                lastCommand: ConsoleCommand.Default,
+		                argument: null,
+		                lastCommand: 0 /* Default */,
 		            };
 		        };
-		        this.moveColumn = function (n, max) {
+		        this.movePoint = function (n, max) {
 		            if (max === void 0) { max = _this.state.promptText.length; }
-		            var pos = _this.state.column + n;
+		            var pos = _this.state.point + n;
 		            if (pos < 0) {
 		                return 0;
 		            }
@@ -21614,30 +21773,73 @@ var Example =
 		                return pos;
 		            }
 		        };
-		        this.rotateRing = function (n, ringn, ring) {
+		        this.rotateRing = function (n, ringn, ring, circular) {
+		            if (circular === void 0) { circular = true; }
 		            if (ring == 0)
 		                return 0;
-		            return (ring + (ringn + n) % ring) % ring;
+		            if (circular) {
+		                return (ring + (ringn + n) % ring) % ring;
+		            }
+		            else {
+		                ringn = ringn - n;
+		                if (ringn < 0) {
+		                    return 0;
+		                }
+		                else if (ringn >= ring) {
+		                    return ring;
+		                }
+		                else {
+		                    return ringn;
+		                }
+		            }
 		        };
 		        this.rotateHistory = function (n) {
-		            var historyn = _this.rotateRing(n, _this.state.historyn, _this.state.history.length + 1);
+		            var historyn = _this.rotateRing(n, _this.state.historyn, _this.state.history.length, false);
 		            if (historyn == 0) {
 		                _this.setState({
-		                    column: _this.state.restoreText.length,
+		                    point: _this.state.restoreText.length,
 		                    promptText: _this.state.restoreText,
 		                    historyn: historyn,
-		                    lastCommand: ConsoleCommand.Default,
+		                    argument: null,
+		                    lastCommand: 0 /* Default */,
 		                }, _this.scrollToBottom);
 		            }
 		            else {
 		                var promptText = _this.state.history[_this.state.history.length - historyn];
 		                _this.setState({
-		                    column: promptText.length,
+		                    point: promptText.length,
 		                    promptText: promptText,
 		                    historyn: historyn,
-		                    lastCommand: ConsoleCommand.Default,
+		                    argument: null,
+		                    lastCommand: 0 /* Default */,
 		                }, _this.scrollToBottom);
 		            }
+		        };
+		        this.searchHistory = function (direction, next) {
+		            if (direction === void 0) { direction = _this.state.searchDirection; }
+		            if (next === void 0) { next = false; }
+		            var idx = _this.state.historyn;
+		            var inc = (direction == 0 /* Reverse */) ? 1 : -1;
+		            if (next) {
+		                idx = idx + inc;
+		            }
+		            for (; idx > 0 && idx <= _this.state.history.length; idx = idx + inc) {
+		                var entry = _this.state.history[_this.state.history.length - idx];
+		                var point = entry.indexOf(_this.state.searchText);
+		                if (point > -1) {
+		                    return {
+		                        point: point,
+		                        promptText: entry,
+		                        searchDirection: direction,
+		                        searchInit: false,
+		                        historyn: idx,
+		                    };
+		                }
+		            }
+		            return {
+		                searchDirection: direction,
+		                searchInit: false,
+		            };
 		        };
 		        // DOM management
 		        this.scrollSemaphore = 0;
@@ -21675,16 +21877,20 @@ var Example =
 		            focus: false,
 		            acceptInput: true,
 		            typer: '',
-		            column: 0,
+		            point: 0,
 		            currLabel: this.nextLabel(),
 		            promptText: '',
 		            restoreText: '',
+		            searchText: '',
+		            searchDirection: null,
+		            searchInit: false,
 		            log: [],
 		            history: [],
 		            historyn: 0,
 		            kill: [],
 		            killn: 0,
-		            lastCommand: ConsoleCommand.Default,
+		            argument: null,
+		            lastCommand: 0 /* Default */,
 		        };
 		    }
 		    // Component Lifecycle
@@ -21695,9 +21901,9 @@ var Example =
 		    };
 		    default_1.prototype.nextWord = function () {
 		        // Find first alphanumeric char after first non-alphanumeric char
-		        var search = /\W\w/.exec(this.state.promptText.substring(this.state.column));
+		        var search = /\W\w/.exec(this.state.promptText.substring(this.state.point));
 		        if (search) {
-		            return search.index + this.state.column + 1;
+		            return search.index + this.state.point + 1;
 		        }
 		        else {
 		            return this.state.promptText.length;
@@ -21705,7 +21911,7 @@ var Example =
 		    };
 		    default_1.prototype.previousWord = function () {
 		        // Find first non-alphanumeric char after first alphanumeric char in reverse
-		        var search = /\W\w(?!.*\W\w)/.exec(this.state.promptText.substring(0, this.state.column - 1));
+		        var search = /\W\w(?!.*\W\w)/.exec(this.state.promptText.substring(0, this.state.point - 1));
 		        if (search) {
 		            return search.index + 1;
 		        }
@@ -21724,7 +21930,7 @@ var Example =
 		                return React.createElement(ConsoleMessage, {key: idx, type: val.type, value: val.value});
 		            }));
 		        }), this.state.acceptInput ?
-		            React.createElement(ConsolePrompt, {label: this.state.currLabel, value: this.state.promptText, column: this.state.column})
+		            React.createElement(ConsolePrompt, {label: this.state.currLabel, value: this.state.promptText, point: this.state.point, argument: this.state.argument})
 		            : null, React.createElement("div", {style: { overflow: "hidden", height: 1, width: 1 }}, React.createElement("textarea", {ref: function (ref) { return _this.child.typer = ref; }, className: "react-console-typer", autoComplete: "off", autoCorrect: "off", autoCapitalize: "off", spellCheck: "false", style: { outline: "none",
 		            color: "transparent",
 		            backgroundColor: "transparent",
