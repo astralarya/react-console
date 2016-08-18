@@ -86,7 +86,7 @@ React-console is inspired by [chrisdone/jquery-console](https://github.com/chris
 [coveralls-url]: https://coveralls.io/github/autochthe/react-console?branch=master
 [david-url]: https://david-dm.org/autochthe/react-console
 [david-image]: https://david-dm.org/autochthe/react-console.svg
-[david-dev-url]: https://david-dm.org/autochthe/react-console#info=devDependencies
+[david-dev-url]: https://david-dm.org/autochthe/react-console?type=dev
 [david-dev-image]: https://david-dm.org/autochthe/react-console/dev-status.svg
-[david-peer-url]: https://david-dm.org/autochthe/react-console#info=peerDependencies
+[david-peer-url]: https://david-dm.org/autochthe/react-console?type=peer
 [david-peer-image]: https://david-dm.org/autochthe/react-console/peer-status.svg
