@@ -8,7 +8,7 @@
 		"jsx": "react"
 	},
 	"exclude": [
-		"example",
+		"docs/example",
 		"test",
 		".tmp",
 		"node_modules"
