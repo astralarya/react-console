@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
+    <meta charset="UTF-8">
+    <title>React-console by autochthe</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css" href="stylesheets/normalize.css" media="screen">
+    <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,700' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen">
+    <link rel="stylesheet" type="text/css" href="stylesheets/github-light.css" media="screen">
+    <link rel="stylesheet" type="text/css" href="app/react-console.example.css" media="screen">
+  </head>
+  <body>
+    <section class="page-header">
+      <h1 class="project-name">React-console</h1>
+      <h2 class="project-tagline">Simple react console emulator</h2>
+      <a href="https://github.com/autochthe/react-console" class="btn">View on GitHub</a>
+      <a href="https://github.com/autochthe/react-console/zipball/master" class="btn">Download .zip</a>
+      <a href="https://github.com/autochthe/react-console/tarball/master" class="btn">Download .tar.gz</a>
+    </section>
+
+    <section class="main-content">
+      <h1>
+<a id="react-console" class="anchor" href="#react-console" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>react-console</h1>
+
+<p>Simple React.js console emulator.</p>
+
+<div id="console"></div>
+<script src="app/react-console.example.js"></script>
+<script>
+Example.init(document.getElementById("console"));
+</script>
+
+<p><a href="https://github.com/autochthe/react-console/tree/master/example" class="btn btn-dark">Code</a></p>
+
+<h2>
+<a id="example" class="anchor" href="#example" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Example</h2>
+
+<p>Simple prompt that echoes back input:</p>
+
+<div class="highlight highlight-source-js"><pre><span class="pl-k">let</span> EchoConsole <span class="pl-k">=</span> <span class="pl-smi">React</span>.<span class="pl-en">createClass</span>({
+    <span class="pl-en">echo</span><span class="pl-k">:</span> <span class="pl-k">function</span>(<span class="pl-smi">text</span>) {
+        <span class="pl-v">this</span>.<span class="pl-smi">refs</span>.<span class="pl-smi">console</span>.<span class="pl-en">log</span>(text);
+        <span class="pl-v">this</span>.<span class="pl-smi">refs</span>.<span class="pl-smi">console</span>.<span class="pl-en">return</span>();
+    },
+    <span class="pl-en">render</span><span class="pl-k">:</span> <span class="pl-k">function</span>() {
+        <span class="pl-k">return</span> <span class="pl-k">&lt;</span>Console ref<span class="pl-k">=</span><span class="pl-s"><span class="pl-pds">"</span>console<span class="pl-pds">"</span></span>
+            handler<span class="pl-k">=</span>{<span class="pl-v">this</span>.<span class="pl-smi">echo</span>}
+            autofocus<span class="pl-k">=</span>{<span class="pl-c1">true</span>}
+        <span class="pl-k">/</span><span class="pl-k">&gt;</span>;
+    }
+});</pre></div>
+
+<p>See the <a href="https://github.com/autochthe/react-console/tree/master/example">example project</a> used in the live demo.</p>
+
+<h2>
+<a id="installation" class="anchor" href="#installation" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Installation</h2>
+
+<pre><code>npm install --save-dev react-console-component
+</code></pre>
+
+<h2>
+<a id="features" class="anchor" href="#features" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Features</h2>
+
+<ul>
+<li>Readline emulation</li>
+<li>Mobile friendly</li>
+<li>Input Method Editor (IME) support</li>
+</ul>
+
+<h2>
+<a id="props" class="anchor" href="#props" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Props</h2>
+
+<p>Properties you can pass to the console element</p>
+
+<table>
+<thead>
+<tr>
+<th>Prop</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>autofocus?</td>
+<td>bool</td>
+<td>Autofocus the console on component mount.</td>
+</tr>
+<tr>
+<td>cancel?</td>
+<td>function(): any</td>
+<td>Function that should stop execution of the current command and call <code>this.return()</code>.</td>
+</tr>
+<tr>
+<td>complete?</td>
+<td>function(words: string[], cursor: number, prompt: string): string[]</td>
+<td>Return a list of possible completions given a list of (<code>words</code>), index of the word containing the cursor (<code>cursor</code>) , and the full prompt text (<code>prompt</code>).</td>
+</tr>
+<tr>
+<td>continue?</td>
+<td>function(prompt: string): bool</td>
+<td>Return a boolean indicating whether to continue asking for user input on a newline given the current prompt text (<code>prompt</code>).</td>
+</tr>
+<tr>
+<td>handler</td>
+<td>function(command: string): any</td>
+<td>Handle a command (<code>command</code>), logging data with <code>this.log()</code> or <code>this.logX()</code>, and calling <code>this.return()</code> when finished.</td>
+</tr>
+<tr>
+<td>promptLabel?</td>
+<td>string</td>
+<td>String displayed to prompt user for input.</td>
+</tr>
+<tr>
+<td>welcomeMessage?</td>
+<td>string</td>
+<td>Initial message displayed after mount.</td>
+</tr>
+</tbody>
+</table>
+
+<h2>
+<a id="public-members" class="anchor" href="#public-members" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Public members</h2>
+
+<table>
+<thead>
+<tr>
+<th>Member</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>log</td>
+<td>function(...messages: any): void</td>
+<td>Log messages to the console. If string, print the value, otherwise, print the JSON value of the message.</td>
+</tr>
+<tr>
+<td>logX</td>
+<td>function(type: string, ...messages: any): void</td>
+<td>Log messages of a particular type to the console. The messages will be given the class <code>react-console-message-{type}</code>.</td>
+</tr>
+<tr>
+<td>return</td>
+<td>function(): void</td>
+<td>Signal the current command has finished and a new prompt should be displayed.</td>
+</tr>
+</tbody>
+</table>
+
+<h2>
+<a id="Awknowledgements" class="anchor" href="#awknowledgements" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Awknoledgements</h2>
+
+<p>React-console is inspired by <a href="https://github.com/chrisdone/jquery-console">chrisdone/jquery-console</a>.</p>
+
+      <footer class="site-footer">
+        <span class="site-footer-owner"><a href="https://github.com/autochthe/react-console">React-console</a> is maintained by <a href="https://github.com/autochthe">autochthe</a>.</span>
+
+        <span class="site-footer-credits">This page was generated in part by <a href="https://pages.github.com">GitHub Pages</a> using the <a href="https://github.com/jasonlong/cayman-theme">Cayman theme</a> by <a href="https://twitter.com/jasonlong">Jason Long</a>.</span>
+      </footer>
+
+    </section>
+
+  </body>
+</html>

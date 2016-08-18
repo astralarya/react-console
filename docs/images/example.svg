@@ -1,0 +1,49 @@
+<svg
+	xmlns:svg="http://www.w3.org/2000/svg"
+	xmlns="http://www.w3.org/2000/svg"
+	height="20em"
+	viewBox="0 0 60 20"
+	preserveAspectRatio="xMinYMin slice"
+	>
+	<style type="text/css">
+	<![CDATA[
+		#background {
+			fill: #efefef; }
+		#cursor {
+			fill: #333;
+			animation: cursor-animation 1s infinite;
+			animation-delay: 1s; }
+		text {
+			fill:#444;
+			font-weight:bold;
+			font-family:'Menlo','Consolas','DejaVu Sans Mono',monospace; }
+		@keyframes cursor-animation {
+		  0% {
+			fill: #333; }
+		  50% {
+			fill: #333; }
+		  51% {
+			fill: none; }
+		  100% {
+			fill: none; } }
+	]]>
+	</style>
+	<rect
+		id="background"
+		y="0"
+		x="0"
+		height="20"
+		width="60" />
+	<rect
+		id="cursor"
+		y="0.6"
+		x="2.25"
+		height="1.2"
+		width="0.6" />
+	<text
+		y="1.55"
+		x="0.5"
+		font-size="1" >
+		0&gt;
+	</text>
+</svg>
