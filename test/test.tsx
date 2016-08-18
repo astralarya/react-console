@@ -126,6 +126,7 @@ describe('<Console />', function() {
 		it('Has class `react-console-focus` on mount when autofocus=true', function() {
 			var wrapper = enzyme.mount(<Console autofocus={true}/>);
 			expect(wrapper.find('.react-console-focus')).length(1);
+			expect(wrapper.find('.react-console-nofocus')).length(0);
 		});
 	});
 	describe('[Property] welcomeMessage: ', function () {
