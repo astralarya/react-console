@@ -32,7 +32,7 @@ let EchoConsole = React.createClass({
 });
 ```
 
-See the [example project](example) used in the [live demo][demo-url].
+See the [example project](docs/example) used in the [live demo][demo-url].
 
 
 ## Installation
