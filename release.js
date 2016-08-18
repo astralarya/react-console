@@ -12,54 +12,42 @@ const ASSETS = [
 	'dist/dist-min.zip',
 ];
 
+const token = require('./.token.json');
 const project = require('./package.json');
 
 const changelogParser = require('changelog-parser');
 const GitHubAPI = require('github');
 const path = require('path');
-const read = require('read');
 const semver = require('semver');
 
-let password = '';
+// Read changelog
+changelogParser(CHANGELOG, (err, result) => {
+	if (err) throw err;
 
-read({ prompt: `Github password for ${USER}: `, silent: true }, (er, input) => {
-	password = input;
-
-	// Read changelog
-	changelogParser(CHANGELOG, (err, result) => {
-		if (err) throw err;
-
-		let found = false;
-		for(let elem of result.versions) {
-			if (elem.version == project.version) {
-				found = true;
-				if(!elem.body) {
-					console.log('Changelog body is required');
-					process.exit(1);
-				}
-				createRelease(project.version, elem.body);
+	let found = false;
+	for(let elem of result.versions) {
+		if (elem.version == project.version) {
+			found = true;
+			if(!elem.body) {
+				console.log('Changelog body is required');
+				process.exit(1);
 			}
+			createRelease(project.version, elem.body);
 		}
-		if(!found) {
-			console.log(`No changelog found for v${project.version}`);
-			process.exit(1);
-		}
-	})
+	}
+	if(!found) {
+		console.log(`No changelog found for v${project.version}`);
+		process.exit(1);
+	}
 })
 
 function createRelease(version, body) {
 	console.log(`Creating new Github release for v${version}`);
 	console.log(body);
 
-	let auth = {
-		type: 'basic',
-		username: USER,
-		password: password,
-	};
-
 	// Connect to github
 	let github = new GitHubAPI();
-	github.authenticate(auth);
+	github.authenticate(token);
 	github.repos.createRelease({
 		user: USER,
 		repo: REPO,

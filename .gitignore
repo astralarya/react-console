@@ -41,3 +41,6 @@ lib
 
 # mocha-webpack cache
 .tmp
+
+# github token
+.token.json
