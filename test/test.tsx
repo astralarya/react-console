@@ -129,6 +129,24 @@ describe('<Console />', function() {
 			expect(wrapper.find('.react-console-nofocus')).length(0);
 		});
 	});
+	describe('[Property] handler: ', function () {
+		it('Recieves input value', function(done) {
+			function handler(command: string) {
+				expect(command).equals('ababa');
+				done();
+			}
+			var wrapper = enzyme.mount(<Console handler={handler}/>);
+			var typer = wrapper.find('.react-console-typer');
+			(typer.get(0) as HTMLTextAreaElement).value = 'ababa';
+			typer.simulate('change');
+			typer.simulate('keyDown', { keyCode: 13 /* Return */ });
+			/*
+			wrapper.setState({promptText: 'ababa'});
+			var instance = wrapper.instance() as Console;
+			instance.acceptLine();
+			*/
+		});
+	});
 	describe('[Property] promptLabel: ', function () {
 		it('Has label \'> \' when promptLabel undefined', function() {
 			var wrapper = enzyme.mount(<Console />);

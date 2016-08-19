@@ -49,6 +49,7 @@
     "karma-webpack": "^1.7.0",
     "mocha": "^3.0.1",
     "node-sass": "^3.8.0",
+    "phantomjs-polyfill-object-assign": "0.0.2",
     "react": "^15.1.0",
     "react-addons-test-utils": "^15.3.0",
     "react-dom": "^15.1.0",
