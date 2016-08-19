@@ -189,15 +189,11 @@ export default class extends React.Component<ConsoleProps,ConsoleState> {
 			log: log,
 		}, this.scrollIfBottom() );
 	}
-	done = () => {
+	return = () => {
 		this.setState({
 			acceptInput: true,
 			currLabel: this.nextLabel(),
 		}, this.scrollIfBottom() );
-	}
-	return = () => {
-		console.log("WARNING: return() is deprecated.  Use done() or the callback (2nd arg of handler) instead.");
-		this.done();
 	}
 	// Component Lifecycle
 	componentDidMount() {
@@ -534,7 +530,7 @@ export default class extends React.Component<ConsoleProps,ConsoleState> {
 				if(this.props.handler) {
 					this.props.handler(command)
 				} else {
-					this.done();
+					this.return();
 				}
 			});
 		}
