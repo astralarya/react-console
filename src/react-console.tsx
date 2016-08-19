@@ -104,10 +104,10 @@ export interface LogEntry {
 }
 
 export interface ConsoleProps{
-	handler(command: string): any;
-	cancel?(): any;
-	complete?(words: string[], curr: number, promptText: string): string[];
-	continue?(promptText: string): boolean;
+	handler: (command: string)=>any;
+	cancel?: ()=>any;
+	complete?: (words: string[], curr: number, promptText: string)=>string[];
+	continue?: (promptText: string)=>boolean;
 	autofocus?: boolean;
 	promptLabel?: string | (()=>string);
 	welcomeMessage?: string;
@@ -168,7 +168,6 @@ export default class extends React.Component<ConsoleProps,ConsoleState> {
 		promptLabel: '> ',
 		continue: function() { return false; },
 		cancel: function() {},
-		handler: function() { this.return() },
 	};
 	child: {
 		typer?: HTMLTextAreaElement;
@@ -190,11 +189,15 @@ export default class extends React.Component<ConsoleProps,ConsoleState> {
 			log: log,
 		}, this.scrollIfBottom() );
 	}
-	return = () => {
+	done = () => {
 		this.setState({
 			acceptInput: true,
 			currLabel: this.nextLabel(),
 		}, this.scrollIfBottom() );
+	}
+	return = () => {
+		console.log("WARNING: return() is deprecated.  Use done() or the callback (2nd arg of handler) instead.");
+		this.done();
 	}
 	// Component Lifecycle
 	componentDidMount() {
@@ -528,7 +531,11 @@ export default class extends React.Component<ConsoleProps,ConsoleState> {
 				lastCommand: ConsoleCommand.Default,
 			}, () => {
 				this.scrollToBottom();
-				this.props.handler(command);
+				if(this.props.handler) {
+					this.props.handler(command)
+				} else {
+					this.done();
+				}
 			});
 		}
 	}

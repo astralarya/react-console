@@ -138,6 +138,22 @@ describe('<Console />', function() {
 			var wrapper = enzyme.mount(<Console promptLabel='ababa: '/>);
 			expect(wrapper.find('.react-console-prompt-label').text()).equals('ababa: ');
 		});
+		it('Calls function when passed as promptLabel and uses returned values as labels', function() {
+			var count = 0;
+			function counter() {
+				return count++;
+			}
+			var wrapper = enzyme.mount(<Console promptLabel={counter}/>);
+			var typer = wrapper.find('.react-console-typer');
+			typer.simulate('keyDown', { keyCode: 13 /* Return */ });
+			typer.simulate('keyDown', { keyCode: 13 /* Return */ });
+			typer.simulate('keyDown', { keyCode: 13 /* Return */ });
+			var labels = wrapper.find('.react-console-prompt-label');
+			expect(labels).length(4);
+			expect(count).equals(4);
+			expect(labels.first().text()).equals('0');
+			expect(labels.last().text()).equals('3');
+		});
 	});
 	describe('[Property] welcomeMessage: ', function () {
 		it('Doesn\'t have class `react-console-welcome` when welcomeMessage undefined', function() {
