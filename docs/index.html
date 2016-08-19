@@ -89,28 +89,28 @@ Example.init(document.getElementById("console"));
 </tr>
 <tr>
 <td>cancel?</td>
-<td>function(): any</td>
+<td>()=&gt;any</td>
 <td>Function that should stop execution of the current command and call <code>this.return()</code>.</td>
 </tr>
 <tr>
 <td>complete?</td>
-<td>function(words: string[], cursor: number, prompt: string): string[]</td>
+<td>(words: string[], cursor: number, prompt: string)=&gt;string[]</td>
 <td>Return a list of possible completions given a list of (<code>words</code>), index of the word containing the cursor (<code>cursor</code>) , and the full prompt text (<code>prompt</code>).</td>
 </tr>
 <tr>
 <td>continue?</td>
-<td>function(prompt: string): bool</td>
+<td>(prompt: string)=&gt;bool</td>
 <td>Return a boolean indicating whether to continue asking for user input on a newline given the current prompt text (<code>prompt</code>).</td>
 </tr>
 <tr>
 <td>handler</td>
-<td>function(command: string): any</td>
+<td>(command: string)=&gt;any</td>
 <td>Handle a command (<code>command</code>), logging data with <code>this.log()</code> or <code>this.logX()</code>, and calling <code>this.return()</code> when finished.</td>
 </tr>
 <tr>
 <td>promptLabel?</td>
-<td>string</td>
-<td>String displayed to prompt user for input.</td>
+<td>string | ()=&gt;string</td>
+<td>String or function that generates a string displayed to prompt user for input.</td>
 </tr>
 <tr>
 <td>welcomeMessage?</td>
@@ -134,17 +134,17 @@ Example.init(document.getElementById("console"));
 <tbody>
 <tr>
 <td>log</td>
-<td>function(...messages: any): void</td>
+<td>(...messages: any)=&gt;void</td>
 <td>Log messages to the console. If string, print the value, otherwise, print the JSON value of the message.</td>
 </tr>
 <tr>
 <td>logX</td>
-<td>function(type: string, ...messages: any): void</td>
+<td>(type: string, ...messages: any)=&gt;void</td>
 <td>Log messages of a particular type to the console. The messages will be given the class <code>react-console-message-{type}</code>.</td>
 </tr>
 <tr>
 <td>return</td>
-<td>function(): void</td>
+<td>()=&gt;void</td>
 <td>Signal the current command has finished and a new prompt should be displayed.</td>
 </tr>
 </tbody>
