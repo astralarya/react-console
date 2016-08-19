@@ -151,8 +151,10 @@ describe('<Console />', function() {
 			var labels = wrapper.find('.react-console-prompt-label');
 			expect(labels).length(4);
 			expect(count).equals(4);
-			expect(labels.first().text()).equals('0');
-			expect(labels.last().text()).equals('3');
+			expect(labels.at(0).text()).equals('0');
+			expect(labels.at(1).text()).equals('1');
+			expect(labels.at(2).text()).equals('2');
+			expect(labels.at(3).text()).equals('3');
 		});
 	});
 	describe('[Property] welcomeMessage: ', function () {
