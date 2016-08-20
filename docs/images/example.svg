@@ -14,11 +14,13 @@
 			animation: cursor-animation 1s infinite;
 			animation-delay: 1s; }
 		text {
-			fill:#999;
-			font-family:'Menlo','Consolas','DejaVu Sans Mono',monospace; }
+			fill: #999;
+			font-family: 'Menlo','Consolas','DejaVu Sans Mono',monospace; }
 		.prompt {
-			fill:#444;
-			font-weight:bold;
+			fill: #444;
+		}
+		.prompt.label {
+			font-weight: bold;
 		}
 		@keyframes cursor-animation {
 		  0% {
@@ -44,16 +46,25 @@
 		height="1.2"
 		width="0.6" />
 	<text
+		class="message"
 		y="1.55"
 		x="0.5"
 		font-size="1" >
 		Try the live demo!
 	</text>
 	<text
-		class="prompt"
+		class="prompt label"
 		y="3.1"
 		x="0.5"
 		font-size="1" >
 		0&gt;
+	</text>
+	<text
+		class="prompt"
+		style="fill:#F0F" // TODO remove when finished
+		y="3.1"
+		x="2.25"
+		font-size="1" >
+		hello
 	</text>
 </svg>
