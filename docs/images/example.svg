@@ -11,11 +11,11 @@
 			fill: #efefef; }
 		#cursor {
 			fill: #333;
-			animation: cursor-animation 1s 9.3, cursor-animation 1s infinite;
-			animation-delay: 1s, 12.1s; }
+			animation: cursor-animation 1s 8.2, cursor-animation 1s infinite;
+			animation-delay: 1s, 10.5s; }
 		#time {
-			animation: typing-animation 0.8s;
-			animation-delay: 10.3s;
+			animation: typing-animation 0.3s;
+			animation-delay: 9.2s;
 			animation-fill-mode: forwards;
 		}
 		text {
