@@ -39,6 +39,13 @@ function logEnd() {
 	},100);
 }
 
+// Express web server
+let app = express();
+app.use('/', express.static(`${__dirname}/dev`));
+app.listen(PORT, function() {
+	serverStatus();
+});
+
 // Webpack build server
 let compiler = webpack(require('./webpack.config.js'));
 compiler.watch({},function(err,stats) {
@@ -59,15 +66,3 @@ karmaServer.on('run_complete', function() {
 	logEnd();
 });
 karmaServer.start();
-
-// Express web server
-let app = express();
-
-app.use('/dist', express.static(`${__dirname}/dev/dist`));
-app.get('/', function(req, res) {
-	res.sendFile(`${dirname}/dev/index.html`);
-});
-
-app.listen(PORT, function() {
-	serverStatus();
-});
