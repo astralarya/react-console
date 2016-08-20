@@ -7,12 +7,17 @@
 	>
 	<style type="text/css">
 	<![CDATA[
-		#background {
+		.background {
 			fill: #efefef; }
 		#cursor {
 			fill: #333;
-			animation: cursor-animation 1s infinite;
-			animation-delay: 1s; }
+			animation: cursor-animation 1s 8.7, cursor-animation 1s infinite;
+			animation-delay: 1s, 10.6s; }
+		#time {
+			animation: typing-animation 0.9s;
+			animation-delay: 9.7s;
+			animation-fill-mode: forwards;
+		}
 		text {
 			fill: #999;
 			font-family: 'Menlo','Consolas','DejaVu Sans Mono',monospace; }
@@ -21,6 +26,9 @@
 		}
 		.prompt.label {
 			font-weight: bold;
+		}
+		.typing {
+			clip-path: url(#typing);
 		}
 		@keyframes cursor-animation {
 		  0% {
@@ -31,20 +39,37 @@
 			fill: none; }
 		  100% {
 			fill: none; } }
+		@keyframes typing-animation {
+		  0% {
+			transform: translate(0,0); }
+		  10% {
+			transform: translate(0,0); }
+		  11% {
+			transform: translate(0.6px,0); }
+		  20% {
+			transform: translate(0.6px,0); }
+		  21% {
+			transform: translate(1.3px,0); }
+		  40% {
+			transform: translate(1.3px,0); }
+		  41% {
+			transform: translate(1.9px,0); }
+		  70% {
+			transform: translate(1.9px,0); }
+		  71% {
+			transform: translate(2.4px,0); }
+		  99% {
+			transform: translate(2.4px,0); }
+		  100% {
+			transform: translate(3px,0); } }
 	]]>
 	</style>
 	<rect
-		id="background"
+		class="background"
 		y="0"
 		x="0"
 		height="20"
 		width="60" />
-	<rect
-		id="cursor"
-		y="2.2"
-		x="2.25"
-		height="1.2"
-		width="0.6" />
 	<text
 		class="message"
 		y="1.55"
@@ -61,10 +86,24 @@
 	</text>
 	<text
 		class="prompt"
-		style="fill:#F0F" // TODO remove when finished
+		style="clip-path:url(#typing)"
 		y="3.1"
 		x="2.25"
 		font-size="1" >
 		hello
 	</text>
+	<g id="time">
+		<rect
+			class="background"
+			y="2.2"
+			x="2.25"
+			height="1.2"
+			width="60" />
+		<rect
+			id="cursor"
+			y="2.2"
+			x="2.25"
+			height="1.2"
+			width="0.6" />
+	</g>
 </svg>
