@@ -12,10 +12,10 @@
 		#cursor {
 			fill: #333;
 			animation: cursor-animation 1s 8.2, cursor-animation 1s infinite;
-			animation-delay: 1s, 10.5s; }
+			animation-delay: 1s, 12.5s; }
 		#time {
-			animation: typing-animation 0.3s;
-			animation-delay: 9.2s;
+			animation: typing-animation 0.4s, typing-animation2 0.5s;
+			animation-delay: 9.2s, 11s;
 			animation-fill-mode: forwards;
 		}
 		text {
@@ -57,6 +57,19 @@
 			transform: translate(2.4px,0); }
 		  100% {
 			transform: translate(3px,0); } }
+		@keyframes typing-animation2 {
+		  0% {
+			transform: translate(3px,0); }
+		  1% {
+			transform: translate(3.6px,0); }
+		  40% {
+			transform: translate(3.6px,0); }
+		  41% {
+			transform: translate(4.3px,0); }
+		  99% {
+			transform: translate(4.3px,0); }
+		  100% {
+			transform: translate(4.9px,0); } }
 	]]>
 	</style>
 	<rect
