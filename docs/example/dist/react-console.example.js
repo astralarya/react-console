@@ -76,7 +76,7 @@ var Example =
 	    }
 	    EchoConsole.prototype.render = function () {
 	        var _this = this;
-	        return React.createElement(react_console_component_1.default, {ref: function (ref) { return _this.child.console = ref; }, handler: this.echo, promptLabel: this.promptLabel, welcomeMessage: "Welcome to the react-console demo!", autofocus: true});
+	        return React.createElement(react_console_component_1.default, {ref: function (ref) { return _this.child.console = ref; }, handler: this.echo, promptLabel: this.promptLabel, welcomeMessage: "Welcome to the react-console demo!\nThis is an example of a simple echo console.", autofocus: true});
 	    };
 	    return EchoConsole;
 	}(React.Component));
