@@ -11,11 +11,11 @@
 			fill: #efefef; }
 		#cursor {
 			fill: #333;
-			animation: cursor-animation 1s 8.2, cursor-animation 1s infinite;
-			animation-delay: 1s, 12.5s; }
+			animation: cursor-animation 1s 8.2, cursor-animation 1s 17.5, cursor-animation 1s infinite;
+			animation-delay: 1s, 12.5s, 31.6s; }
 		#time {
-			animation: typing-animation 0.4s, typing-animation2 0.5s;
-			animation-delay: 9.2s, 11s;
+			animation: typing-animation 0.4s, typing-animation2 0.5s, typing-animation3 0.6s;
+			animation-delay: 9.2s, 11s, 30s;
 			animation-fill-mode: forwards;
 		}
 		text {
@@ -70,6 +70,15 @@
 			transform: translate(4.3px,0); }
 		  100% {
 			transform: translate(4.9px,0); } }
+		@keyframes typing-animation3 {
+		  0% {
+			transform: translate(4.9px,0); }
+		  1% {
+			transform: translate(3.6px,0); }
+		  99% {
+			transform: translate(3.6px,0); }
+		  100% {
+			transform: translate(0,0); } }
 	]]>
 	</style>
 	<rect
