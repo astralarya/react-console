@@ -11,16 +11,16 @@
 			fill: #efefef; }
 		#cursor {
 			fill: #333;
-			animation: cursor-animation 1s 8.7, cursor-animation 1s infinite;
-			animation-delay: 1s, 10.6s; }
+			animation: cursor-animation 1s 5.3, cursor-animation 1s infinite;
+			animation-delay: 1s, 8.1s; }
 		#time {
-			animation: typing-animation 0.9s;
-			animation-delay: 9.7s;
+			animation: typing-animation 0.8s;
+			animation-delay: 6.3s;
 			animation-fill-mode: forwards;
 		}
 		text {
 			fill: #999;
-			font-family: 'Menlo','Consolas','DejaVu Sans Mono',monospace; }
+			font-family: 'Menlo', 'Andale Mono', 'DejaVu Sans Mono', 'Droid Sans Mono', 'Bitstream Vera Sans Mono', 'Courier New', Courier, monospace; }
 		.prompt {
 			fill: #444;
 		}
@@ -42,17 +42,15 @@
 		@keyframes typing-animation {
 		  0% {
 			transform: translate(0,0); }
-		  10% {
-			transform: translate(0,0); }
-		  11% {
+		  1% {
 			transform: translate(0.6px,0); }
-		  20% {
+		  25% {
 			transform: translate(0.6px,0); }
-		  21% {
+		  26% {
 			transform: translate(1.3px,0); }
-		  40% {
+		  50% {
 			transform: translate(1.3px,0); }
-		  41% {
+		  51% {
 			transform: translate(1.9px,0); }
 		  70% {
 			transform: translate(1.9px,0); }
