@@ -2,7 +2,7 @@
 
 Example React console emulator.
 
-Used in the [live demo](https://autochthe.github.io/react-console/).
+Used in the [live demo][demo-url].
 
 
 ## Usage
@@ -26,3 +26,5 @@ Clean generated files:
 Clean generated files and dependencies:
 
     npm run clean:deep
+
+[demo-url]: https://autochthe.github.io/react-console/#react-console
