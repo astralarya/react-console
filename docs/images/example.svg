@@ -27,9 +27,6 @@
 		.prompt.label {
 			font-weight: bold;
 		}
-		.typing {
-			clip-path: url(#typing);
-		}
 		@keyframes cursor-animation {
 		  0% {
 			fill: #333; }
@@ -84,11 +81,10 @@
 	</text>
 	<text
 		class="prompt"
-		style="clip-path:url(#typing)"
 		y="3.1"
 		x="2.25"
 		font-size="1" >
-		hello
+		hello :)
 	</text>
 	<g id="time">
 		<rect
