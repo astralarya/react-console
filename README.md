@@ -69,6 +69,7 @@ Properties you can pass to the console element
 | log		| (...messages: any)=>void			| Log messages to the console. If string, print the value, otherwise, print the JSON value of the message.
 | logX		| (type: string, ...messages: any)=>void	| Log messages of a particular type to the console. The messages will be given the class `react-console-message-{type}`.
 | return	| ()=>void					| Signal the current command has finished and a new prompt should be displayed.
+| clearScreen	| ()=>void					| Clear the visible log in the console. Does not clear command history.
 
 
 ## Awknoledgements

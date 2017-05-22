@@ -248,8 +248,8 @@ export default class extends React.Component<ConsoleProps,ConsoleState> {
 			70: this.forwardChar,
 			// C-b
 			66: this.backwardChar,
-			// C-l TODO
-			//76: this.clearScreen,
+			// C-l
+			76: this.clearScreen,
 			// C-p
 			80: this.previousHistory,
 			// C-n
@@ -587,6 +587,9 @@ export default class extends React.Component<ConsoleProps,ConsoleState> {
 				lastCommand: ConsoleCommand.Search,
 			}, this.scrollToBottom);
 		}
+	}
+	clearScreen = () => {
+		this.setState({ log: [] });
 	}
 	nonIncrementalReverseSearchHistory = () => {
 		// TODO
