@@ -27,4 +27,4 @@ Clean generated files and dependencies:
 
     npm run clean:deep
 
-[demo-url]: https://autochthe.github.io/react-console/#react-console
+[demo-url]: https://astralarya.github.io/react-console/#react-console
