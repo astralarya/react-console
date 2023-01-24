@@ -75,18 +75,18 @@ Properties you can pass to the console element
 
 React-console is inspired by [chrisdone/jquery-console](https://github.com/chrisdone/jquery-console).
 
-[demo-image]: https://autochthe.github.io/react-console/images/example.svg
-[demo-url]: https://autochthe.github.io/react-console/#react-console
+[demo-image]: https://astralarya.github.io/react-console/images/example.svg
+[demo-url]: https://astralarya.github.io/react-console/#react-console
 [npm-image]: https://img.shields.io/npm/v/react-console-component.svg
 [npm-url]: https://npmjs.org/package/react-console-component
 [downloads-image]: https://img.shields.io/npm/dm/react-console-component.svg
-[travis-image]: https://img.shields.io/travis/autochthe/react-console/master.svg
-[travis-url]: https://travis-ci.org/autochthe/react-console
-[coveralls-image]: https://coveralls.io/repos/github/autochthe/react-console/badge.svg?branch=master
-[coveralls-url]: https://coveralls.io/github/autochthe/react-console?branch=master
-[david-url]: https://david-dm.org/autochthe/react-console
-[david-image]: https://david-dm.org/autochthe/react-console.svg
-[david-dev-url]: https://david-dm.org/autochthe/react-console?type=dev
-[david-dev-image]: https://david-dm.org/autochthe/react-console/dev-status.svg
-[david-peer-url]: https://david-dm.org/autochthe/react-console?type=peer
-[david-peer-image]: https://david-dm.org/autochthe/react-console/peer-status.svg
+[travis-image]: https://img.shields.io/travis/astralarya/react-console/master.svg
+[travis-url]: https://travis-ci.org/astralarya/react-console
+[coveralls-image]: https://coveralls.io/repos/github/astralarya/react-console/badge.svg?branch=master
+[coveralls-url]: https://coveralls.io/github/astralarya/react-console?branch=master
+[david-url]: https://david-dm.org/astralarya/react-console
+[david-image]: https://david-dm.org/astralarya/react-console.svg
+[david-dev-url]: https://david-dm.org/astralarya/react-console?type=dev
+[david-dev-image]: https://david-dm.org/astralarya/react-console/dev-status.svg
+[david-peer-url]: https://david-dm.org/astralarya/react-console?type=peer
+[david-peer-image]: https://david-dm.org/astralarya/react-console/peer-status.svg
