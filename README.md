@@ -7,10 +7,6 @@ Simple React.js console emulator.
 [![Travis Build][travis-image]][travis-url]
 [![Coverage Status][coveralls-image]][coveralls-url]
 
-[![Dependency Status][david-image]][david-url]
-[![devDependency Status][david-dev-image]][david-dev-url]
-[![peerDependency Status][david-peer-image]][david-peer-url]
-
 [![Demo Image][demo-image]][demo-url]
 
 ## Example
@@ -84,9 +80,3 @@ React-console is inspired by [chrisdone/jquery-console](https://github.com/chris
 [travis-url]: https://travis-ci.org/astralarya/react-console
 [coveralls-image]: https://coveralls.io/repos/github/astralarya/react-console/badge.svg?branch=master
 [coveralls-url]: https://coveralls.io/github/astralarya/react-console?branch=master
-[david-url]: https://david-dm.org/astralarya/react-console
-[david-image]: https://david-dm.org/astralarya/react-console.svg
-[david-dev-url]: https://david-dm.org/astralarya/react-console?type=dev
-[david-dev-image]: https://david-dm.org/astralarya/react-console/dev-status.svg
-[david-peer-url]: https://david-dm.org/astralarya/react-console?type=peer
-[david-peer-image]: https://david-dm.org/astralarya/react-console/peer-status.svg
